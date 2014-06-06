@@ -28,6 +28,14 @@
 		E23EB36A194269AB00C4DECA /* PoconoFileSystem */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PoconoFileSystem; sourceTree = BUILT_PRODUCTS_DIR; };
 		E23EB36D194269AB00C4DECA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		E23EB36F194269AB00C4DECA /* PoconoFileSystem.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = PoconoFileSystem.1; sourceTree = "<group>"; };
+		E23EB37619426B2600C4DECA /* Collection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Collection.h; sourceTree = "<group>"; };
+		E23EB37719426B5200C4DECA /* FileWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileWriter.h; sourceTree = "<group>"; };
+		E23EB37819426B6200C4DECA /* FileReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileReader.h; sourceTree = "<group>"; };
+		E23EB37919426C8300C4DECA /* FileSystemTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileSystemTest.h; sourceTree = "<group>"; };
+		E23EB37A19426EDD00C4DECA /* FileSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileSystem.h; sourceTree = "<group>"; };
+		E23EB37B19426F5100C4DECA /* DataRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataRecord.h; sourceTree = "<group>"; };
+		E23EB37C1942715300C4DECA /* CollectionIndex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollectionIndex.h; sourceTree = "<group>"; };
+		E23EB37D1942727600C4DECA /* DataBlock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataBlock.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +70,14 @@
 			children = (
 				E23EB36D194269AB00C4DECA /* main.cpp */,
 				E23EB36F194269AB00C4DECA /* PoconoFileSystem.1 */,
+				E23EB37619426B2600C4DECA /* Collection.h */,
+				E23EB37719426B5200C4DECA /* FileWriter.h */,
+				E23EB37819426B6200C4DECA /* FileReader.h */,
+				E23EB37919426C8300C4DECA /* FileSystemTest.h */,
+				E23EB37A19426EDD00C4DECA /* FileSystem.h */,
+				E23EB37B19426F5100C4DECA /* DataRecord.h */,
+				E23EB37C1942715300C4DECA /* CollectionIndex.h */,
+				E23EB37D1942727600C4DECA /* DataBlock.h */,
 			);
 			path = PoconoFileSystem;
 			sourceTree = "<group>";
