@@ -8,30 +8,44 @@
 
 #ifndef PoconoFileSystem_FileSystemTest_h
 #define PoconoFileSystem_FileSystemTest_h
+#include "DataRecord.h"
+#include "FileSystem.h"
 namespace PoconoFileSystem {
     class FileSystemTest {
         private :
-        
+            FileSystem fs_;
         public :
+        FileSystemTest():fs_("test"){
+            
         
-        void createCollection(string nameOfCollection){
+        }
+        CollectionMetaDataPtr openCollection(std::string nameOfCollection)
+        {
+           return fs_.openCollection(nameOfCollection);
+            
+        }
+        void createCollection(std::string nameOfCollection){
         
         }
         
-        void deleteCollection(string nameOfCollection){
+        void deleteCollection(std::string nameOfCollection){
         }
        
-        void insertData(string nameOfCollection,DataRecordPtr record)
+        void insertData(CollectionMetaDataPtr collection,DataRecordPtr record)
+        {
+            fs_.insertData(collection,record);
+        }
+        std::shared_ptr<std::list<DataRecordPtr>> getAllData(CollectionMetaDataPtr collection)
+        {
+            return fs_.getAllData(collection);
+        }
+        
+        void deleteData(std::string nameOfCollection,DataRecordPtr record)
         {
         
         }
         
-        void deleteData(string nameOfCollection,DataRecordPtr record)
-        {
-        
-        }
-        
-        void updateData(string nameOfCollection,DataRecordPtr record)
+        void updateData(std::string nameOfCollection,DataRecordPtr record)
         {
         
         }

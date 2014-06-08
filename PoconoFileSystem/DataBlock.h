@@ -12,7 +12,9 @@
 namespace PoconoFileSystem {
     class DataBlock {
         private :
-        
+        const static size_t DATA_BLOCK_SIZE = 32;
+        const static size_t DATA_BLOCK_OFFSET_SIZE = 32;
+         
         char[DATA_BLOCK_SIZE] collectionName;
         char[DATA_BLOCK_OFFSET_SIZE] nextDataBlockPtr;
         char[DATA_BLOCK_OFFSET_SIZE] previousDataBlockPtr;

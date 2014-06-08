@@ -25,6 +25,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A5D9A14E1942AE9C000F1170 /* PoconoConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PoconoConfig.h; sourceTree = "<group>"; };
+		A5D9A14F1942AF22000F1170 /* Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
+		A5D9A1501942AF99000F1170 /* Configs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Configs.h; sourceTree = "<group>"; };
+		A5D9A1511942B91C000F1170 /* SuperBlock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SuperBlock.h; sourceTree = "<group>"; };
 		E23EB36A194269AB00C4DECA /* PoconoFileSystem */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PoconoFileSystem; sourceTree = BUILT_PRODUCTS_DIR; };
 		E23EB36D194269AB00C4DECA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		E23EB36F194269AB00C4DECA /* PoconoFileSystem.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = PoconoFileSystem.1; sourceTree = "<group>"; };
@@ -78,6 +82,10 @@
 				E23EB37B19426F5100C4DECA /* DataRecord.h */,
 				E23EB37C1942715300C4DECA /* CollectionIndex.h */,
 				E23EB37D1942727600C4DECA /* DataBlock.h */,
+				A5D9A14E1942AE9C000F1170 /* PoconoConfig.h */,
+				A5D9A14F1942AF22000F1170 /* Utils.h */,
+				A5D9A1501942AF99000F1170 /* Configs.h */,
+				A5D9A1511942B91C000F1170 /* SuperBlock.h */,
 			);
 			path = PoconoFileSystem;
 			sourceTree = "<group>";
@@ -213,6 +221,16 @@
 		E23EB374194269AB00C4DECA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/include/,
+					/usr/local/include/,
+				);
+				"HEADER_SEARCH_PATHS[arch=*]" = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -243,6 +261,7 @@
 				E23EB375194269AB00C4DECA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
