@@ -56,7 +56,6 @@ namespace PoconoFileSystem {
         std::string  getNameOfCollectionAsString()
         {
             std::string  nameOfCollectionStr(nameOfCollection);
-            assert(nameOfCollectionStr.size()>0);
             return nameOfCollectionStr;
             
         

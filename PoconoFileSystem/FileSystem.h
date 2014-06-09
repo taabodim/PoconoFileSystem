@@ -13,6 +13,7 @@
 #include "CollectionIndex.h"
 #include <list>
 #include "SuperBlock.h"
+#include "Utils.h"
 namespace PoconoFileSystem {
     class FileSystem {
         private :
@@ -20,10 +21,12 @@ namespace PoconoFileSystem {
         FileReaderPtr fileReader;
         FileWriterPtr fileWriter;
         std::list<CollectionMetaDataPtr> allCollectionsMap; //change this to map later
-        size_t STARTING_OFFSET_OF_COLLECITON_INDEXS = 0;//2048
-        const static size_t BLOCK_SIZE = 64;
+
+        
         SuperBlock superBlock;
         public :
+        
+        
         FileSystem(std::string fileName):filename(fileName),fileReader(new FileReader(filename)),
         fileWriter(new FileWriter(filename))
         {
@@ -52,15 +55,22 @@ namespace PoconoFileSystem {
         }
         void loadAllCollectionMap()
         {
-        //TODO
-            //1.read from STARTING_OFFSET_OF_COLLECITON_INDEXS
-            
-            CollectionMetaDataPtr collMetaData = fileReader->readCollectionMetaDataFromFile(STARTING_OFFSET_OF_COLLECITON_INDEXS);
-            if(collMetaData->offsetOfCollectionMetaDataInFile!=-1)
+            offsetType offsetToGetMetaDataFrom = STARTING_OFFSET_OF_COLLECITON_INDEXS;
+            while(offsetToGetMetaDataFrom<ENDING_OFFSET_OF_COLLECITON_INDEXS)
             {
-                allCollectionsMap.push_back(collMetaData);
-                
+            
+                CollectionMetaDataPtr collMetaData = fileReader->readCollectionMetaDataFromFile(offsetToGetMetaDataFrom);
+                if(collMetaData->offsetOfCollectionMetaDataInFile!=-1)
+                {
+                    if(!collMetaData->getNameOfCollectionAsString().empty())
+                    {
+                    allCollectionsMap.push_back(collMetaData);
+                    }
+                }
+                offsetToGetMetaDataFrom +=(sizeof(class  CollectionMetaData));
             }
+            
+            std::cout<<"allCollectionsMap size is "<<allCollectionsMap.size()<<std::endl;
             
             
         }
@@ -98,7 +108,9 @@ namespace PoconoFileSystem {
             //4.add the offset as the ofssetOfLastDataRecordInCollection
             //
             
-            size_t offset = PoconoFileSystem::getEndOfFileOffsetAsMultipleOfBlock(filename, BLOCK_SIZE);//this should be 0 or 1024
+            size_t offset = PoconoFileSystem::getEndOfFileDataBlockOffsetAsMultipleOfBlock(filename, BLOCK_SIZE);//this should be 0 or 1024
+            
+            //fix this because it should be starting from DATA BLOCK not at the end of file
             record->offsetOfDataRecord = offset;
             
             DataRecordPtr lastRecordOfCollection = getLastRecordOfColelction(collectionMetaData);
@@ -118,7 +130,8 @@ namespace PoconoFileSystem {
                 collectionMetaData->offsetOfFirstDataRecord = record->offsetOfDataRecord;
                 collectionMetaData->offsetOfLastDataRecord = record->offsetOfDataRecord;
                 
-                fileWriter->writeCollectionMetaData(collectionMetaData);            }
+                fileWriter->writeCollectionMetaData(collectionMetaData);
+            }
                 record->offsetOfNextDataRecord = -1;
             //collectionMetaData->offsetOfLastDataRecord = offset;
             appendThisRecord(record, offset);

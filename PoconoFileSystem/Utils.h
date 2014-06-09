@@ -19,6 +19,11 @@
 #include <stdlib.h>  
 namespace PoconoFileSystem{
     typedef signed long offsetType ;
+    const static size_t BLOCK_SIZE = 64;
+    offsetType STARTING_OFFSET_OF_COLLECITON_INDEXS = 0;//2048
+    offsetType ENDING_OFFSET_OF_COLLECITON_INDEXS = 4096;
+    offsetType STARTING_OFFSET_OF_DATA_BLOCK = 4096+(BLOCK_SIZE);//2048
+
     
     std::string getFullCollectionName(std::string name) {
         std::string fullname = Configs::dataDir;
@@ -77,7 +82,7 @@ namespace PoconoFileSystem{
         
         return sz;
     }
-    size_t getEndOfFileOffsetAsMultipleOfBlock(std::string filename,size_t blockSize)
+    offsetType getEndOfFileOffsetAsMultipleOfBlock(std::string filename,size_t blockSize)
     {
         FILE *fp;
         assert(!filename.empty());
@@ -91,10 +96,7 @@ namespace PoconoFileSystem{
         
         if(sz%blockSize)
         {
-            
-//             diff = blockSize + (abs((sz/blockSize)-blockSize));
             diff = sz%blockSize;
-            
             sz+=(blockSize-diff);
         }
         std::cout<<" blockSize: "<<blockSize<<std::endl
@@ -102,7 +104,31 @@ namespace PoconoFileSystem{
         
         return sz;
     }
-
+    offsetType getEndOfFileDataBlockOffsetAsMultipleOfBlock(std::string filename,size_t blockSize)
+    {
+        FILE *fp;
+        assert(!filename.empty());
+        fp=fopen(filename.c_str(),"r+b");
+        assert(fp!=NULL);
+        fseek(fp, 0L, SEEK_END);
+        size_t sz = ftell(fp);
+        fclose(fp);
+        offsetType diff;
+        std::cout<<" initial sz : "<<sz<<std::endl;
+        if (sz<PoconoFileSystem::STARTING_OFFSET_OF_DATA_BLOCK){
+            sz = PoconoFileSystem::STARTING_OFFSET_OF_DATA_BLOCK;
+        }
+        if(sz%blockSize)
+        {
+            diff = sz%blockSize;
+            sz+=(blockSize-diff);
+        }
+        std::cout<<" blockSize: "<<blockSize<<std::endl
+        <<" diff : "<<diff<<std::endl<<" sz : "<<sz<<std::endl;
+        
+        return sz;
+    
+    }
     template<typename T>
     std::string toStr(T i) {
         std::string str = boost::lexical_cast < std::string > (i);
