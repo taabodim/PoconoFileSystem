@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <cassert>
 #include "PoconoConfig.h"
+#include "DataRecordMetaData.h"
 namespace PoconoFileSystem {
     class FileReader {
         std::string filename;
@@ -23,15 +24,15 @@ namespace PoconoFileSystem {
             filename=PoconoFileSystem::getFullCollectionName(fileName);
             
         }
-         DataRecordPtr readDataRecordFromFile(size_t offset);
-         CollectionMetaDataPtr readCollectionMetaDataFromFile(size_t offset);
+        DataRecordPtr readDataRecordFromFile(size_t offset);
+        CollectionMetaDataPtr readCollectionMetaDataFromFile(size_t offset);
+        DataRecordMetaDataPtr readDataRecordMetaDataFromFile(size_t offset);
+            
+            
+        };
         
         
-    };
-    
-   
-    typedef std::shared_ptr<FileReader> FileReaderPtr;
-
+        typedef std::shared_ptr<FileReader> FileReaderPtr;
     CollectionMetaDataPtr FileReader::readCollectionMetaDataFromFile(size_t offset) {
         
         FILE *ptr_myfile;
@@ -67,8 +68,25 @@ namespace PoconoFileSystem {
         fclose(ptr_myfile);
         return record;
     }
+    DataRecordMetaDataPtr FileReader::readDataRecordMetaDataFromFile(size_t offset) {
+        
+        FILE *ptr_myfile;
+        ptr_myfile=fopen(filename.c_str(),"rb");
+        if (!ptr_myfile)
+        {
+            printf("Unable to open file!");
+            
+        }
+        assert(ptr_myfile);
+        fseek ( ptr_myfile , offset , SEEK_SET );
+        DataRecordMetaDataPtr record ( new DataRecordMeataData());
+        fread(&(*record),sizeof(class DataRecordMeataData),1,ptr_myfile);
+        fclose(ptr_myfile);
+        return record;
+    }
     
-
-}
+    
+    
+    }
 
 #endif

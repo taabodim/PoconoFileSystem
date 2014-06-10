@@ -93,7 +93,7 @@ void testWritingAndReadingSmallValuesInThreeCollections()
 int main(int argc, const char * argv[])
 {
     // This is the PoconoFileSystem first commit
-    bool homeSetting = true;
+    bool homeSetting = false;
     
     if(homeSetting)
     {

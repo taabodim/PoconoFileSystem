@@ -99,6 +99,7 @@ namespace PoconoFileSystem{
             diff = sz%blockSize;
             sz+=(blockSize-diff);
         }
+        assert(diff<blockSize);
         std::cout<<" blockSize: "<<blockSize<<std::endl
         <<" diff : "<<diff<<std::endl<<" sz : "<<sz<<std::endl;
         

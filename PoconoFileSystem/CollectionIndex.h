@@ -18,14 +18,14 @@ namespace PoconoFileSystem {
         public :
         offsetType offsetOfCollectionMetaDataInFile;
         //size_t offsetOfAllDataRecords[LIMIT_OF_COLLECTION_SIZE];
-        offsetType offsetOfFirstDataRecord;//this points to the first data record of the collection
-        offsetType offsetOfLastDataRecord;//this points to the last data record of the collection
+        offsetType offsetOfFirstDataRecordMetaData;//this points to the first data record meta data of the collection
+        offsetType offsetOfLastDataRecordMetaData;//this points to the last data record meta data of the collection
 
         CollectionMetaData() //for reading the CollectionMetaData
         //info from file
         {
-            this->offsetOfFirstDataRecord=-1;
-            this->offsetOfLastDataRecord=-1;
+            this->offsetOfFirstDataRecordMetaData=-1;
+            this->offsetOfLastDataRecordMetaData=-1;
             this->offsetOfCollectionMetaDataInFile=-1;
             
         }
@@ -47,8 +47,8 @@ namespace PoconoFileSystem {
                 nameOfCollection [i] = '\0';
             }
             
-            this->offsetOfFirstDataRecord= -1;
-            this->offsetOfLastDataRecord = -1;
+            this->offsetOfFirstDataRecordMetaData= -1;
+            this->offsetOfLastDataRecordMetaData = -1;
             this->offsetOfCollectionMetaDataInFile=-1;
             
 
@@ -77,10 +77,10 @@ namespace PoconoFileSystem {
             std::string recordStr(getNameOfCollectionAsString());
             recordStr.append(";");
             recordStr.append("offsetOfFirstDataRecord : ");
-            recordStr.append(PoconoFileSystem::toStr(offsetOfFirstDataRecord));
+            recordStr.append(PoconoFileSystem::toStr(offsetOfFirstDataRecordMetaData));
             
             recordStr.append("offsetOfLastDataRecord : ");
-            recordStr.append(PoconoFileSystem::toStr(offsetOfLastDataRecord));
+            recordStr.append(PoconoFileSystem::toStr(offsetOfLastDataRecordMetaData));
             
             return recordStr;
             //recordStr
