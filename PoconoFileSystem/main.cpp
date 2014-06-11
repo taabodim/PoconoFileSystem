@@ -38,6 +38,25 @@ void testWritingAndReadingSmallValuesInOneCollection()
         std::cout<<"Data Record is "<<(*it)->toString()<<std::endl;
     }
 }
+void testWritingAndReadingOneSmallValueInOneCollection() {
+    FileSystemTest testFS;
+    CollectionMetaDataPtr collection =testFS.openCollection("testCollection");
+    
+    int num = 1;
+    for(int i=0;i<num;i++)
+    {
+        DataRecordPtr record(new DataRecord("smallKey","smallValue"));
+        testFS.insertData(collection, record);
+    }
+    
+    std::shared_ptr<std::list<DataRecordPtr>> allData = testFS.getAllData(collection);
+    for(std::list<DataRecordPtr>::iterator it = allData->begin();
+        it!=allData->end();++it)
+    {
+        std::cout<<"Data Record is "<<(*it)->toString()<<std::endl;
+    }
+
+}
 void testWritingAndReadingSmallValuesInThreeCollections()
 {
     
@@ -104,8 +123,9 @@ int main(int argc, const char * argv[])
         
         
     }
-//    testWritingAndReadingSmallValuesInOneCollection();
-    testWritingAndReadingSmallValuesInThreeCollections();
+    testWritingAndReadingOneSmallValueInOneCollection();//stage 1
+    //testWritingAndReadingSmallValuesInOneCollection();
+    //testWritingAndReadingSmallValuesInThreeCollections();
     return 0;
 }
 

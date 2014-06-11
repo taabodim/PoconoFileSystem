@@ -33,6 +33,7 @@ namespace PoconoFileSystem {
         void writeCollectionMetaData(CollectionMetaDataPtr collectionMetaDataPtr,size_t offsetOfCollectionIndex);
         void writeCollectionMetaData(CollectionMetaDataPtr collectionMetaDataPtr);
         void writeDataRecordMetaData(DataRecordMetaDataPtr dataRecordMetaDataPtr);
+        offsetType writeTheValueOfRecord(DataRecordPtr dataRecordMetaDataPtr);
      };
     typedef std::shared_ptr<FileWriter> FileWriterPtr;
     
@@ -109,7 +110,26 @@ namespace PoconoFileSystem {
         
         
     }
-    
+    offsetType FileWriter::writeTheValueOfRecord(DataRecordPtr record){
+        FILE *ptr_myfile;
+        ptr_myfile=fopen(filename.c_str(),"r+b");
+        if (!ptr_myfile)
+        {
+//            mylogger<<"Unable to open file!";
+            
+        }
+        
+        assert(ptr_myfile);
+        assert(record->offsetOfDataRecord>-1);
+        fseek ( ptr_myfile , record->offsetOfDataRecord , SEEK_SET );
+        std::string valueAsStr = record->getValueAsString();
+        fwrite(valueAsStr.c_str(), record->sizeOfValueFieldInDataRecord, 1, ptr_myfile);
+        fflush(ptr_myfile);
+        
+        fclose(ptr_myfile);
+        std::cout<<" wrote this DataRecord to file at offset "<<record->offsetOfDataRecord<<" , "<<record->toString()<<std::endl;
+        return (record->offsetOfDataRecord + record->sizeOfValueFieldInDataRecord);  
+    }
     
     void  FileWriter::writeDataRecordAtOffset (std::shared_ptr<DataRecord> record) {
         

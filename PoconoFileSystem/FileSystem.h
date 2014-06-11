@@ -203,6 +203,11 @@ namespace PoconoFileSystem {
             DataRecordMetaDataPtr firstDataMetaDataPtr = fileReader->readDataRecordMetaDataFromFile(collection->offsetOfFirstDataRecordMetaData);
             
             DataRecordPtr firstDataPtr = fileReader->readDataRecordFromFile(firstDataMetaDataPtr->offsetOfDataRecord);
+            std::string valueOfDataRecord = fileReader->readTheValueOfDataRecord(firstDataPtr->offsetOfValueOfRecordInFile,firstDataPtr->sizeOfValueFieldInDataRecord);
+            assert(!valueOfDataRecord.empty());
+            
+
+
             allData->push_back(firstDataPtr);
             DataRecordMetaDataPtr nextDataRecordMetaDataPtr = firstDataMetaDataPtr;
             while(nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData!=-1)
@@ -223,8 +228,12 @@ namespace PoconoFileSystem {
         }
         void appendThisRecord(DataRecordPtr record)
         {
+            offsetType offsetOfValueOfRecordInFile = fileWriter->writeTheValueOfRecord(record);
+            record->offsetOfValueOfRecordInFile = offsetOfValueOfRecordInFile;
+            record->offsetOfDataRecord = offsetOfValueOfRecordInFile;
             fileWriter->writeDataRecordAtOffset(record);
         }
+
         void updateThisRecord(DataRecordPtr record)
         {
             fileWriter->writeDataRecordAtOffset(record);

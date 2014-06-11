@@ -44,6 +44,38 @@ namespace PoconoFileSystem {
  			offsetOfCollection = -1;
 
  		}
+ 		 std::string toString()
+        {
+            std::string recordStr("RecordMetaData is {");
+            
+
+            recordStr.append("offsetOfDataRecord : ");
+            recordStr.append(PoconoFileSystem::toStr(offsetOfDataRecord));
+            
+
+            recordStr.append("offsetOfDataRecordMetaData : ");
+            recordStr.append(PoconoFileSystem::toStr(offsetOfDataRecordMetaData));
+            
+
+            recordStr.append("offsetOfNextDataRecordMetaData : ");
+            recordStr.append(PoconoFileSystem::toStr(offsetOfNextDataRecordMetaData));
+            
+            recordStr.append("offsetOfPreviousDataRecordMetaData : ");
+            recordStr.append(PoconoFileSystem::toStr(offsetOfPreviousDataRecordMetaData));
+            
+            recordStr.append(" ,offsetOfDataRecord : ");
+            recordStr.append(PoconoFileSystem::toStr(offsetOfDataRecord));
+            
+            recordStr.append(" ,sizeOfValueFieldInDataRecord : ");
+            recordStr.append(PoconoFileSystem::toStr(sizeOfValueFieldInDataRecord));
+           
+           recordStr.append(" ,offsetOfCollection : ");
+           recordStr.append(PoconoFileSystem::toStr(offsetOfCollection));
+
+           recordStr.append("}");
+           
+            return recordStr;
+        }
  	};
 
  	typedef std::shared_ptr<DataRecordMeataData> DataRecordMetaDataPtr;

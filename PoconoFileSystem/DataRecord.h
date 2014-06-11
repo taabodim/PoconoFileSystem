@@ -9,6 +9,8 @@
 #ifndef PoconoFileSystem_DataRecord_h
 #define PoconoFileSystem_DataRecord_h
 #include "Utils.h"
+#include <string.h>
+
 namespace PoconoFileSystem {
     class DataRecord {
         private :
@@ -23,7 +25,7 @@ namespace PoconoFileSystem {
         // offsetType offsetOfNextDataRecordMetaData;//this points to the next DataRecordMetaData that points to the next DataRecord
         // offsetType offsetOfPreviousDataRecordMetaData;//this points to the prev DataRecordMetaData that points to the previous DataRecord
         offsetType offsetOfDataRecord;//this points to the offset of this data record
-        offsetType endingOffsetOfDataRecord; //this points to where the data record ends.
+        offsetType offsetOfValueOfRecordInFile; //this points to where the the value field of record is .
         //we need this , because the value part of the data is variable sized.
         bool dataRecordRemovedFlag;//this flag is set to true when data is deleted;
 
@@ -37,6 +39,8 @@ namespace PoconoFileSystem {
             // offsetOfPreviousDataRecordMetaData = -1;
             offsetOfDataRecord = -1;
             sizeOfValueFieldInDataRecord = -1;
+            offsetOfCollection = -1;
+            
         }
         DataRecord(std::string keyStr,std::string valueStr)
         {
@@ -64,31 +68,56 @@ namespace PoconoFileSystem {
             sizeOfValueFieldInDataRecord = valueStr.size();
             
             offsetOfDataRecord = -1;
+            offsetOfCollection = -1;
+
+            assert(sizeOfValueFieldInDataRecord== valueStr.size());
             assert(offsetOfDataRecord==-1);
+
+        }
+        std::string getValueAsString()
+        {
+            char valueArrayCopy[sizeOfValueFieldInDataRecord];
+            
+            memcpy ( valueArrayCopy, value, sizeOfValueFieldInDataRecord );
+            std::string val (valueArrayCopy);
+            std::cout<<"getValueAsString : "<<val<<std::endl;
+            assert(value!=NULL);
+            return val;
 
         }
         std::string toString()
         {
             std::string recordStr(key);
             recordStr.append(";");
-            recordStr.append(value);
+            if(value==NULL)
+            {
+                recordStr.append("NULL");
+            }
+            else
+            {
+                recordStr.append(value);
+            }
 //            recordStr.append("offsetOfNextDataRecordMetaData : ");
 //            recordStr.append(PoconoFileSystem::toStr(offsetOfNextDataRecordMetaData));
 //            
 //            recordStr.append("offsetOfPreviousDataRecordMetaData : ");
 //            recordStr.append(PoconoFileSystem::toStr(offsetOfPreviousDataRecordMetaData));
             
-            recordStr.append("offsetOfDataRecord : ");
+            recordStr.append(" ,offsetOfDataRecord : ");
             recordStr.append(PoconoFileSystem::toStr(offsetOfDataRecord));
             
-            recordStr.append("sizeOfValueFieldInDataRecord : ");
+            recordStr.append(" ,sizeOfValueFieldInDataRecord : ");
             recordStr.append(PoconoFileSystem::toStr(sizeOfValueFieldInDataRecord));
+           
+            recordStr.append(" ,offsetOfValueOfRecordInFile : ");
+            recordStr.append(PoconoFileSystem::toStr(offsetOfValueOfRecordInFile));
+           
            
 
             return recordStr;
         }
     };
-    
+   
     typedef std::shared_ptr<DataRecord> DataRecordPtr;
     
 }
