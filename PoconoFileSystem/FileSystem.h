@@ -178,18 +178,19 @@ namespace PoconoFileSystem {
             
             size_t offset = PoconoFileSystem::getEndOfFileDataBlockOffsetAsMultipleOfBlock(filename, BLOCK_SIZE);//this should be 0 or 1024
             
+            record->offsetOfDataRecord = offset; //record sits before after the meta data record
+            
+            insertDataRecord(collectionMetaData,record);//inser the real data in the data record before the inserting the meta data
+            size_t sizeOfDataRecordObject = sizeof(class DataRecord);
+
+            
+            
             DataRecordMetaDataPtr dataRecordMetaData(new DataRecordMeataData());
             dataRecordMetaData->sizeOfValueFieldInDataRecord  = record->sizeOfValueFieldInDataRecord;
-            dataRecordMetaData->offsetOfDataRecordMetaData = offset;
-            insertDataRecordMetaData(collectionMetaData,dataRecordMetaData);//insert the Meta Data about the record before inserting the record
-            //each collectionMetaData should have information about dataRecordMetaData
-            //each dataRecordMetaData should have information about dataRecord
+            dataRecordMetaData->offsetOfDataRecordMetaData = offset + sizeOfDataRecordObject;//this is done because value is written before the data record object
+            insertDataRecordMetaData(collectionMetaData,dataRecordMetaData);//insert the Meta Data about the record after inserting the record
             
             
-            size_t sizeOfClass = sizeof(class DataRecordMeataData);
-            record->offsetOfDataRecord =sizeOfClass + offset; //record sits right after the meta data record
-
-            insertDataRecord(collectionMetaData,record);//inser the real data in the data record after the inserting the meta data
             
             
         }

@@ -29,7 +29,7 @@ namespace PoconoFileSystem {
         //we need this , because the value part of the data is variable sized.
         bool dataRecordRemovedFlag;//this flag is set to true when data is deleted;
 
-        offsetType sizeOfValueFieldInDataRecord; 
+        offsetType sizeOfValueFieldInDataRecord;
         char  key [MAX_KEY_SIZE];
         char*  value;
         

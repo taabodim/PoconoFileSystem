@@ -121,14 +121,14 @@ namespace PoconoFileSystem {
         
         assert(ptr_myfile);
         assert(record->offsetOfDataRecord>-1);
-        fseek ( ptr_myfile , record->offsetOfDataRecord , SEEK_SET );
+        fseek ( ptr_myfile , record->offsetOfDataRecord, SEEK_SET );
         std::string valueAsStr = record->getValueAsString();
         fwrite(valueAsStr.c_str(), record->sizeOfValueFieldInDataRecord, 1, ptr_myfile);
         fflush(ptr_myfile);
         
         fclose(ptr_myfile);
         std::cout<<" wrote this DataRecord to file at offset "<<record->offsetOfDataRecord<<" , "<<record->toString()<<std::endl;
-        return (record->offsetOfDataRecord + record->sizeOfValueFieldInDataRecord);  
+        return record->offsetOfDataRecord;  
     }
     
     void  FileWriter::writeDataRecordAtOffset (std::shared_ptr<DataRecord> record) {

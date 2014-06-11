@@ -46,7 +46,7 @@ namespace PoconoFileSystem {
         fseek ( ptr_myfile , offset , SEEK_SET );
         CollectionMetaDataPtr collMetadata ( new CollectionMetaData());
         fread(&(*collMetadata),sizeof(class CollectionMetaData),1,ptr_myfile);
-        std::cout<<"At offset "<<offset<<",this collMetadata was read from file "<<collMetadata->toString()<<std::endl;
+        std::cout<<"At offset "<<offset<<" with size of "<<sizeof(class CollectionMetaData)<<",this collMetadata was read from file "<<collMetadata->toString()<<std::endl;
 
         fclose(ptr_myfile);
         return collMetadata;
@@ -68,7 +68,7 @@ namespace PoconoFileSystem {
         assert(record->offsetOfDataRecord!=-1);
         assert(record->sizeOfValueFieldInDataRecord!= -1);
         assert(record->offsetOfCollection!= -1);
-         std::cout<<"At offset "<<offset<<",this record was read from file "<<record->toString()<<std::endl;
+         std::cout<<"At offset "<<offset<<" with size of "<<sizeof(class DataRecord)<<",this record was read from file "<<record->toString()<<std::endl;
 
         fclose(ptr_myfile);
         return record;
@@ -86,7 +86,7 @@ namespace PoconoFileSystem {
         fseek ( ptr_myfile , offset , SEEK_SET );
         DataRecordMetaDataPtr record ( new DataRecordMeataData());
         fread(&(*record),sizeof(class DataRecordMeataData),1,ptr_myfile);
-         std::cout<<"At offset "<<offset<<",this record meta data was read from file "<<record->toString()<<std::endl;
+        std::cout<<"At offset "<<offset<<" with size of "<<sizeof(class DataRecordMeataData)<<",this record meta data was read from file "<<record->toString()<<std::endl;
        
         fclose(ptr_myfile);
         return record;
@@ -103,7 +103,7 @@ namespace PoconoFileSystem {
         fseek ( ptr_myfile , offset , SEEK_SET );
         std::string valueReadFromFile;
         fread(&(valueReadFromFile),sizeOfValueFieldInDataRecord,1,ptr_myfile);
-         std::cout<<"At offset "<<offset<<",this value was read from file "<<valueReadFromFile<<std::endl;
+         std::cout<<"At offset "<<offset<<" with size of "<<sizeOfValueFieldInDataRecord<<",this value was read from file "<<valueReadFromFile<<std::endl;
        
         assert(!valueReadFromFile.empty());
         fclose(ptr_myfile);

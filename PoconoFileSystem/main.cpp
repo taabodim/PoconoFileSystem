@@ -10,6 +10,8 @@
 #include "FileSystemTest.h"
 #include "DataRecord.h"
 #include "Configs.h"
+#include "Utils.h"
+
 using namespace PoconoFileSystem;
 
 std::string PoconoFileSystem::Configs::dataDir("/Users/mtaabodi/Documents/pico_data/");
@@ -121,8 +123,12 @@ int main(int argc, const char * argv[])
         Configs::dataDir.clear();
         Configs::dataDir.append("/Users/mahmoudtaabodi/Documents/pico_data/");
         
-        
     }
+//    std::string dataFilename(Configs::dataDir);
+//    dataFilename.append("test.dat");
+
+    //truncateTheFile(dataFilename);
+        
     testWritingAndReadingOneSmallValueInOneCollection();//stage 1
     //testWritingAndReadingSmallValuesInOneCollection();
     //testWritingAndReadingSmallValuesInThreeCollections();

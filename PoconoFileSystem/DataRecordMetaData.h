@@ -42,6 +42,9 @@ namespace PoconoFileSystem {
  			offsetOfDataRecord = -1;
  			sizeOfValueFieldInDataRecord = -1;
  			offsetOfCollection = -1;
+            offsetOfNextDataRecordMetaData = -1;
+            offsetOfPreviousDataRecordMetaData = -1;
+
 
  		}
  		 std::string toString()
