@@ -24,6 +24,11 @@ namespace PoconoFileSystem {
         CollectionMetaData() //for reading the CollectionMetaData
         //info from file
         {
+            for(int i=0;i<LIMIT_OF_COLLECTION_SIZE;i++)
+                
+            {
+                nameOfCollection [i] = '\0';
+            }
             this->offsetOfFirstDataRecordMetaData=-1;
             this->offsetOfLastDataRecordMetaData=-1;
             this->offsetOfCollectionMetaDataInFile=-1;
@@ -55,7 +60,13 @@ namespace PoconoFileSystem {
         }
         std::string  getNameOfCollectionAsString()
         {
-            std::string  nameOfCollectionStr(nameOfCollection);
+            std::string  nameOfCollectionStr;
+            
+                for(int i=0;i<32;i++)
+                
+                {
+                   nameOfCollectionStr.push_back( nameOfCollection [i]);
+                }
             return nameOfCollectionStr;
             
         
@@ -74,7 +85,8 @@ namespace PoconoFileSystem {
         
         std::string toString()
         {
-            std::string recordStr(getNameOfCollectionAsString());
+            std::string recordStr;
+            recordStr.append(getNameOfCollectionAsString());
             recordStr.append(";");
             recordStr.append("offsetOfFirstDataRecord : ");
             recordStr.append(PoconoFileSystem::toStr(offsetOfFirstDataRecordMetaData));

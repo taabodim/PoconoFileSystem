@@ -42,12 +42,13 @@ void testWritingAndReadingSmallValuesInOneCollection()
 }
 void testWritingAndReadingOneSmallValueInOneCollection() {
     FileSystemTest testFS;
-    CollectionMetaDataPtr collection =testFS.openCollection("testCollection");
+    std::string nameOfCollection("testCollection");
+    CollectionMetaDataPtr collection =testFS.openCollection(nameOfCollection);
     
-    int num = 1;
-    for(int i=0;i<num;i++)
+    int num = 0;
+    for(int i=0;i<1;i++)
     {
-        DataRecordPtr record(new DataRecord("smallKey","smallValue"));
+        DataRecordPtr record(new DataRecord("smallKey","smallValue***************************************************************************************EhdOfValue"));
         testFS.insertData(collection, record);
     }
     
@@ -87,7 +88,7 @@ void testWritingAndReadingSmallValuesInThreeCollections()
         key.append(toStr(i));
         key.append(allCollections[j]->getNameOfCollectionAsString());
         
-        std::string value("smallValue");
+        std::string value("smallValue***************************************************************************************EhdOfValue");
         value.append(toStr(i));
         value.append(allCollections[j]->getNameOfCollectionAsString());
         

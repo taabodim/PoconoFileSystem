@@ -29,11 +29,11 @@ namespace PoconoFileSystem {
                 PoconoFileSystem::openFileIfItDoesntExist(filename);
             }
         }
-        void writeDataRecordAtOffset(std::shared_ptr<DataRecord> record);
+        void writeDataRecordAtOffset(std::shared_ptr<DataRecord> record,offsetType offsetOfDataRecord);
         void writeCollectionMetaData(CollectionMetaDataPtr collectionMetaDataPtr,size_t offsetOfCollectionIndex);
         void writeCollectionMetaData(CollectionMetaDataPtr collectionMetaDataPtr);
         void writeDataRecordMetaData(DataRecordMetaDataPtr dataRecordMetaDataPtr);
-        offsetType writeTheValueOfRecord(DataRecordPtr dataRecordMetaDataPtr);
+        void writeTheValueOfRecord(DataRecordPtr record,offsetType offsetOfValueOfRecordInFile);
      };
     typedef std::shared_ptr<FileWriter> FileWriterPtr;
     
@@ -110,7 +110,7 @@ namespace PoconoFileSystem {
         
         
     }
-    offsetType FileWriter::writeTheValueOfRecord(DataRecordPtr record){
+    void FileWriter::writeTheValueOfRecord(DataRecordPtr record,offsetType offsetOfValueOfRecordInFile){
         FILE *ptr_myfile;
         ptr_myfile=fopen(filename.c_str(),"r+b");
         if (!ptr_myfile)
@@ -120,18 +120,18 @@ namespace PoconoFileSystem {
         }
         
         assert(ptr_myfile);
-        assert(record->offsetOfDataRecord>-1);
-        fseek ( ptr_myfile , record->offsetOfDataRecord, SEEK_SET );
+        //assert(record->offsetOfDataRecord>-1);
+        fseek ( ptr_myfile , offsetOfValueOfRecordInFile, SEEK_SET );
         std::string valueAsStr = record->getValueAsString();
-        fwrite(valueAsStr.c_str(), record->sizeOfValueFieldInDataRecord, 1, ptr_myfile);
+        fwrite(valueAsStr.c_str(), valueAsStr.size(), 1, ptr_myfile);
         fflush(ptr_myfile);
         
         fclose(ptr_myfile);
-        std::cout<<" wrote this DataRecord to file at offset "<<record->offsetOfDataRecord<<" , "<<record->toString()<<std::endl;
-        return record->offsetOfDataRecord;  
+        std::cout<<" wrote this value of data record at offset "<<offsetOfValueOfRecordInFile<<std::endl;
+        
     }
-    
-    void  FileWriter::writeDataRecordAtOffset (std::shared_ptr<DataRecord> record) {
+   
+    void  FileWriter::writeDataRecordAtOffset (std::shared_ptr<DataRecord> record,offsetType offsetOfDataRecord) {
         
         FILE *ptr_myfile;
 //        struct recordInDatabase my_record;
@@ -146,12 +146,12 @@ namespace PoconoFileSystem {
         }
         
         assert(ptr_myfile);
-        assert(record->offsetOfDataRecord>-1);
-        fseek ( ptr_myfile , record->offsetOfDataRecord , SEEK_SET );
+        //assert(record->offsetOfDataRecord>-1);
+        fseek ( ptr_myfile , offsetOfDataRecord , SEEK_SET );
         fwrite(&(*record), sizeof(class DataRecord), 1, ptr_myfile);
         fflush(ptr_myfile);
         fclose(ptr_myfile);
-        std::cout<<" wrote this DataRecord to file at offset "<<record->offsetOfDataRecord<<" , "<<record->toString()<<std::endl;
+        std::cout<<" wrote this DataRecord to file at offset "<<offsetOfDataRecord<<" , "<<record->toString()<<std::endl;
     }
 }
 

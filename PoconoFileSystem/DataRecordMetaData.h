@@ -29,7 +29,8 @@ namespace PoconoFileSystem {
  		
  		public : 
  		offsetType offsetOfDataRecord; //this is the offset of data record that this meta data points to
- 		offsetType sizeOfValueFieldInDataRecord; //this is the value that 
+        offsetType offsetOfValueOfRecordInFile;
+ 		offsetType sizeOfClassToContainDataRecord; //this is the value that 
  		//is passed to the constructor of the DataRecord class to 
  		//create the right size DataRecord object and read all the info 
  		offsetType offsetOfDataRecordMetaData;//this is where this class sits in filesystem
@@ -40,11 +41,11 @@ namespace PoconoFileSystem {
  		{
  			offsetOfDataRecordMetaData = -1;
  			offsetOfDataRecord = -1;
- 			sizeOfValueFieldInDataRecord = -1;
+ 			sizeOfClassToContainDataRecord = -1;
  			offsetOfCollection = -1;
             offsetOfNextDataRecordMetaData = -1;
             offsetOfPreviousDataRecordMetaData = -1;
-
+            offsetOfValueOfRecordInFile = -1;
 
  		}
  		 std::string toString()
@@ -69,12 +70,16 @@ namespace PoconoFileSystem {
             recordStr.append(" ,offsetOfDataRecord : ");
             recordStr.append(PoconoFileSystem::toStr(offsetOfDataRecord));
             
-            recordStr.append(" ,sizeOfValueFieldInDataRecord : ");
-            recordStr.append(PoconoFileSystem::toStr(sizeOfValueFieldInDataRecord));
+            recordStr.append(" ,sizeOfClassToContainDataRecord : ");
+            recordStr.append(PoconoFileSystem::toStr(sizeOfClassToContainDataRecord));
            
            recordStr.append(" ,offsetOfCollection : ");
            recordStr.append(PoconoFileSystem::toStr(offsetOfCollection));
-
+            
+            recordStr.append(" ,offsetOfValueOfRecordInFile : ");
+            recordStr.append(PoconoFileSystem::toStr(offsetOfValueOfRecordInFile));
+            
+            
            recordStr.append("}");
            
             return recordStr;

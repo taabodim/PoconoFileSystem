@@ -24,7 +24,7 @@ namespace PoconoFileSystem {
         //data record belongs to.
         // offsetType offsetOfNextDataRecordMetaData;//this points to the next DataRecordMetaData that points to the next DataRecord
         // offsetType offsetOfPreviousDataRecordMetaData;//this points to the prev DataRecordMetaData that points to the previous DataRecord
-        offsetType offsetOfDataRecord;//this points to the offset of this data record
+        //offsetType offsetOfDataRecord;//this points to the offset of this data record
         offsetType offsetOfValueOfRecordInFile; //this points to where the the value field of record is .
         //we need this , because the value part of the data is variable sized.
         bool dataRecordRemovedFlag;//this flag is set to true when data is deleted;
@@ -37,17 +37,15 @@ namespace PoconoFileSystem {
         {//for reading the data into array, init the arrays later
             // offsetOfNextDataRecordMetaData = -1;
             // offsetOfPreviousDataRecordMetaData = -1;
-            offsetOfDataRecord = -1;
-            sizeOfValueFieldInDataRecord = -1;
+           // offsetOfDataRecord = -1;
+            //sizeOfValueFieldInDataRecord = -1;
             offsetOfCollection = -1;
             
         }
         DataRecord(std::string keyStr,std::string valueStr)
         {
             const char* keyPtr = keyStr.c_str();
-            const char* valuePtr = valueStr.c_str();
-            value = new char[valueStr.size()];
-
+           
             for(int i=0;i<keyStr.size();i++)
                 
             {
@@ -59,6 +57,18 @@ namespace PoconoFileSystem {
                 key[i] = '\0';
             }
             
+            setValue(valueStr);
+            //offsetOfDataRecord = -1;
+            offsetOfCollection = -1;
+
+            
+           // assert(offsetOfDataRecord==-1);
+
+        }
+        void setValue(std::string valueStr)
+        {
+             const char* valuePtr = valueStr.c_str();
+            value = new char[valueStr.size()];
             for(int i=0;i<valueStr.size();i++)
                 
             {
@@ -66,12 +76,7 @@ namespace PoconoFileSystem {
                 ++valuePtr;
             }
             sizeOfValueFieldInDataRecord = valueStr.size();
-            
-            offsetOfDataRecord = -1;
-            offsetOfCollection = -1;
-
             assert(sizeOfValueFieldInDataRecord== valueStr.size());
-            assert(offsetOfDataRecord==-1);
 
         }
         std::string getValueAsString()
@@ -79,7 +84,7 @@ namespace PoconoFileSystem {
             char valueArrayCopy[sizeOfValueFieldInDataRecord];
             
             memcpy ( valueArrayCopy, value, sizeOfValueFieldInDataRecord );
-            std::string val (valueArrayCopy);
+            std::string val (valueArrayCopy,sizeOfValueFieldInDataRecord);
             std::cout<<"getValueAsString : "<<val<<std::endl;
             assert(value!=NULL);
             return val;
@@ -103,15 +108,15 @@ namespace PoconoFileSystem {
 //            recordStr.append("offsetOfPreviousDataRecordMetaData : ");
 //            recordStr.append(PoconoFileSystem::toStr(offsetOfPreviousDataRecordMetaData));
             
-            recordStr.append(" ,offsetOfDataRecord : ");
-            recordStr.append(PoconoFileSystem::toStr(offsetOfDataRecord));
+           // recordStr.append(" ,offsetOfDataRecord : ");
+           // recordStr.append(PoconoFileSystem::toStr(offsetOfDataRecord));
             
             recordStr.append(" ,sizeOfValueFieldInDataRecord : ");
             recordStr.append(PoconoFileSystem::toStr(sizeOfValueFieldInDataRecord));
            
             recordStr.append(" ,offsetOfValueOfRecordInFile : ");
             recordStr.append(PoconoFileSystem::toStr(offsetOfValueOfRecordInFile));
-           
+//           
            
 
             return recordStr;

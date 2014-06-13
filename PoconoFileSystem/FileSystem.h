@@ -134,13 +134,12 @@ namespace PoconoFileSystem {
             }
             dataRecordMetaDataPtr->offsetOfNextDataRecordMetaData = -1;
             dataRecordMetaDataPtr->offsetOfCollection = collectionMetaData->offsetOfCollectionMetaDataInFile;
-            appendThisRecordMetaData(dataRecordMetaDataPtr);
-            fileWriter->writeCollectionMetaData(collectionMetaData);
             fileWriter->writeDataRecordMetaData(dataRecordMetaDataPtr);
-
-
+            fileWriter->writeCollectionMetaData(collectionMetaData);
+           
         }
-        void insertDataRecord(CollectionMetaDataPtr collectionMetaData,DataRecordPtr record)
+        void insertDataRecord(CollectionMetaDataPtr collectionMetaData,
+                              DataRecordMetaDataPtr dataRecordMetaData, DataRecordPtr record,offsetType offsetOfDataRecord)
         {
 
                         
@@ -148,23 +147,19 @@ namespace PoconoFileSystem {
                        if(lastdataRecordMetaDataOfCollection)
                 
             {
-                lastdataRecordMetaDataOfCollection->offsetOfDataRecord = record->offsetOfDataRecord;//make the last record
+                lastdataRecordMetaDataOfCollection->offsetOfDataRecord = offsetOfDataRecord;//make the last record
                 //meta data point to the next data record
                 updateThisDataRecordMetaData(lastdataRecordMetaDataOfCollection);//update the last record meta data
             }
             else {
             
             }
-            appendThisRecord(record);
+            insertThisRecordAndItsValue(dataRecordMetaData,record,offsetOfDataRecord);
             fileWriter->writeCollectionMetaData(collectionMetaData);
             
 
         }
-        void appendThisRecordMetaData(DataRecordMetaDataPtr dataRecordMetaDataPtr)
-        {
-            fileWriter->writeDataRecordMetaData(dataRecordMetaDataPtr);
-
-        }
+     
         void insertData( CollectionMetaDataPtr collectionMetaData,DataRecordPtr record)
         {
             //1.read the end of DataBlock  offset
@@ -176,18 +171,18 @@ namespace PoconoFileSystem {
             //4.add the offset as the ofssetOfLastDataRecordInCollection
             //5.add the offset of collectionMetaData to the offsetOfCollection in DataRecord
             
-            size_t offset = PoconoFileSystem::getEndOfFileDataBlockOffsetAsMultipleOfBlock(filename, BLOCK_SIZE);//this should be 0 or 1024
+            size_t offsetOfDataRecord = PoconoFileSystem::getEndOfFileDataBlockOffsetAsMultipleOfBlock(filename, BLOCK_SIZE);//this should be 0 or 1024
             
-            record->offsetOfDataRecord = offset; //record sits before after the meta data record
-            
-            insertDataRecord(collectionMetaData,record);//inser the real data in the data record before the inserting the meta data
+            DataRecordMetaDataPtr dataRecordMetaData(new DataRecordMeataData());
+            record->offsetOfCollection = collectionMetaData->offsetOfCollectionMetaDataInFile;
+            insertDataRecord(collectionMetaData,dataRecordMetaData,record,offsetOfDataRecord);//inser the real data in the data record before the inserting the meta data
             size_t sizeOfDataRecordObject = sizeof(class DataRecord);
 
             
             
-            DataRecordMetaDataPtr dataRecordMetaData(new DataRecordMeataData());
-            dataRecordMetaData->sizeOfValueFieldInDataRecord  = record->sizeOfValueFieldInDataRecord;
-            dataRecordMetaData->offsetOfDataRecordMetaData = offset + sizeOfDataRecordObject;//this is done because value is written before the data record object
+           
+            dataRecordMetaData->offsetOfDataRecord = offsetOfDataRecord;
+            dataRecordMetaData->offsetOfDataRecordMetaData = offsetOfDataRecord + sizeOfDataRecordObject;//this is done because value is written before the data record object
             insertDataRecordMetaData(collectionMetaData,dataRecordMetaData);//insert the Meta Data about the record after inserting the record
             
             
@@ -203,8 +198,11 @@ namespace PoconoFileSystem {
             //2. get the first data record and append to the list
             DataRecordMetaDataPtr firstDataMetaDataPtr = fileReader->readDataRecordMetaDataFromFile(collection->offsetOfFirstDataRecordMetaData);
             
-            DataRecordPtr firstDataPtr = fileReader->readDataRecordFromFile(firstDataMetaDataPtr->offsetOfDataRecord);
+            DataRecordPtr firstDataPtr = fileReader->readDataRecordFromFile(firstDataMetaDataPtr->offsetOfDataRecord,firstDataMetaDataPtr->sizeOfClassToContainDataRecord);
+            
             std::string valueOfDataRecord = fileReader->readTheValueOfDataRecord(firstDataPtr->offsetOfValueOfRecordInFile,firstDataPtr->sizeOfValueFieldInDataRecord);
+            firstDataPtr->setValue(valueOfDataRecord);
+            
             assert(!valueOfDataRecord.empty());
             
 
@@ -213,9 +211,11 @@ namespace PoconoFileSystem {
             DataRecordMetaDataPtr nextDataRecordMetaDataPtr = firstDataMetaDataPtr;
             while(nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData!=-1)
             {
-                DataRecordPtr dataPtr = fileReader->readDataRecordFromFile(nextDataRecordMetaDataPtr->offsetOfDataRecord);
-                
+                DataRecordPtr dataPtr = fileReader->readDataRecordFromFile(nextDataRecordMetaDataPtr->offsetOfDataRecord,nextDataRecordMetaDataPtr->sizeOfClassToContainDataRecord);
+                std::string valueOfDataRecord = fileReader->readTheValueOfDataRecord(dataPtr->offsetOfValueOfRecordInFile,dataPtr->sizeOfValueFieldInDataRecord);
+            
                 std::cout<<" pushing back data dataPtr->offsetOfNextDataRecordMetaData : "<<nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData<<std::endl;
+                dataPtr->setValue(valueOfDataRecord);
                 allData->push_back(dataPtr);
                 
                 nextDataRecordMetaDataPtr =fileReader->readDataRecordMetaDataFromFile(nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData);
@@ -227,17 +227,25 @@ namespace PoconoFileSystem {
             
             
         }
-        void appendThisRecord(DataRecordPtr record)
+        void insertThisRecordAndItsValue(DataRecordMetaDataPtr dataRecordMetaData,DataRecordPtr record,offsetType offsetOfDataRecord)
         {
-            offsetType offsetOfValueOfRecordInFile = fileWriter->writeTheValueOfRecord(record);
+            offsetType offsetOfValueOfRecordInFile = PoconoFileSystem::getEndOfFileDataBlockOffsetAsMultipleOfBlock(filename, BLOCK_SIZE);
             record->offsetOfValueOfRecordInFile = offsetOfValueOfRecordInFile;
-            record->offsetOfDataRecord = offsetOfValueOfRecordInFile;
-            fileWriter->writeDataRecordAtOffset(record);
+            dataRecordMetaData->offsetOfValueOfRecordInFile = offsetOfValueOfRecordInFile;
+            fileWriter->writeTheValueOfRecord(record,offsetOfValueOfRecordInFile);
+            std::string valueExpected = record->getValueAsString();
+
+            assert(fileReader->readTheValueOfDataRecord(offsetOfValueOfRecordInFile,record->sizeOfValueFieldInDataRecord).compare(valueExpected)==0);
+            
+            record->offsetOfValueOfRecordInFile = offsetOfValueOfRecordInFile;
+            fileWriter->writeDataRecordAtOffset(record,offsetOfDataRecord);
+            //assert(fileReader->readDataRecordFromFile(offsetOfDataRecord,record->sizeOfClassToContainDataRecord).compare(record->getValueAsString())==0);
+            
         }
 
-        void updateThisRecord(DataRecordPtr record)
+        void updateThisRecord(DataRecordPtr record,offsetType offsetOfDataRecord)
         {
-            fileWriter->writeDataRecordAtOffset(record);
+            fileWriter->writeDataRecordAtOffset(record,offsetOfDataRecord);
             
         }
         void updateThisDataRecordMetaData(DataRecordMetaDataPtr record)
@@ -248,22 +256,22 @@ namespace PoconoFileSystem {
 
         
         
-        DataRecordPtr getFirstRecordOfCollection(CollectionMetaDataPtr collection)
-        {
-            DataRecordPtr nullPtr;
-            if(collection->offsetOfFirstDataRecordMetaData==-1) return nullPtr;
-            else
-           return fileReader->readDataRecordFromFile(collection->offsetOfFirstDataRecordMetaData);
-        
-        }
-        DataRecordPtr getLastRecordOfCollection(CollectionMetaDataPtr collection)
-        {
-            DataRecordPtr nullPtr;
-            if(collection->offsetOfLastDataRecordMetaData==-1) return nullPtr;
-            else
-                return fileReader->readDataRecordFromFile(collection->offsetOfLastDataRecordMetaData);
-            
-        }
+//        DataRecordPtr getFirstRecordOfCollection(CollectionMetaDataPtr collection)
+//        {
+//            DataRecordPtr nullPtr;
+//            if(collection->offsetOfFirstDataRecordMetaData==-1) return nullPtr;
+//            else
+//           return fileReader->readDataRecordFromFile(collection->offsetOfFirstDataRecordMetaData);
+//        
+//        }
+//        DataRecordPtr getLastRecordOfCollection(CollectionMetaDataPtr collection)
+//        {
+//            DataRecordPtr nullPtr;
+//            if(collection->offsetOfLastDataRecordMetaData==-1) return nullPtr;
+//            else
+//                return fileReader->readDataRecordFromFile(collection->offsetOfLastDataRecordMetaData);
+//            
+//        }
         
         DataRecordMetaDataPtr getLastDataRecordMetaDataOfCollection(CollectionMetaDataPtr collection)
         {
