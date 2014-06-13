@@ -15,8 +15,11 @@
 #include <cassert>
 #include "PoconoConfig.h"
 #include "DataRecordMetaData.h"
+#include "LoggerWrapper.h"
+
 namespace PoconoFileSystem {
-    class FileReader {
+    
+    class FileReader : public loggerWrapper{
         std::string filename;
         public :
         FileReader(std::string fileName) : filename(fileName)
@@ -46,7 +49,9 @@ namespace PoconoFileSystem {
         fseek ( ptr_myfile , offset , SEEK_SET );
         CollectionMetaDataPtr collMetadata ( new CollectionMetaData());
         fread(&(*collMetadata),sizeof(class CollectionMetaData),1,ptr_myfile);
-        std::cout<<"At offset "<<offset<<" with size of "<<sizeof(class CollectionMetaData)<<",this collMetadata was read from file "<<collMetadata->toString()<<std::endl;
+        dbLogger->log("logging test");
+//        
+//        std::cout<<"At offset "<<offset<<" with size of "<<sizeof(class CollectionMetaData)<<",this collMetadata was read from file "<<collMetadata->toString()<<std::endl;
 
         fclose(ptr_myfile);
         return collMetadata;

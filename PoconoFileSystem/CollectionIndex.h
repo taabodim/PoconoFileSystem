@@ -63,9 +63,11 @@ namespace PoconoFileSystem {
             std::string  nameOfCollectionStr;
             
                 for(int i=0;i<32;i++)
-                
                 {
-                   nameOfCollectionStr.push_back( nameOfCollection [i]);
+                    if(nameOfCollection [i]!='\0')
+                    {
+                      nameOfCollectionStr.push_back(nameOfCollection [i]);
+                    }
                 }
             return nameOfCollectionStr;
             
@@ -86,12 +88,13 @@ namespace PoconoFileSystem {
         std::string toString()
         {
             std::string recordStr;
+            recordStr.resize(200);
             recordStr.append(getNameOfCollectionAsString());
             recordStr.append(";");
-            recordStr.append("offsetOfFirstDataRecord : ");
+            recordStr.append(toStr("offsetOfFirstDataRecord : "));
             recordStr.append(PoconoFileSystem::toStr(offsetOfFirstDataRecordMetaData));
             
-            recordStr.append("offsetOfLastDataRecord : ");
+            recordStr.append(toStr("offsetOfLastDataRecord : "));
             recordStr.append(PoconoFileSystem::toStr(offsetOfLastDataRecordMetaData));
             
             return recordStr;

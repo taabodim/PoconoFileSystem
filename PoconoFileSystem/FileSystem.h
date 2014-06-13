@@ -32,7 +32,9 @@ namespace PoconoFileSystem {
         fileWriter(new FileWriter(filename))
         {
             filename = PoconoFileSystem::getFullCollectionName(filename);
+            openFileIfItDoesntExist(filename);
         //read all the collectionOffsets from the file , and load the collectionMap
+            
             loadAllCollectionMap();
             
         }
