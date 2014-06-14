@@ -26,6 +26,7 @@
 
 /* Begin PBXFileReference section */
 		A53270ED194CFEFE00530E5B /* FileSystemAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileSystemAPI.h; sourceTree = "<group>"; };
+		A53270EE194D014700530E5B /* CollectionMetaData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollectionMetaData.h; sourceTree = "<group>"; };
 		A5D9A14E1942AE9C000F1170 /* PoconoConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PoconoConfig.h; sourceTree = "<group>"; };
 		A5D9A14F1942AF22000F1170 /* Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		A5D9A1501942AF99000F1170 /* Configs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Configs.h; sourceTree = "<group>"; };
@@ -92,6 +93,7 @@
 				E2649624194BA94300638312 /* Logger.h */,
 				E2649625194BADFF00638312 /* LoggerWrapper.h */,
 				A53270ED194CFEFE00530E5B /* FileSystemAPI.h */,
+				A53270EE194D014700530E5B /* CollectionMetaData.h */,
 			);
 			path = PoconoFileSystem;
 			sourceTree = "<group>";

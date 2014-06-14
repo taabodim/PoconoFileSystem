@@ -100,6 +100,18 @@ namespace PoconoFileSystem {
             assert(sizeOfValueFieldInDataRecord== length);
 
         }
+        
+        std::string getKeyAsString()
+        {
+        
+            char keyArrayCopy[MAX_KEY_SIZE];
+            
+            memcpy ( keyArrayCopy, key, MAX_KEY_SIZE );
+            std::string keyStr (key,MAX_KEY_SIZE);
+            std::cout<<"keyStr : "<<keyStr<<std::endl;
+            return keyStr;
+        }
+        
         std::string getValueAsString()
         {
             char valueArrayCopy[sizeOfValueFieldInDataRecord];

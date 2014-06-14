@@ -25,7 +25,7 @@ void testWritingAndReadingSmallValuesInOneCollection()
 {
     
     
-    FileSystemTest testFS;
+    FileSystemAPI testFS;
     CollectionMetaDataPtr collection =testFS.openCollection("testCollection");
     
     int num = 10;
@@ -43,7 +43,7 @@ void testWritingAndReadingSmallValuesInOneCollection()
     }
 }
 void testWritingAndReadingOneSmallValueInOneCollection() {
-    FileSystemTest testFS;
+    FileSystemAPI testFS;
     std::string nameOfCollection("testCollection");
     CollectionMetaDataPtr collection =testFS.openCollection(nameOfCollection);
     
@@ -66,7 +66,7 @@ void testWritingAndReadingSmallValuesInThreeCollections()
 {
     
     
-    FileSystemTest testFS;
+    FileSystemAPI testFS;
     int numOfCollectionsInTest =3;
     
 //    for(int col = 0 ; col<numOfCollectionsInTest;col++)
@@ -116,14 +116,14 @@ void testWritingAndReadingSmallValuesInThreeCollections()
 }
 
 void testWritingTenDataRecordAndFindingOne() {
-    FileSystemTest testFS;
+    FileSystemAPI testFS;
     std::string nameOfCollection("testCollection");
     CollectionMetaDataPtr collection =testFS.openCollection(nameOfCollection);
     
-    
+      std::string key("smallKey");
     for(int i=0;i<10;i++)
     {
-        std::string key("smallKey");
+      
         key.append(toStr(i));
 
         DataRecordPtr record(new DataRecord(key,"smallValue***************************************************************************************EhdOfValue"));
@@ -131,13 +131,9 @@ void testWritingTenDataRecordAndFindingOne() {
     }
     //find the one with key : smallKey8
     
-    testFS.
-    std::shared_ptr<std::list<DataRecordPtr>> allData = testFS.getAllData(collection);
-    for(std::list<DataRecordPtr>::iterator it = allData->begin();
-        it!=allData->end();++it)
-    {
-        std::cout<<"Data Record is "<<(*it)->toString()<<std::endl;
-    }
+    DataRecordPtr foundRecord = testFS.find(key);
+    assert(foundRecord->getKeyAsString().compare(key)==0);
+    std::cout<<"foundRecord Data Record is "<<(foundRecord)->toString()<<std::endl;
     
 
 }

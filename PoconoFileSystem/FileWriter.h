@@ -15,7 +15,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <cassert>
-#include "CollectionIndex.h"
+#include "CollectionMetaData.h"
 namespace PoconoFileSystem {
     class FileWriter {
         private :

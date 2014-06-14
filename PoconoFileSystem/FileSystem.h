@@ -10,7 +10,7 @@
 #define PoconoFileSystem_FileSystem_h
 #include "FileWriter.h"
 #include "FileReader.h"
-#include "CollectionIndex.h"
+#include "CollectionMetaData.h"
 #include <list>
 #include "SuperBlock.h"
 #include "Utils.h"
@@ -292,6 +292,12 @@ namespace PoconoFileSystem {
         void deleteCollection(std::string nameOfCollection){
         }
         
+        DataRecordPtr find(std::string key) {
+
+            
+            
+            return NULL;
+        }
         
         
         

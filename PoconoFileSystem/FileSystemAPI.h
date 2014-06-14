@@ -51,7 +51,9 @@ namespace PoconoFileSystem {
             
         }
         
-        
+        DataRecordPtr find(std::string key) {
+             return fs_.find(key);
+        }
         
         
     };
