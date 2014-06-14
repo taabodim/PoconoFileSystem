@@ -35,9 +35,10 @@ void testWritingAndReadingSmallValuesInOneCollection()
         testFS.insertData(collection, record);
     }
     
-    std::shared_ptr<std::list<DataRecordPtr>> allData = testFS.getAllData(collection);
-    for(std::list<DataRecordPtr>::iterator it = allData->begin();
-        it!=allData->end();++it)
+    std::list<DataRecordPtr> allData;
+     testFS.getAllData(allData,collection);
+    for(std::list<DataRecordPtr>::iterator it = allData.begin();
+        it!=allData.end();++it)
     {
         std::cout<<"Data Record is "<<(*it)->toString()<<std::endl;
     }
@@ -54,9 +55,10 @@ void testWritingAndReadingOneSmallValueInOneCollection() {
         testFS.insertData(collection, record);
     }
     
-    std::shared_ptr<std::list<DataRecordPtr>> allData = testFS.getAllData(collection);
-    for(std::list<DataRecordPtr>::iterator it = allData->begin();
-        it!=allData->end();++it)
+    std::list<DataRecordPtr> allData;
+    testFS.getAllData(allData,collection);
+    for(std::list<DataRecordPtr>::iterator it = allData.begin();
+        it!=allData.end();++it)
     {
         std::cout<<"Data Record is "<<(*it)->toString()<<std::endl;
     }
@@ -103,9 +105,10 @@ void testWritingAndReadingSmallValuesInThreeCollections()
     {
         std::cout<<"data in the next collections *************"<<std::endl;
         
-    std::shared_ptr<std::list<DataRecordPtr>> allData = testFS.getAllData(allCollections[j]);
-    for(std::list<DataRecordPtr>::iterator it = allData->begin();
-        it!=allData->end();++it)
+        std::list<DataRecordPtr> allData;
+        testFS.getAllData(allData,allCollections[j]);
+    for(std::list<DataRecordPtr>::iterator it = allData.begin();
+        it!=allData.end();++it)
     {
         std::cout<<"Data Record is "<<(*it)->toString()<<std::endl;
     }
@@ -131,7 +134,7 @@ void testWritingTenDataRecordAndFindingOne() {
     }
     //find the one with key : smallKey8
     
-    DataRecordPtr foundRecord = testFS.find(key);
+    DataRecordPtr foundRecord = testFS.find(nameOfCollection,key);
     assert(foundRecord->getKeyAsString().compare(key)==0);
     std::cout<<"foundRecord Data Record is "<<(foundRecord)->toString()<<std::endl;
     
@@ -141,7 +144,7 @@ int main(int argc, const char * argv[])
 {
     // This is the PoconoFileSystem first commit
     bool homeSetting = true;
-   // setTheStackSize();
+    setTheStackSize();
     if(homeSetting)
     {
         Configs::logDir.clear();
@@ -156,7 +159,7 @@ int main(int argc, const char * argv[])
     //truncateTheFile(dataFilename);
         
    // testWritingAndReadingOneSmallValueInOneCollection();//stage 1
-    //testWritingTenDataRecordAndFindingOne();
+    testWritingTenDataRecordAndFindingOne();
     //testWritingAndReadingSmallValuesInOneCollection();
     //testWritingAndReadingSmallValuesInThreeCollections();
     return 0;

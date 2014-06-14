@@ -201,16 +201,13 @@ namespace PoconoFileSystem {
              fileWriter->writeCollectionMetaData(collectionMetaData,collectionMetaData->offsetOfCollectionMetaDataInFile);
             
         }
-        std::shared_ptr<std::list<DataRecordPtr>> getAllData(CollectionMetaDataPtr collectionArg)
+        void getAllData(std::list<DataRecordPtr>& allData, CollectionMetaDataPtr collectionArg)
         {
             //1.get the most updated version of collectionMetaData
             CollectionMetaDataRawPtr collection = new CollectionMetaData();
             
             fileReader->readCollectionMetaDataFromFile(collection,collectionArg->offsetOfCollectionMetaDataInFile);
             
-            
-            
-           std::shared_ptr<std::list<DataRecordPtr>> allData(new std::list<DataRecordPtr>());
             
             
             DataRecordMetaDataPtr firstDataMetaDataPtr = new DataRecordMeataData();
@@ -228,7 +225,7 @@ namespace PoconoFileSystem {
             
             
             assert(!valueOfDataRecord.empty());
-            allData->push_back(firstDataPtr);
+            allData.push_back(firstDataPtr);
     
             
             
@@ -244,17 +241,13 @@ namespace PoconoFileSystem {
                 
                 dataPtr->setValue(valueOfDataRecord,nextDataRecordMetaDataPtr->lengthOfValueField);
                 
-                allData->push_back(dataPtr);
+                allData.push_back(dataPtr);
                 
                 fileReader->readDataRecordMetaDataFromFile(nextDataRecordMetaDataPtr,nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData);
                 
                 
             }
             
-            return  allData;
-//            delete firstDataMetaDataPtr;
-            
-  //          return NULL;
         }
         
         DataRecordMetaDataPtr getLastDataRecordMetaDataOfCollection(CollectionMetaDataPtr collection)
@@ -292,9 +285,23 @@ namespace PoconoFileSystem {
         void deleteCollection(std::string nameOfCollection){
         }
         
-        DataRecordPtr find(std::string key) {
+        
+        
+        DataRecordPtr find(std::string nameOfCollection,std::string key) {
+            CollectionMetaDataPtr collectionPtr = openCollection(nameOfCollection);
+            std::list<DataRecordPtr> allData;
+            getAllData(allData,collectionPtr);
+            for(std::list<DataRecordPtr>::iterator it = allData.begin();
+                it!=allData.end();++it)
+            {
+                if((*it)->keyIsEqualTo(key))
+                {
+                    std::cout<<"find:  Data Record found for key "<<key<<" : "<<(*it)->toString()<<std::endl;
+                    
+                    return (*it);
+                 }
+            }
 
-            
             
             return NULL;
         }

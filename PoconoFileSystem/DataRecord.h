@@ -100,6 +100,13 @@ namespace PoconoFileSystem {
             assert(sizeOfValueFieldInDataRecord== length);
 
         }
+        bool keyIsEqualTo(std::string keyGiven)
+        {
+           if(this->getKeyAsString().compare(keyGiven)==0)
+               return true;
+            
+            return false;
+        }
         
         std::string getKeyAsString()
         {
