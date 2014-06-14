@@ -19,8 +19,29 @@ namespace PoconoFileSystem {
 	that contains the data record, the rest of information resides 
 	in DataRecord
 
-
+     
 	*/
+    
+    struct DataRecordMetaDataStruct{
+        offsetType offsetOfDataRecord; //this is the offset of data record that this meta data points to
+        offsetType offsetOfValueOfRecordInFile;
+        offsetType offsetOfDataRecordMetaData;//this is where this class sits in filesystem
+ 		offsetType offsetOfNextDataRecordMetaData;
+        offsetType offsetOfPreviousDataRecordMetaData;
+        offsetType offsetOfCollection;
+        offsetType lengthOfValueField;
+        DataRecordMetaDataStruct(){
+            offsetOfDataRecord = -1;
+            offsetOfValueOfRecordInFile = -1;
+            offsetOfDataRecordMetaData=-1;
+            offsetOfNextDataRecordMetaData=-1;
+            offsetOfPreviousDataRecordMetaData=-1;
+            offsetOfCollection=-1;
+            lengthOfValueField=-1;
+        }
+        
+        
+    };
     class DataRecordMeataData {
  	
 
@@ -30,9 +51,7 @@ namespace PoconoFileSystem {
  		public : 
  		offsetType offsetOfDataRecord; //this is the offset of data record that this meta data points to
         offsetType offsetOfValueOfRecordInFile;
- 		offsetType sizeOfClassToContainDataRecord; //this is the value that 
- 		//is passed to the constructor of the DataRecord class to 
- 		//create the right size DataRecord object and read all the info 
+        offsetType lengthOfValueField;
  		offsetType offsetOfDataRecordMetaData;//this is where this class sits in filesystem
  		offsetType offsetOfNextDataRecordMetaData;
         offsetType offsetOfPreviousDataRecordMetaData;
@@ -41,11 +60,11 @@ namespace PoconoFileSystem {
  		{
  			offsetOfDataRecordMetaData = -1;
  			offsetOfDataRecord = -1;
- 			sizeOfClassToContainDataRecord = -1;
  			offsetOfCollection = -1;
             offsetOfNextDataRecordMetaData = -1;
             offsetOfPreviousDataRecordMetaData = -1;
             offsetOfValueOfRecordInFile = -1;
+            lengthOfValueField=-1;
 
  		}
  		 std::string toString()
@@ -70,14 +89,15 @@ namespace PoconoFileSystem {
             recordStr.append(" ,offsetOfDataRecord : ");
             recordStr.append(PoconoFileSystem::toStr(offsetOfDataRecord));
             
-            recordStr.append(" ,sizeOfClassToContainDataRecord : ");
-            recordStr.append(PoconoFileSystem::toStr(sizeOfClassToContainDataRecord));
            
            recordStr.append(" ,offsetOfCollection : ");
            recordStr.append(PoconoFileSystem::toStr(offsetOfCollection));
             
             recordStr.append(" ,offsetOfValueOfRecordInFile : ");
             recordStr.append(PoconoFileSystem::toStr(offsetOfValueOfRecordInFile));
+            
+            recordStr.append(" ,lengthOfValueField : ");
+            recordStr.append(PoconoFileSystem::toStr(lengthOfValueField));
             
             
            recordStr.append("}");
@@ -86,7 +106,9 @@ namespace PoconoFileSystem {
         }
  	};
 
- 	typedef std::shared_ptr<DataRecordMeataData> DataRecordMetaDataPtr;
+// 	typedef std::shared_ptr<DataRecordMeataData> DataRecordMetaDataPtr;
+    typedef DataRecordMeataData* DataRecordMetaDataPtr;
+
 }
 
 #endif

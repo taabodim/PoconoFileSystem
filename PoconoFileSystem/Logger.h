@@ -39,7 +39,7 @@ public:
         append(toStr(boost::format("\nTime : %1%  %2%") % getTimeNowAsString() %str.c_str()));
     }
     logger(std::string filename){
-        string path(PoconoConfig::logDir);
+        string path(PoconoFileSystem::Configs::logDir);
 		std::string ext(".log");
 		path.append(filename);
         path.append(ext);

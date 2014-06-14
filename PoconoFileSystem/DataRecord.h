@@ -12,9 +12,29 @@
 #include <string.h>
 
 namespace PoconoFileSystem {
+    const static size_t MAX_KEY_SIZE = 32;
+    
+    struct DataRecordStruct{
+        offsetType  offsetOfCollection;
+        offsetType offsetOfValueOfRecordInFile; //this points to where the the value field of
+        bool dataRecordRemovedFlag;//this flag is set to true when data is deleted;
+        offsetType sizeOfValueFieldInDataRecord;
+        char  key [MAX_KEY_SIZE];
+        DataRecordStruct()
+        {
+            for(size_t i=0;i<MAX_KEY_SIZE;i++)
+            {
+                key[i] = '\0';
+            }
+            sizeOfValueFieldInDataRecord = -1;
+            
+            dataRecordRemovedFlag = false;
+            offsetOfValueOfRecordInFile = -1;
+            offsetOfCollection = -1;
+        }
+    };
     class DataRecord {
         private :
-        const static size_t MAX_KEY_SIZE = 32;
         // const static size_t MAX_VALUE_SIZE = 32;
         
         public :
@@ -57,7 +77,7 @@ namespace PoconoFileSystem {
                 key[i] = '\0';
             }
             
-            setValue(valueStr);
+            setValue(valueStr,valueStr.size());
             //offsetOfDataRecord = -1;
             offsetOfCollection = -1;
 
@@ -65,18 +85,19 @@ namespace PoconoFileSystem {
            // assert(offsetOfDataRecord==-1);
 
         }
-        void setValue(std::string valueStr)
+        void setValue(std::string valueStr,offsetType length)
         {
              const char* valuePtr = valueStr.c_str();
-            value = new char[valueStr.size()];
-            for(int i=0;i<valueStr.size();i++)
+            value = new char[length];
+            for(int i=0;i<length;i++)
                 
             {
                 value[i] = *valuePtr;
                 ++valuePtr;
             }
-            sizeOfValueFieldInDataRecord = valueStr.size();
-            assert(sizeOfValueFieldInDataRecord== valueStr.size());
+            value[length+1]='\0';
+            sizeOfValueFieldInDataRecord = length;
+            assert(sizeOfValueFieldInDataRecord== length);
 
         }
         std::string getValueAsString()

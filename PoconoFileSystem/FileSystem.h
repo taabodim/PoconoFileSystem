@@ -16,15 +16,16 @@
 #include "Utils.h"
 #include "DataRecordMetaData.h"
 namespace PoconoFileSystem {
-    class FileSystem {
+    class FileSystem : public loggerWrapper {
         private :
         std::string filename;
         FileReaderPtr fileReader;
         FileWriterPtr fileWriter;
-        std::list<CollectionMetaDataPtr> allCollectionsMap; //change this to map later
-
+        //        std::list<CollectionMetaDataPtr> allCollectionsMap; //change this to map later
+        std::list<CollectionMetaDataRawPtr> allCollectionsMap;
         
-        SuperBlock superBlock;
+        
+//        SuperBlock superBlock;
         public :
         
         
@@ -33,7 +34,7 @@ namespace PoconoFileSystem {
         {
             filename = PoconoFileSystem::getFullCollectionName(filename);
             openFileIfItDoesntExist(filename);
-        //read all the collectionOffsets from the file , and load the collectionMap
+            //read all the collectionOffsets from the file , and load the collectionMap
             
             loadAllCollectionMap();
             
@@ -42,35 +43,39 @@ namespace PoconoFileSystem {
         {
             
             CollectionMetaDataPtr collMetaData = getCollectionMetaData(nameOfCollection);
-            if(collMetaData)
+            if(collMetaData!=NULL)
             {
                 return collMetaData;
             }
             else {
-               
-                CollectionMetaDataPtr colIndex(new CollectionMetaData(nameOfCollection));
+                
+                //                CollectionMetaDataPtr colIndex(new CollectionMetaData(nameOfCollection));
+                CollectionMetaDataRawPtr colIndex = new CollectionMetaData(nameOfCollection);
+                
                 allCollectionsMap.push_back(colIndex);
-                colIndex->offsetOfCollectionMetaDataInFile =STARTING_OFFSET_OF_COLLECITON_INDEXS + ((allCollectionsMap.size()-1) * sizeof(class CollectionMetaData));
-                fileWriter->writeCollectionMetaData(colIndex);
-                collMetaData = colIndex;
+                offsetType offsetOfCollectionMetaDataInFile =STARTING_OFFSET_OF_COLLECITON_INDEXS + ((allCollectionsMap.size()-1) * sizeof(class CollectionMetaData));
+                fileWriter->writeCollectionMetaData(colIndex,offsetOfCollectionMetaDataInFile);
+                return colIndex;
             }
-            return collMetaData;
         }
         void loadAllCollectionMap()
         {
             offsetType offsetToGetMetaDataFrom = STARTING_OFFSET_OF_COLLECITON_INDEXS;
             while(offsetToGetMetaDataFrom<ENDING_OFFSET_OF_COLLECITON_INDEXS)
             {
-            
-                CollectionMetaDataPtr collMetaData = fileReader->readCollectionMetaDataFromFile(offsetToGetMetaDataFrom);
-                if(collMetaData->offsetOfCollectionMetaDataInFile!=-1)
+                //                dbLogger->log(toStr(boost::format("\n loadAllCollectionMap : offset %1%") % offsetToGetMetaDataFrom));
+                CollectionMetaDataRawPtr collMetaData = new CollectionMetaData();
+                fileReader->readCollectionMetaDataFromFile(collMetaData,offsetToGetMetaDataFrom);
+                if(collMetaData!=NULL)
                 {
+                    
                     if(!collMetaData->getNameOfCollectionAsString().empty())
                     {
-                    allCollectionsMap.push_back(collMetaData);
+                        allCollectionsMap.push_back(collMetaData);
                     }
+                    
+                    offsetToGetMetaDataFrom +=(sizeof(class  CollectionMetaData));
                 }
-                offsetToGetMetaDataFrom +=(sizeof(class  CollectionMetaData));
             }
             
             std::cout<<"allCollectionsMap size is "<<allCollectionsMap.size()<<std::endl;
@@ -84,7 +89,8 @@ namespace PoconoFileSystem {
             if(!collectionExists(nameOfCollection))
             {
                 size_t offset = PoconoFileSystem::getEndOfFileOffset(filename);
-                CollectionMetaDataPtr colIndex(new CollectionMetaData(nameOfCollection));
+                //                CollectionMetaDataPtr colIndex(new CollectionMetaData(nameOfCollection));
+                CollectionMetaDataRawPtr colIndex=new CollectionMetaData(nameOfCollection);
                 
                 size_t offsetOfCollectionIndex =STARTING_OFFSET_OF_COLLECITON_INDEXS+ allCollectionsMap.size()*sizeof(class CollectionMetaData);
                 std::cout<< " offsetOfCollectionIndex : "<<offsetOfCollectionIndex<<std::endl;
@@ -100,196 +106,177 @@ namespace PoconoFileSystem {
         bool collectionExists(std::string nameOfCollection) {
             return false;//for now
         }
-        void insertDataRecordMetaData( CollectionMetaDataPtr collectionMetaData,DataRecordMetaDataPtr dataRecordMetaDataPtr)
+        void linkTheLastMetaDataAndNewOneAndUpdateTheLastMetaData( CollectionMetaDataPtr collectionMetaData,DataRecordMetaDataPtr dataRecordMetaDataPtr)
         {
-
-//            dataRecordMetaDataPtr->offsetOfDataRecordMetaData =  offset; //it should be always right after
-            //the DataRecordMetaData
-            //DataRecordPtr lastRecordOfCollection = getLastRecordOfColelction(collectionMetaData);
-
+            
             //get the last data record meta data that collection meta data points to
             DataRecordMetaDataPtr lastdataRecordMetaDataOfCollection = getLastDataRecordMetaDataOfCollection(collectionMetaData);
-           
-            if(lastdataRecordMetaDataOfCollection)
+            
+            if(lastdataRecordMetaDataOfCollection!=NULL)
                 
             {
-
-                lastdataRecordMetaDataOfCollection->offsetOfNextDataRecordMetaData = dataRecordMetaDataPtr->offsetOfDataRecordMetaData; //make the last
-                //dataRecordMetaData of collection points to the new data record 
+              
+                //update the collectionMetaData to point to the last data record meta data
                 
-                updateThisDataRecordMetaData(lastdataRecordMetaDataOfCollection);//updates the last data record meta data 
+                lastdataRecordMetaDataOfCollection->offsetOfNextDataRecordMetaData = dataRecordMetaDataPtr->offsetOfDataRecordMetaData; //make the last
+                //dataRecordMetaData of collection points to the new data record
+                
+                fileWriter->writeDataRecordMetaData(lastdataRecordMetaDataOfCollection);
+                //updates the last data record meta data
                 //that points to the data record that we are about to save right after it.
-
-
+                
+                
                 dataRecordMetaDataPtr->offsetOfPreviousDataRecordMetaData = lastdataRecordMetaDataOfCollection->offsetOfDataRecordMetaData;
+                
                 collectionMetaData->offsetOfLastDataRecordMetaData = dataRecordMetaDataPtr->offsetOfDataRecordMetaData;
-                fileWriter->writeCollectionMetaData(collectionMetaData);
+                
+               
             }
             else {
-            //this is the case that we want to write the first data row in colleciton, the collection
-                //doesnt point to anything 
+                //this is the case that we want to write the first data row in colleciton, the collection
+                //doesnt point to anything
                 dataRecordMetaDataPtr->offsetOfPreviousDataRecordMetaData = -1;
                 collectionMetaData->offsetOfFirstDataRecordMetaData = dataRecordMetaDataPtr->offsetOfDataRecordMetaData;
                 collectionMetaData->offsetOfLastDataRecordMetaData = dataRecordMetaDataPtr->offsetOfDataRecordMetaData;
                 
-                fileWriter->writeCollectionMetaData(collectionMetaData);
             }
+            
             dataRecordMetaDataPtr->offsetOfNextDataRecordMetaData = -1;
             dataRecordMetaDataPtr->offsetOfCollection = collectionMetaData->offsetOfCollectionMetaDataInFile;
-            fileWriter->writeDataRecordMetaData(dataRecordMetaDataPtr);
-            fileWriter->writeCollectionMetaData(collectionMetaData);
            
         }
-        void insertDataRecord(CollectionMetaDataPtr collectionMetaData,
-                              DataRecordMetaDataPtr dataRecordMetaData, DataRecordPtr record,offsetType offsetOfDataRecord)
-        {
-
-                        
-            DataRecordMetaDataPtr lastdataRecordMetaDataOfCollection = getLastDataRecordMetaDataOfCollection(collectionMetaData);
-                       if(lastdataRecordMetaDataOfCollection)
-                
-            {
-                lastdataRecordMetaDataOfCollection->offsetOfDataRecord = offsetOfDataRecord;//make the last record
-                //meta data point to the next data record
-                updateThisDataRecordMetaData(lastdataRecordMetaDataOfCollection);//update the last record meta data
-            }
-            else {
-            
-            }
-            insertThisRecordAndItsValue(dataRecordMetaData,record,offsetOfDataRecord);
-            fileWriter->writeCollectionMetaData(collectionMetaData);
-            
-
-        }
-     
+       
+        
         void insertData( CollectionMetaDataPtr collectionMetaData,DataRecordPtr record)
         {
-            //1.read the end of DataBlock  offset
-            //2.add the record to file to the an offset which is multiple of BLOCK_SIZE =1024
-            //3.add the new offset to the next of the collection.offsetOfLastDataRecord
-            //4.getTheOffsetOfLastDataRecord from collection and, add its offset to the
-            //previous field of new DataRecord
             
-            //4.add the offset as the ofssetOfLastDataRecordInCollection
-            //5.add the offset of collectionMetaData to the offsetOfCollection in DataRecord
             
-            size_t offsetOfDataRecord = PoconoFileSystem::getEndOfFileDataBlockOffsetAsMultipleOfBlock(filename, BLOCK_SIZE);//this should be 0 or 1024
+            offsetType offsetOfDataRecordMetaData = PoconoFileSystem::getEndOfFileDataBlockOffsetAsMultipleOfBlock(filename, BLOCK_SIZE);//this should be 0 or 1024 , //getting a proper offset
             
+            offsetType offsetOfDataRecord =offsetOfDataRecordMetaData + sizeof(struct DataRecordMetaDataStruct) * 2;
+            
+            offsetType offsetOfValueField = offsetOfDataRecord + sizeof(struct DataRecordStruct)* 2;
+            
+            
+            //prepare DataRecord meta data
             DataRecordMetaDataPtr dataRecordMetaData(new DataRecordMeataData());
+            
+            dataRecordMetaData->offsetOfDataRecord = offsetOfDataRecord;
+            dataRecordMetaData->offsetOfValueOfRecordInFile = offsetOfValueField;
+            dataRecordMetaData->offsetOfDataRecordMetaData=offsetOfDataRecordMetaData;
+            dataRecordMetaData->offsetOfNextDataRecordMetaData=-1;
+            dataRecordMetaData->offsetOfPreviousDataRecordMetaData=-1;
+            dataRecordMetaData->offsetOfCollection=collectionMetaData->offsetOfCollectionMetaDataInFile;
+            dataRecordMetaData->lengthOfValueField =record->getValueAsString().size();
+            
+            
+            //prepare DataRecord
             record->offsetOfCollection = collectionMetaData->offsetOfCollectionMetaDataInFile;
-            insertDataRecord(collectionMetaData,dataRecordMetaData,record,offsetOfDataRecord);//inser the real data in the data record before the inserting the meta data
-            size_t sizeOfDataRecordObject = sizeof(class DataRecord);
+            record->sizeOfValueFieldInDataRecord = record->getValueAsString().size();
+            record->dataRecordRemovedFlag = false;
+            record->offsetOfValueOfRecordInFile = offsetOfValueField;
+            
+            
+            
+            
+            
+            /* writing the value field in file */
+            
+            fileWriter->writeTheValueOfRecord(record,offsetOfValueField);
+            std::string valueExpected = record->getValueAsString();
+            
+            assert(fileReader->readTheValueOfDataRecord(offsetOfValueField,record->sizeOfValueFieldInDataRecord).compare(valueExpected)==0);
+            /*********************************/
+            
+            
+            fileWriter->writeDataRecordAtOffset(record,offsetOfDataRecord);
 
             
+            linkTheLastMetaDataAndNewOneAndUpdateTheLastMetaData(collectionMetaData,dataRecordMetaData);//insert the Meta Data about the record after inserting the record
             
+            fileWriter->writeDataRecordMetaData(dataRecordMetaData);
+
            
-            dataRecordMetaData->offsetOfDataRecord = offsetOfDataRecord;
-            dataRecordMetaData->offsetOfDataRecordMetaData = offsetOfDataRecord + sizeOfDataRecordObject;//this is done because value is written before the data record object
-            insertDataRecordMetaData(collectionMetaData,dataRecordMetaData);//insert the Meta Data about the record after inserting the record
             
-            
-            
+             fileWriter->writeCollectionMetaData(collectionMetaData,collectionMetaData->offsetOfCollectionMetaDataInFile);
             
         }
         std::shared_ptr<std::list<DataRecordPtr>> getAllData(CollectionMetaDataPtr collectionArg)
         {
-            std::shared_ptr<std::list<DataRecordPtr>> allData(new std::list<DataRecordPtr>());
             //1.get the most updated version of collectionMetaData
-           CollectionMetaDataPtr collection =  fileReader->readCollectionMetaDataFromFile(collectionArg->offsetOfCollectionMetaDataInFile);
+            CollectionMetaDataRawPtr collection = new CollectionMetaData();
+            
+            fileReader->readCollectionMetaDataFromFile(collection,collectionArg->offsetOfCollectionMetaDataInFile);
+            
+            
+            
+           std::shared_ptr<std::list<DataRecordPtr>> allData(new std::list<DataRecordPtr>());
+            
+            
+            DataRecordMetaDataPtr firstDataMetaDataPtr = new DataRecordMeataData();
             
             //2. get the first data record and append to the list
-            DataRecordMetaDataPtr firstDataMetaDataPtr = fileReader->readDataRecordMetaDataFromFile(collection->offsetOfFirstDataRecordMetaData);
+            fileReader->readDataRecordMetaDataFromFile(firstDataMetaDataPtr,collection->offsetOfFirstDataRecordMetaData);
             
-            DataRecordPtr firstDataPtr = fileReader->readDataRecordFromFile(firstDataMetaDataPtr->offsetOfDataRecord,firstDataMetaDataPtr->sizeOfClassToContainDataRecord);
+            //read the data record that is pointed by the first pointer
+            DataRecordPtr firstDataPtr = fileReader->readDataRecordFromFile(firstDataMetaDataPtr->offsetOfDataRecord);
             
+            //read the value that is pointed by the first pointer
             std::string valueOfDataRecord = fileReader->readTheValueOfDataRecord(firstDataPtr->offsetOfValueOfRecordInFile,firstDataPtr->sizeOfValueFieldInDataRecord);
-            firstDataPtr->setValue(valueOfDataRecord);
+            
+            firstDataPtr->setValue(valueOfDataRecord,firstDataMetaDataPtr->lengthOfValueField);
+            
             
             assert(!valueOfDataRecord.empty());
-            
-
-
             allData->push_back(firstDataPtr);
+    
+            
+            
             DataRecordMetaDataPtr nextDataRecordMetaDataPtr = firstDataMetaDataPtr;
+            
             while(nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData!=-1)
             {
-                DataRecordPtr dataPtr = fileReader->readDataRecordFromFile(nextDataRecordMetaDataPtr->offsetOfDataRecord,nextDataRecordMetaDataPtr->sizeOfClassToContainDataRecord);
+                DataRecordPtr dataPtr = fileReader->readDataRecordFromFile(nextDataRecordMetaDataPtr->offsetOfDataRecord);
+                
                 std::string valueOfDataRecord = fileReader->readTheValueOfDataRecord(dataPtr->offsetOfValueOfRecordInFile,dataPtr->sizeOfValueFieldInDataRecord);
-            
+                
                 std::cout<<" pushing back data dataPtr->offsetOfNextDataRecordMetaData : "<<nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData<<std::endl;
-                dataPtr->setValue(valueOfDataRecord);
+                
+                dataPtr->setValue(valueOfDataRecord,nextDataRecordMetaDataPtr->lengthOfValueField);
+                
                 allData->push_back(dataPtr);
                 
-                nextDataRecordMetaDataPtr =fileReader->readDataRecordMetaDataFromFile(nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData);
+                fileReader->readDataRecordMetaDataFromFile(nextDataRecordMetaDataPtr,nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData);
                 
                 
             }
             
             return  allData;
+//            delete firstDataMetaDataPtr;
             
-            
+  //          return NULL;
         }
-        void insertThisRecordAndItsValue(DataRecordMetaDataPtr dataRecordMetaData,DataRecordPtr record,offsetType offsetOfDataRecord)
-        {
-            offsetType offsetOfValueOfRecordInFile = PoconoFileSystem::getEndOfFileDataBlockOffsetAsMultipleOfBlock(filename, BLOCK_SIZE);
-            record->offsetOfValueOfRecordInFile = offsetOfValueOfRecordInFile;
-            dataRecordMetaData->offsetOfValueOfRecordInFile = offsetOfValueOfRecordInFile;
-            fileWriter->writeTheValueOfRecord(record,offsetOfValueOfRecordInFile);
-            std::string valueExpected = record->getValueAsString();
-
-            assert(fileReader->readTheValueOfDataRecord(offsetOfValueOfRecordInFile,record->sizeOfValueFieldInDataRecord).compare(valueExpected)==0);
-            
-            record->offsetOfValueOfRecordInFile = offsetOfValueOfRecordInFile;
-            fileWriter->writeDataRecordAtOffset(record,offsetOfDataRecord);
-            //assert(fileReader->readDataRecordFromFile(offsetOfDataRecord,record->sizeOfClassToContainDataRecord).compare(record->getValueAsString())==0);
-            
-        }
-
-        void updateThisRecord(DataRecordPtr record,offsetType offsetOfDataRecord)
-        {
-            fileWriter->writeDataRecordAtOffset(record,offsetOfDataRecord);
-            
-        }
-        void updateThisDataRecordMetaData(DataRecordMetaDataPtr record)
-        {
-            
-            fileWriter->writeDataRecordMetaData(record);
-        }
-
-        
-        
-//        DataRecordPtr getFirstRecordOfCollection(CollectionMetaDataPtr collection)
-//        {
-//            DataRecordPtr nullPtr;
-//            if(collection->offsetOfFirstDataRecordMetaData==-1) return nullPtr;
-//            else
-//           return fileReader->readDataRecordFromFile(collection->offsetOfFirstDataRecordMetaData);
-//        
-//        }
-//        DataRecordPtr getLastRecordOfCollection(CollectionMetaDataPtr collection)
-//        {
-//            DataRecordPtr nullPtr;
-//            if(collection->offsetOfLastDataRecordMetaData==-1) return nullPtr;
-//            else
-//                return fileReader->readDataRecordFromFile(collection->offsetOfLastDataRecordMetaData);
-//            
-//        }
         
         DataRecordMetaDataPtr getLastDataRecordMetaDataOfCollection(CollectionMetaDataPtr collection)
         {
-            DataRecordMetaDataPtr nullPtr;
-            if(collection->offsetOfLastDataRecordMetaData==-1) return nullPtr;
+            DataRecordMetaDataPtr record = new DataRecordMeataData();
+            if(collection->offsetOfLastDataRecordMetaData==-1) return NULL;
             else
-                return fileReader->readDataRecordMetaDataFromFile(collection->offsetOfLastDataRecordMetaData);
+            {
+                 fileReader->readDataRecordMetaDataFromFile(record,collection->offsetOfLastDataRecordMetaData);
+                return record;
+            }
         }
         CollectionMetaDataPtr getCollectionMetaData (std::string nameOfCollection)
         {
-         
-            CollectionMetaDataPtr nullPtr;
-            for(std::list<CollectionMetaDataPtr>::iterator it = allCollectionsMap.begin();
+            
+        //            typedef std::list<CollectionMetaDataPtr>::iterator iterType;
+            typedef std::list<CollectionMetaDataRawPtr>::iterator iterType;
+            
+            for(iterType it = allCollectionsMap.begin();
 				it != allCollectionsMap.end(); ++it)
             {
-                CollectionMetaDataPtr colPtr = *it;
+                CollectionMetaDataRawPtr colPtr = *it;
                 std::string str = colPtr->getNameOfCollectionAsString();
                 
                 if(str.compare(nameOfCollection)
@@ -299,7 +286,7 @@ namespace PoconoFileSystem {
                 }
             }
             std::cout<<" didn't find the collection, retuning nullptr";
-            return nullPtr;//
+            return NULL;//
         }
         
         void deleteCollection(std::string nameOfCollection){
@@ -323,9 +310,9 @@ namespace PoconoFileSystem {
         {
             
         }
-
         
-        };
+        
+    };
 }
 
 #endif

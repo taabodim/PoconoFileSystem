@@ -11,78 +11,72 @@
 #include "logger.h"
 
 namespace PoconoFileSystem {
-template<typename T>
-logger& operator << ( logger& wrapper,const T& nonstr)
-{
-    string str = boost::lexical_cast<std::string>(nonstr);
-    // std::cout<<str;
-    wrapper.log(str);
-    return wrapper;
-}
-
-template<>
-logger& operator << ( logger& wrapper,const std::string& str)
-{
-    //std::cout<<str;
-    wrapper.log(str);
-    return wrapper;
-}
-
-template <typename Type>
-void log(logger& wrapper, Type str )
-{
-    string realStr = convertToString(str);
-    wrapper.log(realStr);
-}
-
-
-void log(logger& wrapper,std::string str )
-{
-    wrapper.log(str);
     
-}
-
-class loggerWrapper {
-    
-public:
-    logger mylogger;
-    std::shared_ptr<logger> clientLogger;
-    std::shared_ptr<logger> sessionLogger;
-    std::shared_ptr<logger> dbLogger;
-    static logger* myloggerPtr;;
-    //this is to have only one instance of logger everywhere
-    
-    loggerWrapper():mylogger("/gicapods")
-    ,clientLogger(new logger("client"))
-    ,sessionLogger(new logger("session"))
-    ,dbLogger(new logger("dbLogger"))
+    template<typename T>
+    logger& operator << (logger& wrapper,const T& nonstr)
     {
+        string str = boost::lexical_cast<std::string>(nonstr);
+        // std::cout<<str;
+        wrapper.log(str);
+        return wrapper;
+    }
+    
+    template<>
+    logger& operator << ( logger& wrapper,const std::string& str)
+    {
+        //std::cout<<str;
+        wrapper.log(str);
+        return wrapper;
+    }
+    
+    template <typename Type>
+    void log(logger& wrapper, Type str )
+    {
+        string realStr = convertToString(str);
+        wrapper.log(realStr);
+    }
+    
+    
+    void log(logger& wrapper,std::string str )
+    {
+        wrapper.log(str);
         
-        if(myloggerPtr==NULL)
+    }
+    
+    class loggerWrapper {
+        
+    public:
+        logger mylogger;
+        std::shared_ptr<logger> clientLogger;
+        std::shared_ptr<logger> sessionLogger;
+        std::shared_ptr<logger> dbLogger;
+        
+        loggerWrapper():mylogger("/gicapods")
+        ,clientLogger(new logger("client"))
+        ,sessionLogger(new logger("session"))
+        ,dbLogger(new logger("dbLogger"))
         {
-            myloggerPtr = new logger("/gicapods");//to delete the file once
+            
+            
+            
+        }
+        
+        loggerWrapper(std::string logFileName):mylogger(logFileName)
+        ,clientLogger(new logger("client"))
+        ,sessionLogger(new logger("session"))
+        ,dbLogger(new logger("dbLogger"))
+        
+        {
+            
+        }
+        
+        void log(const std::string str)  {
+            mylogger<<str;
         }
         
         
         
-    }
-    
-    loggerWrapper(std::string logFileName):mylogger(logFileName)
-    ,clientLogger(new logger("client"))
-    ,sessionLogger(new logger("session"))
-    ,dbLogger(new logger("dbLogger"))
-    
-    {
-        
-    }
-    
-    void log(const std::string str)  {
-        mylogger<<str;
-    }
-    
-    
-    
-};
+    };
 }
 
 #endif

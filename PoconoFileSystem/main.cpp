@@ -7,10 +7,12 @@
 //
 
 #include <iostream>
-#include "FileSystemTest.h"
+#include "FileSystemAPI.h"
 #include "DataRecord.h"
 #include "Configs.h"
 #include "Utils.h"
+
+#include <sys/resource.h>
 
 using namespace PoconoFileSystem;
 
@@ -45,7 +47,7 @@ void testWritingAndReadingOneSmallValueInOneCollection() {
     std::string nameOfCollection("testCollection");
     CollectionMetaDataPtr collection =testFS.openCollection(nameOfCollection);
     
-    int num = 0;
+    
     for(int i=0;i<1;i++)
     {
         DataRecordPtr record(new DataRecord("smallKey","smallValue***************************************************************************************EhdOfValue"));
@@ -112,11 +114,38 @@ void testWritingAndReadingSmallValuesInThreeCollections()
     
 //    }
 }
+
+void testWritingTenDataRecordAndFindingOne() {
+    FileSystemTest testFS;
+    std::string nameOfCollection("testCollection");
+    CollectionMetaDataPtr collection =testFS.openCollection(nameOfCollection);
+    
+    
+    for(int i=0;i<10;i++)
+    {
+        std::string key("smallKey");
+        key.append(toStr(i));
+
+        DataRecordPtr record(new DataRecord(key,"smallValue***************************************************************************************EhdOfValue"));
+        testFS.insertData(collection, record);
+    }
+    //find the one with key : smallKey8
+    
+    testFS.
+    std::shared_ptr<std::list<DataRecordPtr>> allData = testFS.getAllData(collection);
+    for(std::list<DataRecordPtr>::iterator it = allData->begin();
+        it!=allData->end();++it)
+    {
+        std::cout<<"Data Record is "<<(*it)->toString()<<std::endl;
+    }
+    
+
+}
 int main(int argc, const char * argv[])
 {
     // This is the PoconoFileSystem first commit
-    bool homeSetting = false;
-    
+    bool homeSetting = true;
+   // setTheStackSize();
     if(homeSetting)
     {
         Configs::logDir.clear();
@@ -130,7 +159,8 @@ int main(int argc, const char * argv[])
 
     //truncateTheFile(dataFilename);
         
-    testWritingAndReadingOneSmallValueInOneCollection();//stage 1
+   // testWritingAndReadingOneSmallValueInOneCollection();//stage 1
+    //testWritingTenDataRecordAndFindingOne();
     //testWritingAndReadingSmallValuesInOneCollection();
     //testWritingAndReadingSmallValuesInThreeCollections();
     return 0;

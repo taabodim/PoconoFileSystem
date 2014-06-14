@@ -9,18 +9,41 @@
 #ifndef PoconoFileSystem_CollectionIndex_h
 #define PoconoFileSystem_CollectionIndex_h
 #include "Utils.h"
+#include <memory>
+#include <iostream>
 namespace PoconoFileSystem {
-    class CollectionMetaData {
+    
+    struct CollectionMetaDataStruct{
+        char nameOfCollection [32];
+        offsetType offsetOfLastDataRecordMetaData;//this points to the last data
+        offsetType offsetOfCollectionMetaDataInFile;//needed
+        offsetType offsetOfFirstDataRecordMetaData;
+        CollectionMetaDataStruct(){
+        for(int i=0;i<32;i++)
+        {
+            nameOfCollection[i]='\0';
+            offsetOfLastDataRecordMetaData=-1;
+            offsetOfCollectionMetaDataInFile=-1;
+            offsetOfFirstDataRecordMetaData=-1;
+        }
+        
+        }
+    };
+    
+    class CollectionMetaData : std::enable_shared_from_this<CollectionMetaData>{
+        
+        
         private :
         
-        char nameOfCollection [32];
-        const static int LIMIT_OF_COLLECTION_SIZE = 128;
+         const static int LIMIT_OF_COLLECTION_SIZE = 128;
         public :
-        offsetType offsetOfCollectionMetaDataInFile;
-        //size_t offsetOfAllDataRecords[LIMIT_OF_COLLECTION_SIZE];
+       
         offsetType offsetOfFirstDataRecordMetaData;//this points to the first data record meta data of the collection
+        offsetType offsetOfCollectionMetaDataInFile;//needed
+        
         offsetType offsetOfLastDataRecordMetaData;//this points to the last data record meta data of the collection
-
+        char nameOfCollection [32];
+        
         CollectionMetaData() //for reading the CollectionMetaData
         //info from file
         {
@@ -31,7 +54,6 @@ namespace PoconoFileSystem {
             }
             this->offsetOfFirstDataRecordMetaData=-1;
             this->offsetOfLastDataRecordMetaData=-1;
-            this->offsetOfCollectionMetaDataInFile=-1;
             
         }
         CollectionMetaData(std::string name)
@@ -54,7 +76,6 @@ namespace PoconoFileSystem {
             
             this->offsetOfFirstDataRecordMetaData= -1;
             this->offsetOfLastDataRecordMetaData = -1;
-            this->offsetOfCollectionMetaDataInFile=-1;
             
 
         }
@@ -88,7 +109,7 @@ namespace PoconoFileSystem {
         std::string toString()
         {
             std::string recordStr;
-            recordStr.resize(200);
+//            recordStr.resize(200);
             recordStr.append(getNameOfCollectionAsString());
             recordStr.append(";");
             recordStr.append(toStr("offsetOfFirstDataRecord : "));
@@ -100,12 +121,18 @@ namespace PoconoFileSystem {
             return recordStr;
             //recordStr
         }
-
+        std::shared_ptr<CollectionMetaData> getSharedPtrFromThis()
+        {
+            return shared_from_this();
+        }
         
     };
     
-    typedef std::shared_ptr<CollectionMetaData> CollectionMetaDataPtr;
+    //typedef std::shared_ptr<CollectionMetaData> CollectionMetaDataPtr;
+    typedef CollectionMetaData* CollectionMetaDataPtr;
     
+    typedef CollectionMetaData* CollectionMetaDataRawPtr;
+
 }
 
 #endif

@@ -30,11 +30,14 @@ namespace PoconoFileSystem {
             }
         }
         void writeDataRecordAtOffset(std::shared_ptr<DataRecord> record,offsetType offsetOfDataRecord);
-        void writeCollectionMetaData(CollectionMetaDataPtr collectionMetaDataPtr,size_t offsetOfCollectionIndex);
-        void writeCollectionMetaData(CollectionMetaDataPtr collectionMetaDataPtr);
+        void writeCollectionMetaData(CollectionMetaDataRawPtr collectionMetaDataPtr,offsetType offsetOfCollectionMetaData);
+       
         void writeDataRecordMetaData(DataRecordMetaDataPtr dataRecordMetaDataPtr);
         void writeTheValueOfRecord(DataRecordPtr record,offsetType offsetOfValueOfRecordInFile);
+        
      };
+    
+    
     typedef std::shared_ptr<FileWriter> FileWriterPtr;
     
     void FileWriter::writeDataRecordMetaData(DataRecordMetaDataPtr dataRecordMetaDataPtr)
@@ -53,8 +56,21 @@ namespace PoconoFileSystem {
         
         assert(ptr_myfile);
         assert(dataRecordMetaDataPtr->offsetOfDataRecordMetaData>-1);
+        
+        
+        DataRecordMetaDataStruct dataRecordStruct;
+        
+        dataRecordStruct.offsetOfDataRecord =dataRecordMetaDataPtr->offsetOfDataRecord;
+        dataRecordStruct.offsetOfValueOfRecordInFile = dataRecordMetaDataPtr->offsetOfValueOfRecordInFile;
+        dataRecordStruct.offsetOfDataRecordMetaData=dataRecordMetaDataPtr->offsetOfDataRecordMetaData;
+        dataRecordStruct.offsetOfNextDataRecordMetaData=dataRecordMetaDataPtr->offsetOfNextDataRecordMetaData;
+        dataRecordStruct.offsetOfPreviousDataRecordMetaData=dataRecordMetaDataPtr->offsetOfPreviousDataRecordMetaData;
+        dataRecordStruct.offsetOfCollection=dataRecordMetaDataPtr->offsetOfCollection;
+        dataRecordStruct.lengthOfValueField=dataRecordMetaDataPtr->lengthOfValueField;
+        
+        
         fseek ( ptr_myfile , dataRecordMetaDataPtr->offsetOfDataRecordMetaData , SEEK_SET );
-        fwrite(&(*dataRecordMetaDataPtr),sizeof(class DataRecordMeataData),1,ptr_myfile);
+        fwrite(&dataRecordStruct,sizeof(struct DataRecordMetaDataStruct),1,ptr_myfile);
         
         fflush(ptr_myfile);
         fclose(ptr_myfile);
@@ -64,7 +80,7 @@ namespace PoconoFileSystem {
     
     }
     
-    void FileWriter::writeCollectionMetaData(CollectionMetaDataPtr colIndex,size_t offsetOfCollectionIndex)
+    void FileWriter::writeCollectionMetaData(CollectionMetaDataRawPtr colIndex,offsetType offsetOfCollectionIndex)
     {
         FILE *ptr_myfile;
         //        struct recordInDatabase my_record;
@@ -79,38 +95,24 @@ namespace PoconoFileSystem {
         }
         
         assert(ptr_myfile);
+        CollectionMetaDataStruct colStructPtr;
+
+        for(int i=0;i<32;i++)
+        {
+            colStructPtr.nameOfCollection[i]=colIndex->nameOfCollection[i];
+        }
+        colStructPtr.offsetOfLastDataRecordMetaData=colIndex->offsetOfLastDataRecordMetaData;
+        colStructPtr.offsetOfCollectionMetaDataInFile=colIndex->offsetOfCollectionMetaDataInFile;
+        colStructPtr.offsetOfFirstDataRecordMetaData=colIndex->offsetOfFirstDataRecordMetaData;
         
         fseek ( ptr_myfile , offsetOfCollectionIndex , SEEK_SET );
-        fwrite(&(*colIndex), sizeof(class CollectionMetaData), 1, ptr_myfile);
+        fwrite(&colStructPtr, sizeof(struct CollectionMetaDataStruct), 1, ptr_myfile);
         fflush(ptr_myfile);
         fclose(ptr_myfile);
     
     
     }
-    void FileWriter::writeCollectionMetaData(CollectionMetaDataPtr colIndex)
-    {
-        FILE *ptr_myfile;
-        //        struct recordInDatabase my_record;
-        
-        //     std::unique_lock < std::mutex > writeLock(writeMutex);
-        
-        ptr_myfile=fopen(filename.c_str(),"r+b");
-        if (!ptr_myfile)
-        {
-            //            mylogger<<"Unable to open file!";
-            
-        }
-        
-        assert(ptr_myfile);
-        std::cout<<"writing collectionMetaData at offset "<<colIndex->offsetOfCollectionMetaDataInFile<<" "<<colIndex->toString()<<std::endl;
-        fseek ( ptr_myfile , colIndex->offsetOfCollectionMetaDataInFile , SEEK_SET );
-        fwrite(&(*colIndex), sizeof(class CollectionMetaData), 1, ptr_myfile);
-        fflush(ptr_myfile);
-        fclose(ptr_myfile);
-        
-        
-    }
-    void FileWriter::writeTheValueOfRecord(DataRecordPtr record,offsetType offsetOfValueOfRecordInFile){
+      void FileWriter::writeTheValueOfRecord(DataRecordPtr record,offsetType offsetOfValueOfRecordInFile){
         FILE *ptr_myfile;
         ptr_myfile=fopen(filename.c_str(),"r+b");
         if (!ptr_myfile)
@@ -123,6 +125,7 @@ namespace PoconoFileSystem {
         //assert(record->offsetOfDataRecord>-1);
         fseek ( ptr_myfile , offsetOfValueOfRecordInFile, SEEK_SET );
         std::string valueAsStr = record->getValueAsString();
+          
         fwrite(valueAsStr.c_str(), valueAsStr.size(), 1, ptr_myfile);
         fflush(ptr_myfile);
         
@@ -147,8 +150,22 @@ namespace PoconoFileSystem {
         
         assert(ptr_myfile);
         //assert(record->offsetOfDataRecord>-1);
+        
+        DataRecordStruct dataRecordStruct;
+        
+        for(int i=0;i<32;i++)
+        {
+            dataRecordStruct.key[i]=record->key[i];
+        }
+     
+        dataRecordStruct.sizeOfValueFieldInDataRecord=record->sizeOfValueFieldInDataRecord;
+        dataRecordStruct.dataRecordRemovedFlag=record->dataRecordRemovedFlag;
+        dataRecordStruct.offsetOfValueOfRecordInFile = record->offsetOfValueOfRecordInFile;
+        dataRecordStruct.offsetOfCollection = record->offsetOfCollection;
+        
+        
         fseek ( ptr_myfile , offsetOfDataRecord , SEEK_SET );
-        fwrite(&(*record), sizeof(class DataRecord), 1, ptr_myfile);
+        fwrite(&dataRecordStruct, sizeof(struct DataRecordStruct), 1, ptr_myfile);
         fflush(ptr_myfile);
         fclose(ptr_myfile);
         std::cout<<" wrote this DataRecord to file at offset "<<offsetOfDataRecord<<" , "<<record->toString()<<std::endl;

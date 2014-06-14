@@ -24,8 +24,9 @@
 #include <ctime>
 #include <ratio>
 #include <string>       // for std::string
-
+#include <stdlib.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
+
 namespace PoconoFileSystem{
     typedef signed long offsetType ;
     const static size_t BLOCK_SIZE = 64;
@@ -33,6 +34,8 @@ namespace PoconoFileSystem{
     offsetType ENDING_OFFSET_OF_COLLECITON_INDEXS = 4096;
     offsetType STARTING_OFFSET_OF_DATA_BLOCK = 4096+(BLOCK_SIZE);//2048
 
+  
+    
     
     std::string getFullCollectionName(std::string name) {
         std::string fullname = Configs::dataDir;
@@ -198,6 +201,43 @@ namespace PoconoFileSystem{
                 hours, minutes, seconds, milliseconds);
         
         return buf;
+    }
+    
+    
+    long convertStringToLong(std::string str)
+    {
+        long i = atol (str.c_str());
+        return i;
+    }
+    std::string convertLongToString(long num)
+    {
+        return toStr(num);
+    }
+    void setTheStackSize()
+    {
+        
+        const rlim_t kStackSize = 32L * 1024L * 1024L;   // min stack size = 64 Mb
+        struct rlimit rl;
+        int result;
+        
+        result = getrlimit(RLIMIT_STACK, &rl);
+        if (result == 0)
+        {
+            if (rl.rlim_cur < kStackSize)
+            {
+                rl.rlim_cur = kStackSize;
+                result = setrlimit(RLIMIT_STACK, &rl);
+                if (result != 0)
+                {
+                    fprintf(stderr, "setrlimit returned result = %d\n", result);
+                }
+            }
+        }
+        
+        // ...
+        
+        
+        
     }
 
 }

@@ -27,16 +27,16 @@ namespace PoconoFileSystem {
             filename=PoconoFileSystem::getFullCollectionName(fileName);
             
         }
-        DataRecordPtr readDataRecordFromFile(size_t offset,offsetType sizeOfClassToContainDataRecord);
-        CollectionMetaDataPtr readCollectionMetaDataFromFile(size_t offset);
-        DataRecordMetaDataPtr readDataRecordMetaDataFromFile(size_t offset);
+        DataRecordPtr readDataRecordFromFile(offsetType offset);
+        void readCollectionMetaDataFromFile(CollectionMetaData* collectionPtr,offsetType offset);
+        DataRecordMetaDataPtr readDataRecordMetaDataFromFile(DataRecordMetaDataPtr record,offsetType offset);
         std::string readTheValueOfDataRecord(offsetType offset,offsetType sizeOfValueField);
         
         };
         
         
         typedef std::shared_ptr<FileReader> FileReaderPtr;
-    CollectionMetaDataPtr FileReader::readCollectionMetaDataFromFile(size_t offset) {
+    void FileReader::readCollectionMetaDataFromFile(CollectionMetaData* collectionPtr,offsetType offset) {
         
         FILE *ptr_myfile;
         ptr_myfile=fopen(filename.c_str(),"rb");
@@ -47,17 +47,31 @@ namespace PoconoFileSystem {
         }
         assert(ptr_myfile);
         fseek ( ptr_myfile , offset , SEEK_SET );
-        CollectionMetaDataPtr collMetadata ( new CollectionMetaData());
-        fread(&(*collMetadata),sizeof(class CollectionMetaData),1,ptr_myfile);
-        dbLogger->log("logging test");
-//        
+        CollectionMetaDataStruct colStruct;
+        
+        fread(&colStruct,sizeof(struct CollectionMetaDataStruct),1,ptr_myfile);
+        
+        for(int i=0;i<32;i++)
+        {
+            collectionPtr->nameOfCollection[i] = colStruct.nameOfCollection[i];
+        }
+        collectionPtr->offsetOfLastDataRecordMetaData = colStruct.offsetOfLastDataRecordMetaData;
+        collectionPtr->offsetOfCollectionMetaDataInFile =colStruct.offsetOfCollectionMetaDataInFile;
+       collectionPtr->offsetOfFirstDataRecordMetaData= colStruct.offsetOfFirstDataRecordMetaData;
+        
+        
+        
+//
 //        std::cout<<"At offset "<<offset<<" with size of "<<sizeof(class CollectionMetaData)<<",this collMetadata was read from file "<<collMetadata->toString()<<std::endl;
-
+       
+//         dbLogger->log(toStr(boost::format("\n loadAllCollectionMap : At offset  %1% with size of %2% ,this collMetadata was read from file %3% \n") %offset
+//             %sizeOfClass %collMetadata->toString()));
+        
         fclose(ptr_myfile);
-        return collMetadata;
+
     }
     
-    DataRecordPtr FileReader::readDataRecordFromFile(size_t offset,offsetType sizeOfClassToContainDataRecord) {
+    DataRecordPtr FileReader::readDataRecordFromFile(offsetType offset) {
         
         FILE *ptr_myfile;
         ptr_myfile=fopen(filename.c_str(),"rb");
@@ -67,19 +81,33 @@ namespace PoconoFileSystem {
             
         }
         assert(ptr_myfile);
-        fseek ( ptr_myfile , offset , SEEK_SET );
-        DataRecordPtr record ( new DataRecord());
-        fread(&(*record),sizeOfClassToContainDataRecord,1,ptr_myfile);
-        //assert(record->offsetOfDataRecord!=-1);
-        assert(record->sizeOfValueFieldInDataRecord!= -1);
-        assert(record->offsetOfCollection!= -1);
         
-         std::cout<<"At offset "<<offset<<" with size of "<<sizeOfClassToContainDataRecord<<",this record was read from file "<<record->toString()<<std::endl;
+        
+        DataRecordStruct dataRecordStruct;
+        
+        fseek ( ptr_myfile , offset , SEEK_SET );
+        fread(&dataRecordStruct,sizeof(struct DataRecordStruct),1,ptr_myfile);
+       
+        DataRecordPtr record ( new DataRecord());
+        
+        
+        for(offsetType i=0;i<MAX_KEY_SIZE;i++)
+        {
+            record->key[i] = dataRecordStruct.key[i];
+        }
+        record->sizeOfValueFieldInDataRecord = dataRecordStruct.sizeOfValueFieldInDataRecord;
+        
+        record->dataRecordRemovedFlag = dataRecordStruct.dataRecordRemovedFlag;
+        record->offsetOfValueOfRecordInFile = dataRecordStruct.offsetOfValueOfRecordInFile;
+        record->offsetOfCollection = dataRecordStruct.offsetOfCollection;
+        
+        
+//         std::cout<<"At offset "<<offset<<" with size of "<<sizeof(class DataRecord)<<",this record was read from file "<<record->toString()<<std::endl;
 
         fclose(ptr_myfile);
         return record;
     }
-    DataRecordMetaDataPtr FileReader::readDataRecordMetaDataFromFile(size_t offset) {
+    DataRecordMetaDataPtr FileReader::readDataRecordMetaDataFromFile(DataRecordMetaDataPtr record,offsetType offset) {
         
         FILE *ptr_myfile;
         ptr_myfile=fopen(filename.c_str(),"rb");
@@ -89,13 +117,38 @@ namespace PoconoFileSystem {
             
         }
         assert(ptr_myfile);
-        fseek ( ptr_myfile , offset , SEEK_SET );
-        DataRecordMetaDataPtr record ( new DataRecordMeataData());
-        fread(&(*record),sizeof(class DataRecordMeataData),1,ptr_myfile);
-        std::cout<<"At offset "<<offset<<" with size of "<<sizeof(class DataRecordMeataData)<<",this record meta data was read from file "<<record->toString()<<std::endl;
         
-        assert(record->offsetOfDataRecord!=-1);
-        assert(record->offsetOfDataRecordMetaData!= -1);
+        
+        
+        assert(offset>-1);
+        fseek ( ptr_myfile , offset , SEEK_SET );
+        DataRecordMetaDataStruct dataRecordMetaDataStruct;
+        
+        fread(&dataRecordMetaDataStruct,sizeof(struct DataRecordMetaDataStruct),1,ptr_myfile);
+       
+        
+        
+        
+        
+        record->lengthOfValueField =dataRecordMetaDataStruct.lengthOfValueField;
+        record->offsetOfDataRecord = dataRecordMetaDataStruct.offsetOfDataRecord;
+        record->offsetOfValueOfRecordInFile = dataRecordMetaDataStruct.offsetOfValueOfRecordInFile;
+        record->offsetOfDataRecordMetaData=dataRecordMetaDataStruct.offsetOfDataRecordMetaData;
+        record->offsetOfNextDataRecordMetaData=dataRecordMetaDataStruct.offsetOfNextDataRecordMetaData;
+        record->offsetOfPreviousDataRecordMetaData=dataRecordMetaDataStruct.offsetOfPreviousDataRecordMetaData;
+        record->offsetOfCollection=dataRecordMetaDataStruct.offsetOfCollection;
+        
+        
+        std::cout<<"At offset "<<offset<<" with size of "<<sizeof(class DataRecordMeataData)<<",this record meta data was read from file "<<record->toString()<<std::endl;
+
+        
+        
+        
+        
+        
+        
+//        assert(record->offsetOfDataRecord!=-1);
+//        assert(record->offsetOfDataRecordMetaData!= -1);
        
         fclose(ptr_myfile);
         return record;

@@ -11,15 +11,15 @@
 #include <map>
 namespace PoconoFileSystem{
     
-    class SuperBlock {
-    
-        std::map<size_t,size_t> freeOffsetWithSizeMap;
-    public:
-        SuperBlock() {
-        
-        }
-       
-    };
+//    class SuperBlock {
+//    
+//        std::map<size_t,size_t> freeOffsetWithSizeMap;
+//    public:
+//        SuperBlock() {
+//        
+//        }
+//       
+//    };
     
 }
 

@@ -25,6 +25,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A53270ED194CFEFE00530E5B /* FileSystemAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileSystemAPI.h; sourceTree = "<group>"; };
 		A5D9A14E1942AE9C000F1170 /* PoconoConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PoconoConfig.h; sourceTree = "<group>"; };
 		A5D9A14F1942AF22000F1170 /* Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		A5D9A1501942AF99000F1170 /* Configs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Configs.h; sourceTree = "<group>"; };
@@ -35,7 +36,6 @@
 		E23EB37619426B2600C4DECA /* Collection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Collection.h; sourceTree = "<group>"; };
 		E23EB37719426B5200C4DECA /* FileWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileWriter.h; sourceTree = "<group>"; };
 		E23EB37819426B6200C4DECA /* FileReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileReader.h; sourceTree = "<group>"; };
-		E23EB37919426C8300C4DECA /* FileSystemTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileSystemTest.h; sourceTree = "<group>"; };
 		E23EB37A19426EDD00C4DECA /* FileSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileSystem.h; sourceTree = "<group>"; };
 		E23EB37B19426F5100C4DECA /* DataRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataRecord.h; sourceTree = "<group>"; };
 		E23EB37C1942715300C4DECA /* CollectionIndex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollectionIndex.h; sourceTree = "<group>"; };
@@ -80,7 +80,6 @@
 				E23EB37619426B2600C4DECA /* Collection.h */,
 				E23EB37719426B5200C4DECA /* FileWriter.h */,
 				E23EB37819426B6200C4DECA /* FileReader.h */,
-				E23EB37919426C8300C4DECA /* FileSystemTest.h */,
 				E23EB37A19426EDD00C4DECA /* FileSystem.h */,
 				E23EB37B19426F5100C4DECA /* DataRecord.h */,
 				E23EB37C1942715300C4DECA /* CollectionIndex.h */,
@@ -92,6 +91,7 @@
 				E23EB37E1945F55800C4DECA /* DataRecordMetaData.h */,
 				E2649624194BA94300638312 /* Logger.h */,
 				E2649625194BADFF00638312 /* LoggerWrapper.h */,
+				A53270ED194CFEFE00530E5B /* FileSystemAPI.h */,
 			);
 			path = PoconoFileSystem;
 			sourceTree = "<group>";
@@ -237,6 +237,8 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
+				"LIBRARY_SEARCH_PATHS[arch=*]" = /usr/local/Cellar/boost/1.55.0_1/lib/;
+				OTHER_LDFLAGS = "-lboost_system";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -244,6 +246,7 @@
 		E23EB375194269AB00C4DECA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				OTHER_LDFLAGS = "-lboost_system";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
