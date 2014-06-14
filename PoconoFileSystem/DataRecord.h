@@ -107,17 +107,22 @@ namespace PoconoFileSystem {
             
             return false;
         }
-        
+        std::string keyStr;
         std::string getKeyAsString()
         {
         
+            if(keyStr.empty())
+            {
             char keyArrayCopy[MAX_KEY_SIZE];
             
             memcpy ( keyArrayCopy, key, MAX_KEY_SIZE );
-            std::string keyStr (key,MAX_KEY_SIZE);
+            std::string keyStrNew (key);
+            keyStr.append(keyStrNew);
             std::cout<<"keyStr : "<<keyStr<<std::endl;
+            }
             return keyStr;
         }
+        
         
         std::string getValueAsString()
         {

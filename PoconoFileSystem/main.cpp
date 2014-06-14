@@ -123,18 +123,19 @@ void testWritingTenDataRecordAndFindingOne() {
     std::string nameOfCollection("testCollection");
     CollectionMetaDataPtr collection =testFS.openCollection(nameOfCollection);
     
-      std::string key("smallKey");
+    
     for(int i=0;i<10;i++)
     {
-      
+       std::string key("smallKey");
         key.append(toStr(i));
 
         DataRecordPtr record(new DataRecord(key,"smallValue***************************************************************************************EhdOfValue"));
         testFS.insertData(collection, record);
     }
     //find the one with key : smallKey8
-    
+    std::string key("smallKey8");
     DataRecordPtr foundRecord = testFS.find(nameOfCollection,key);
+    assert(foundRecord!=NULL);
     assert(foundRecord->getKeyAsString().compare(key)==0);
     std::cout<<"foundRecord Data Record is "<<(foundRecord)->toString()<<std::endl;
     
@@ -144,7 +145,7 @@ int main(int argc, const char * argv[])
 {
     // This is the PoconoFileSystem first commit
     bool homeSetting = true;
-    setTheStackSize();
+    //setTheStackSize();
     if(homeSetting)
     {
         Configs::logDir.clear();
