@@ -18,6 +18,7 @@
 namespace PoconoFileSystem {
     class FileSystem : public loggerWrapper {
         private :
+        const static int DELETED = 88;
         std::string filename;
         FileReaderPtr fileReader;
         FileWriterPtr fileWriter;
@@ -71,7 +72,10 @@ namespace PoconoFileSystem {
                     
                     if(!collMetaData->getNameOfCollectionAsString().empty())
                     {
-                        allCollectionsMap.push_back(collMetaData);
+                       if(collMetaData->isCollectionDeleted!=DELETED)
+                       {
+                           allCollectionsMap.push_back(collMetaData);
+                       }
                     }
                     
                     offsetToGetMetaDataFrom +=(sizeof(class  CollectionMetaData));
@@ -283,6 +287,30 @@ namespace PoconoFileSystem {
         }
         
         void deleteCollection(std::string nameOfCollection){
+            //mark the collection as deleted....
+            CollectionMetaDataPtr collecitonPtr = getCollectionMetaData (nameOfCollection);
+            collecitonPtr->isCollectionDeleted = DELETED;//88  means its deleted
+            fileWriter->writeCollectionMetaData(collecitonPtr,collecitonPtr->offsetOfCollectionMetaDataInFile);
+            
+            typedef std::list<CollectionMetaDataRawPtr>::iterator iterType;
+            
+            for(iterType it = allCollectionsMap.begin();
+				it != allCollectionsMap.end(); ++it)
+            {
+                CollectionMetaDataRawPtr colPtr = *it;
+                std::string str = colPtr->getNameOfCollectionAsString();
+                
+                if(str.compare(nameOfCollection)
+                   ==0)
+                {
+                    allCollectionsMap.remove(colPtr);
+                    
+                    break;
+                }
+            }
+            
+            //fileWriter->replaceContentWith0(sizeof(struct CollectionMetaDataStruct),collecitonPtr->offsetOfCollectionMetaDataInFile);
+            //replace the content of collection in file with all 0
         }
         
         

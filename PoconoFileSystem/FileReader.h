@@ -57,7 +57,8 @@ namespace PoconoFileSystem {
         }
         collectionPtr->offsetOfLastDataRecordMetaData = colStruct.offsetOfLastDataRecordMetaData;
         collectionPtr->offsetOfCollectionMetaDataInFile =colStruct.offsetOfCollectionMetaDataInFile;
-       collectionPtr->offsetOfFirstDataRecordMetaData= colStruct.offsetOfFirstDataRecordMetaData;
+        collectionPtr->offsetOfFirstDataRecordMetaData= colStruct.offsetOfFirstDataRecordMetaData;
+        collectionPtr->isCollectionDeleted = colStruct.isCollectionDeleted;
         
         
         

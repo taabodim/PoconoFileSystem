@@ -30,6 +30,8 @@ namespace PoconoFileSystem {
         }
         
         void deleteCollection(std::string nameOfCollection){
+            fs_.deleteCollection(nameOfCollection);
+
         }
         
         void insertData(CollectionMetaDataPtr collection,DataRecordPtr record)
@@ -50,7 +52,9 @@ namespace PoconoFileSystem {
         {
             
         }
+        list<showAllCollections() {
         
+        }
         DataRecordPtr find(std::string nameOfCollection,std::string key) {
              return fs_.find(nameOfCollection,key);
         }

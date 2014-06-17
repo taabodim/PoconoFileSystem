@@ -19,6 +19,7 @@ namespace PoconoFileSystem {
         offsetType offsetOfLastDataRecordMetaData;//this points to the last data
         offsetType offsetOfCollectionMetaDataInFile;//needed
         offsetType offsetOfFirstDataRecordMetaData;
+        offsetType isCollectionDeleted;
         CollectionMetaDataStruct(){
             for(int i=0;i<32;i++)
             {
@@ -26,6 +27,7 @@ namespace PoconoFileSystem {
                 offsetOfLastDataRecordMetaData=-1;
                 offsetOfCollectionMetaDataInFile=-1;
                 offsetOfFirstDataRecordMetaData=-1;
+                isCollectionDeleted=-1;
             }
             
         }
@@ -41,7 +43,7 @@ namespace PoconoFileSystem {
         
         offsetType offsetOfFirstDataRecordMetaData;//this points to the first data record meta data of the collection
         offsetType offsetOfCollectionMetaDataInFile;//needed
-        
+        offsetType isCollectionDeleted;
         offsetType offsetOfLastDataRecordMetaData;//this points to the last data record meta data of the collection
         char nameOfCollection [32];
         
@@ -55,6 +57,7 @@ namespace PoconoFileSystem {
             }
             this->offsetOfFirstDataRecordMetaData=-1;
             this->offsetOfLastDataRecordMetaData=-1;
+            this->isCollectionDeleted = -1;
             
         }
         CollectionMetaData(std::string name)
@@ -77,7 +80,7 @@ namespace PoconoFileSystem {
             
             this->offsetOfFirstDataRecordMetaData= -1;
             this->offsetOfLastDataRecordMetaData = -1;
-            
+            this->isCollectionDeleted = -1;
             
         }
         std::string  getNameOfCollectionAsString()
@@ -110,7 +113,7 @@ namespace PoconoFileSystem {
         std::string toString()
         {
             std::string recordStr;
-            //            recordStr.resize(200);
+           
             recordStr.append(getNameOfCollectionAsString());
             recordStr.append(";");
             recordStr.append(toStr("offsetOfFirstDataRecord : "));
@@ -119,9 +122,16 @@ namespace PoconoFileSystem {
             recordStr.append(toStr("offsetOfLastDataRecord : "));
             recordStr.append(PoconoFileSystem::toStr(offsetOfLastDataRecordMetaData));
             
+            
+            recordStr.append(toStr("isCollectionDeleted : "));
+            recordStr.append(PoconoFileSystem::toStr(isCollectionDeleted));
+          
+            recordStr.append(toStr("offsetOfCollectionMetaDataInFile : "));
+            recordStr.append(PoconoFileSystem::toStr(offsetOfCollectionMetaDataInFile));
+            
+          
             return recordStr;
-            //recordStr
-        }
+         }
         std::shared_ptr<CollectionMetaData> getSharedPtrFromThis()
         {
             return shared_from_this();

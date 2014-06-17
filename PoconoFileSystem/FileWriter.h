@@ -35,7 +35,7 @@ namespace PoconoFileSystem {
         void writeDataRecordMetaData(DataRecordMetaDataPtr dataRecordMetaDataPtr);
         void writeTheValueOfRecord(DataRecordPtr record,offsetType offsetOfValueOfRecordInFile);
         
-     };
+    };
     
     
     typedef std::shared_ptr<FileWriter> FileWriterPtr;
@@ -101,9 +101,12 @@ namespace PoconoFileSystem {
         {
             colStructPtr.nameOfCollection[i]=colIndex->nameOfCollection[i];
         }
+        
         colStructPtr.offsetOfLastDataRecordMetaData=colIndex->offsetOfLastDataRecordMetaData;
         colStructPtr.offsetOfCollectionMetaDataInFile=colIndex->offsetOfCollectionMetaDataInFile;
         colStructPtr.offsetOfFirstDataRecordMetaData=colIndex->offsetOfFirstDataRecordMetaData;
+        colStructPtr.isCollectionDeleted = colIndex->isCollectionDeleted;
+        
         
         fseek ( ptr_myfile , offsetOfCollectionIndex , SEEK_SET );
         fwrite(&colStructPtr, sizeof(struct CollectionMetaDataStruct), 1, ptr_myfile);
@@ -170,6 +173,8 @@ namespace PoconoFileSystem {
         fclose(ptr_myfile);
         std::cout<<" wrote this DataRecord to file at offset "<<offsetOfDataRecord<<" , "<<record->toString()<<std::endl;
     }
+    
+    
 }
 
 #endif

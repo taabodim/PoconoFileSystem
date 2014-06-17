@@ -141,6 +141,64 @@ void testWritingTenDataRecordAndFindingOne() {
     
 
 }
+void testDeletingFourCollections()
+{
+    FileSystemAPI testFS;
+    std::string nameOfCollection("testCollection");
+    std::string nameOfCollection1("testCollection1");
+    std::string nameOfCollection2("testCollection2");
+    std::string nameOfCollection3("testCollection3");
+    
+    testFS.openCollection(nameOfCollection);
+    testFS.openCollection(nameOfCollection1);
+    testFS.openCollection(nameOfCollection2);
+    testFS.openCollection(nameOfCollection3);
+
+    testFS.deleteCollection(nameOfCollection);
+    testFS.deleteCollection(nameOfCollection1);
+    testFS.deleteCollection(nameOfCollection2);
+    testFS.deleteCollection(nameOfCollection3);
+
+    list<CollectionMetaDataPtr> = testFS.getAllCollections();
+    for(
+    
+}
+
+//incomplete
+void testWriting10DataRecordAndDeletingTheOneWithSmallKey8() {
+    FileSystemAPI testFS;
+    std::string nameOfCollection("testCollection");
+    
+    testFS.deleteCollection(nameOfCollection);
+    
+    CollectionMetaDataPtr collection =testFS.openCollection(nameOfCollection);
+    
+    
+    for(int i=0;i<100;i++)
+    {
+        std::string key("smallKey");
+        key.append(toStr(i));
+        
+        DataRecordPtr record(new DataRecord(key,"smallValue***************************************************************************************EhdOfValue"));
+        testFS.insertData(collection, record);
+    }
+    //find the one with key : smallKey8
+    std::string key("smallKey8");
+    DataRecordPtr foundRecord = testFS.find(nameOfCollection,key);
+    assert(foundRecord!=NULL);
+    assert(foundRecord->getKeyAsString().compare(key)==0);
+    std::cout<<"foundRecord Data Record is "<<(foundRecord)->toString()<<std::endl;
+    
+    
+}
+void allOfTests() {
+    // testWritingAndReadingOneSmallValueInOneCollection();//stage 1
+    //testWritingTenDataRecordAndFindingOne();
+    //testWritingAndReadingSmallValuesInOneCollection();
+    //testWritingAndReadingSmallValuesInThreeCollections();
+    //testWriting10DataRecordAndDeletingTheOneWithSmallKey8();
+    
+}
 int main(int argc, const char * argv[])
 {
     // This is the PoconoFileSystem first commit
@@ -154,15 +212,14 @@ int main(int argc, const char * argv[])
         Configs::dataDir.append("/Users/mahmoudtaabodi/Documents/pico_data/");
         
     }
-//    std::string dataFilename(Configs::dataDir);
-//    dataFilename.append("test.dat");
+    std::string dataFilename(Configs::dataDir);
+    dataFilename.append("test.dat");
 
-    //truncateTheFile(dataFilename);
-        
-   // testWritingAndReadingOneSmallValueInOneCollection();//stage 1
-    testWritingTenDataRecordAndFindingOne();
-    //testWritingAndReadingSmallValuesInOneCollection();
-    //testWritingAndReadingSmallValuesInThreeCollections();
+    truncateTheFile(dataFilename);
+    allOfTests();
+  
+    testDeletingFourCollections();
+    
     return 0;
 }
 

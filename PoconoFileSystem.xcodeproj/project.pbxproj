@@ -15,7 +15,7 @@
 		E23EB368194269AB00C4DECA /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = /Users/mahmoudtaabodi/Documents;
+			dstPath = /Users/mahmoudtaabodi/Documents/pocono;
 			dstSubfolderSpec = 0;
 			files = (
 				E23EB370194269AB00C4DECA /* PoconoFileSystem.1 in CopyFiles */,
