@@ -159,12 +159,18 @@ void testDeletingFourCollections()
     testFS.deleteCollection(nameOfCollection2);
     testFS.deleteCollection(nameOfCollection3);
 
-    list<CollectionMetaDataPtr> = testFS.getAllCollections();
-    for(
+    list<std::string> allCollections= testFS.showAllCollections();
+    for(list<std::string>::iterator iter=allCollections.begin();
+        iter!=allCollections.end();++iter)
+    {
+        std::cout<<"collection name is : "<<*iter<<std::endl;
+    }
+    
+    assert(allCollections.size()==0);
     
 }
 
-//incomplete
+//incomplete , finish this test
 void testWriting10DataRecordAndDeletingTheOneWithSmallKey8() {
     FileSystemAPI testFS;
     std::string nameOfCollection("testCollection");
@@ -192,7 +198,7 @@ void testWriting10DataRecordAndDeletingTheOneWithSmallKey8() {
     
 }
 void allOfTests() {
-    // testWritingAndReadingOneSmallValueInOneCollection();//stage 1
+    //testWritingAndReadingOneSmallValueInOneCollection();//stage 1
     //testWritingTenDataRecordAndFindingOne();
     //testWritingAndReadingSmallValuesInOneCollection();
     //testWritingAndReadingSmallValuesInThreeCollections();
@@ -202,7 +208,7 @@ void allOfTests() {
 int main(int argc, const char * argv[])
 {
     // This is the PoconoFileSystem first commit
-    bool homeSetting = true;
+    bool homeSetting = false;
     //setTheStackSize();
     if(homeSetting)
     {

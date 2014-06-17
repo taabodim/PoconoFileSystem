@@ -43,17 +43,17 @@ namespace PoconoFileSystem {
            fs_.getAllData(allData,collection);
         }
         
-        void deleteData(std::string nameOfCollection,DataRecordPtr record)
+        void deleteData(std::string nameOfCollection,std::string key)
         {
-            
+            return fs_.deleteData(nameOfCollection,key);
         }
         
         void updateData(std::string nameOfCollection,DataRecordPtr record)
         {
             
         }
-        list<showAllCollections() {
-        
+        list<std::string> showAllCollections() {
+            return fs_.showAllCollections();
         }
         DataRecordPtr find(std::string nameOfCollection,std::string key) {
              return fs_.find(nameOfCollection,key);

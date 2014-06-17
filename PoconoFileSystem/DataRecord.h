@@ -40,11 +40,7 @@ namespace PoconoFileSystem {
         public :
         
        
-        offsetType  offsetOfCollection; //this points to the collection this
-        //data record belongs to.
-        // offsetType offsetOfNextDataRecordMetaData;//this points to the next DataRecordMetaData that points to the next DataRecord
-        // offsetType offsetOfPreviousDataRecordMetaData;//this points to the prev DataRecordMetaData that points to the previous DataRecord
-        //offsetType offsetOfDataRecord;//this points to the offset of this data record
+        offsetType  offsetOfCollection; //this points to the collection this data record belongs to.
         offsetType offsetOfValueOfRecordInFile; //this points to where the the value field of record is .
         //we need this , because the value part of the data is variable sized.
         bool dataRecordRemovedFlag;//this flag is set to true when data is deleted;

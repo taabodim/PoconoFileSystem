@@ -53,8 +53,11 @@ namespace PoconoFileSystem {
                 //                CollectionMetaDataPtr colIndex(new CollectionMetaData(nameOfCollection));
                 CollectionMetaDataRawPtr colIndex = new CollectionMetaData(nameOfCollection);
                 
-                allCollectionsMap.push_back(colIndex);
                 offsetType offsetOfCollectionMetaDataInFile =STARTING_OFFSET_OF_COLLECITON_INDEXS + ((allCollectionsMap.size()-1) * sizeof(class CollectionMetaData));
+                colIndex->offsetOfCollectionMetaDataInFile = offsetOfCollectionMetaDataInFile;
+                
+                allCollectionsMap.push_back(colIndex);
+                
                 fileWriter->writeCollectionMetaData(colIndex,offsetOfCollectionMetaDataInFile);
                 return colIndex;
             }
@@ -156,9 +159,7 @@ namespace PoconoFileSystem {
             
             
             offsetType offsetOfDataRecordMetaData = PoconoFileSystem::getEndOfFileDataBlockOffsetAsMultipleOfBlock(filename, BLOCK_SIZE);//this should be 0 or 1024 , //getting a proper offset
-            
             offsetType offsetOfDataRecord =offsetOfDataRecordMetaData + sizeof(struct DataRecordMetaDataStruct) * 2;
-            
             offsetType offsetOfValueField = offsetOfDataRecord + sizeof(struct DataRecordStruct)* 2;
             
             
@@ -300,17 +301,13 @@ namespace PoconoFileSystem {
                 CollectionMetaDataRawPtr colPtr = *it;
                 std::string str = colPtr->getNameOfCollectionAsString();
                 
-                if(str.compare(nameOfCollection)
-                   ==0)
+                if(str.compare(nameOfCollection)==0)
                 {
                     allCollectionsMap.remove(colPtr);
-                    
                     break;
                 }
             }
             
-            //fileWriter->replaceContentWith0(sizeof(struct CollectionMetaDataStruct),collecitonPtr->offsetOfCollectionMetaDataInFile);
-            //replace the content of collection in file with all 0
         }
         
         
@@ -335,23 +332,84 @@ namespace PoconoFileSystem {
         }
         
         
-        
-        
-        
-        
-        
-        
-        
-        void deleteData(std::string nameOfCollection,DataRecordPtr record)
+        std::string deleteData(std::string nameOfCollection,std::string key)
         {
-            
+            DataRecordPtr recordPtr =  find(nameOfCollection,key);
+            if(recordPtr==NULL) {
+                string resp("There is no data associated with this key : ");
+                resp.append(key);
+                return resp;
+            }
+            else
+            {
+                DataRecordMetaDataPtr previouseRecordMetaData = getRecordMetaData(recordPtr->offsetOfPreviousDataRecordMetaData);
+                DataRecordMetaDataPtr nextRecordMetaData = getRecordMetaData(recordPtr->offsetOfNextDataRecordMetaData);
+                DataRecordMetaDataPtr currentRecordMetaData = getRecordMetaData(recordPtr->offsetOfCurrentDataRecordMetaData);
+
+                //linking the previous to the next and the next to the previous
+                previouseRecordMetaData->offsetOfNextDataRecordMetaData = nextRecordMetaData->offsetOfDataRecordMetaData;
+                nextRecordMetaData->offsetOfPreviousDataRecordMetaData  = previouseRecordMetaData->offsetOfDataRecordMetaData;
+                currentRecordMetaData->isDataRecordMetaDeleted = DELETED;
+
+                addOffsetToFreeListOfCurrentMetaDataOffsets(currentRecordMetaData->offsetOfDataRecordMetaData);
+                //we can write the empty charactest instead of value later....TODO
+
+                fileWriter->writeDataRecordMetaData(currentRecordMetaData);
+                fileWriter->writeDataRecordMetaData(previouseRecordMetaData);
+                fileWriter->writeDataRecordMetaData(nextRecordMetaData);
+
+                string resp("record was deleted with this key : ");
+                resp.append(key);
+                return resp;
+            }
+        }  
+        void addOffsetToFreeListOfCurrentMetaDataOffsets(offsetType freeOffsetOfDataRecordMetaData){
+
+            //add this offset to a list and use this list for inserting new datarecordmetadata 
         }
-        
-        void updateData(std::string nameOfCollection,DataRecordPtr record)
+                
+        std::string updateData(std::string nameOfCollection,std::string key,std::string valueToBeOverwritten)
         {
-            
+            DataRecordPtr recordPtr =  find(nameOfCollection,key);
+            if(recordPtr==NULL) {
+                string resp("There is no data associated with this key : ");
+                resp.append(key);
+                return resp;
+            }
+            else
+            {
+                offsetType offsetOfnewValue = PoconoFileSystem::getEndOfFileDataBlockOffsetAsMultipleOfBlock(filename, BLOCK_SIZE);//this should be 0 or 1024 , //getting a proper offset
+           
+
+                DataRecordMetaDataPtr currentRecordMetaData = getRecordMetaData(recordPtr->offsetOfCurrentDataRecordMetaData);
+                recordPtr->sizeOfValueFieldInDataRecord = valueToBeOverwritten.size();
+                recordPtr->offsetOfValueField = offsetOfnewValue;
+                fileWriter->writeTheValueOfRecord(recordPtr,offsetOfnewValue);
+
+                std::string valueExpected = recordPtr->getValueAsString();
+                
+                fileWriter->writeDataRecordMetaData(currentRecordMetaData);
+
+                fileWriter->
+
+                assert(fileReader->readTheValueOfDataRecord(offsetOfValueField,recordPtr->sizeOfValueFieldInDataRecord).compare(valueExpected)==0);
+            }
         }
-        
+        std::list<std::string> showAllCollections() {
+            //this loads the collection without caching it to make sure that 
+            //the delete collection and other possible functionality
+            //works fine
+            loadAllCollectionMap();
+            list<std::string> allCollectionNames;
+            for(list<CollectionMetaDataRawPtr>::iterator iter = allCollectionsMap.begin();
+                iter!=allCollectionsMap.end();++iter)
+            {
+                allCollectionNames.push_back((*iter)->getNameOfCollectionAsString());
+
+            }
+            
+            return allCollectionNames;
+         }
         
     };
 }

@@ -165,7 +165,7 @@ namespace PoconoFileSystem {
         assert(ptr_myfile);
         fseek ( ptr_myfile , offset , SEEK_SET );
         char valueReadFromFile [sizeOfValueFieldInDataRecord];
-        fread(valueReadFromFile,sizeOfValueFieldInDataRecord+100,1,ptr_myfile);
+        fread(valueReadFromFile,sizeOfValueFieldInDataRecord,1,ptr_myfile);
         std::string valueReadFromFileStr(valueReadFromFile);
         
         std::cout<<"At offset "<<offset<<" with size of "<<sizeOfValueFieldInDataRecord<<",this value was read from file "<<valueReadFromFile<<std::endl;

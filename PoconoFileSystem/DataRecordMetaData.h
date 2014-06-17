@@ -30,6 +30,8 @@ namespace PoconoFileSystem {
         offsetType offsetOfPreviousDataRecordMetaData;
         offsetType offsetOfCollection;
         offsetType lengthOfValueField;
+        offsetType isDataRecordMetaDeleted;
+        
         DataRecordMetaDataStruct(){
             offsetOfDataRecord = -1;
             offsetOfValueOfRecordInFile = -1;
@@ -38,6 +40,7 @@ namespace PoconoFileSystem {
             offsetOfPreviousDataRecordMetaData=-1;
             offsetOfCollection=-1;
             lengthOfValueField=-1;
+            isDataRecordMetaDeleted=-1;
         }
         
         
@@ -56,6 +59,8 @@ namespace PoconoFileSystem {
  		offsetType offsetOfNextDataRecordMetaData;
         offsetType offsetOfPreviousDataRecordMetaData;
         offsetType offsetOfCollection;
+        offsetType isDataRecordMetaDeleted;
+       
         DataRecordMeataData()
  		{
  			offsetOfDataRecordMetaData = -1;
@@ -65,6 +70,8 @@ namespace PoconoFileSystem {
             offsetOfPreviousDataRecordMetaData = -1;
             offsetOfValueOfRecordInFile = -1;
             lengthOfValueField=-1;
+            isDataRecordMetaDeleted = -1;
+       
 
  		}
  		 std::string toString()
@@ -98,6 +105,9 @@ namespace PoconoFileSystem {
             
             recordStr.append(" ,lengthOfValueField : ");
             recordStr.append(PoconoFileSystem::toStr(lengthOfValueField));
+            
+            recordStr.append(" ,isDataRecordMetaDeleted : ");
+            recordStr.append(PoconoFileSystem::toStr(isDataRecordMetaDeleted));
             
             
            recordStr.append("}");

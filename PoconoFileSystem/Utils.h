@@ -77,7 +77,7 @@ namespace PoconoFileSystem{
     void truncateTheFile(const std::string& name) {
         FILE * pFile;
         pFile = fopen(name.c_str(), "w");
-        char str[] = "fileContent was deleted!";
+        char str[] = "";
         
         fwrite(str , 1 , sizeof(str) , pFile );
         fclose(pFile);

@@ -24,11 +24,12 @@ namespace PoconoFileSystem {
             for(int i=0;i<32;i++)
             {
                 nameOfCollection[i]='\0';
-                offsetOfLastDataRecordMetaData=-1;
-                offsetOfCollectionMetaDataInFile=-1;
-                offsetOfFirstDataRecordMetaData=-1;
-                isCollectionDeleted=-1;
+                
             }
+            offsetOfLastDataRecordMetaData=-1;
+            offsetOfCollectionMetaDataInFile=-1;
+            offsetOfFirstDataRecordMetaData=-1;
+            isCollectionDeleted=-1;
             
         }
     };
