@@ -19,6 +19,8 @@ namespace PoconoFileSystem {
         offsetType offsetOfValueOfRecordInFile; //this points to where the the value field of
         bool dataRecordRemovedFlag;//this flag is set to true when data is deleted;
         offsetType sizeOfValueFieldInDataRecord;
+        offsetType offsetOfDataRecordMetaData; //this is the offset of metadata record that points to this guy , we need it for update functionality
+        offsetType offsetOfDataRecord;//this points to where this datarecord sits in file,this is needed for update functionality
         char  key [MAX_KEY_SIZE];
         DataRecordStruct()
         {
@@ -31,6 +33,8 @@ namespace PoconoFileSystem {
             dataRecordRemovedFlag = false;
             offsetOfValueOfRecordInFile = -1;
             offsetOfCollection = -1;
+            offsetOfDataRecordMetaData =-1;
+            offsetOfDataRecord = -1;
         }
     };
     class DataRecord {
@@ -40,12 +44,13 @@ namespace PoconoFileSystem {
         public :
         
        
-        offsetType  offsetOfCollection; //this points to the collection this data record belongs to.
+        offsetType offsetOfCollection; //this points to the collection this data record belongs to.
         offsetType offsetOfValueOfRecordInFile; //this points to where the the value field of record is .
         //we need this , because the value part of the data is variable sized.
         bool dataRecordRemovedFlag;//this flag is set to true when data is deleted;
-
         offsetType sizeOfValueFieldInDataRecord;
+        offsetType offsetOfDataRecordMetaData; //this is the offset of metadata record that points to this guy , we need it for update functionality
+        offsetType offsetOfDataRecord;//this points to where this datarecord sits in file,this is needed for update functionality
         char  key [MAX_KEY_SIZE];
         char*  value;
         
@@ -56,6 +61,7 @@ namespace PoconoFileSystem {
            // offsetOfDataRecord = -1;
             //sizeOfValueFieldInDataRecord = -1;
             offsetOfCollection = -1;
+            offsetOfDataRecord =-1;
             
         }
         DataRecord(std::string keyStr,std::string valueStr)
@@ -76,7 +82,7 @@ namespace PoconoFileSystem {
             setValue(valueStr,valueStr.size());
             //offsetOfDataRecord = -1;
             offsetOfCollection = -1;
-
+            offsetOfDataRecord =-1;
             
            // assert(offsetOfDataRecord==-1);
 

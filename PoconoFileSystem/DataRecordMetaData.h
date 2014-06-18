@@ -118,7 +118,10 @@ namespace PoconoFileSystem {
 
 // 	typedef std::shared_ptr<DataRecordMeataData> DataRecordMetaDataPtr;
     typedef DataRecordMeataData* DataRecordMetaDataPtr;
-
+    static DataRecordMetaDataPtr getARecordMetaDataOnHeap() { 
+        //later count how many objects are created
+        return new DataRecordMeataData();
+    }
 }
 
 #endif

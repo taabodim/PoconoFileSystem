@@ -43,7 +43,7 @@ namespace PoconoFileSystem {
            fs_.getAllData(allData,collection);
         }
         
-        void deleteData(std::string nameOfCollection,std::string key)
+        std::string deleteData(std::string nameOfCollection,std::string key)
         {
             return fs_.deleteData(nameOfCollection,key);
         }

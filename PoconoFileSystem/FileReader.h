@@ -29,7 +29,7 @@ namespace PoconoFileSystem {
         }
         DataRecordPtr readDataRecordFromFile(offsetType offset);
         void readCollectionMetaDataFromFile(CollectionMetaData* collectionPtr,offsetType offset);
-        DataRecordMetaDataPtr readDataRecordMetaDataFromFile(DataRecordMetaDataPtr record,offsetType offset);
+        void readDataRecordMetaDataFromFile(DataRecordMetaDataPtr record,offsetType offset);
         std::string readTheValueOfDataRecord(offsetType offset,offsetType sizeOfValueField);
         
         };
@@ -101,14 +101,15 @@ namespace PoconoFileSystem {
         record->dataRecordRemovedFlag = dataRecordStruct.dataRecordRemovedFlag;
         record->offsetOfValueOfRecordInFile = dataRecordStruct.offsetOfValueOfRecordInFile;
         record->offsetOfCollection = dataRecordStruct.offsetOfCollection;
-        
+        record->offsetOfDataRecordMetaData =   dataRecordStruct.offsetOfDataRecordMetaData ;
+        record->offsetOfDataRecord =  dataRecordStruct.offsetOfDataRecord;
         
 //         std::cout<<"At offset "<<offset<<" with size of "<<sizeof(class DataRecord)<<",this record was read from file "<<record->toString()<<std::endl;
 
         fclose(ptr_myfile);
         return record;
     }
-    DataRecordMetaDataPtr FileReader::readDataRecordMetaDataFromFile(DataRecordMetaDataPtr record,offsetType offset) {
+    void FileReader::readDataRecordMetaDataFromFile(DataRecordMetaDataPtr record,offsetType offset) {
         
         FILE *ptr_myfile;
         ptr_myfile=fopen(filename.c_str(),"rb");
@@ -152,7 +153,7 @@ namespace PoconoFileSystem {
 //        assert(record->offsetOfDataRecordMetaData!= -1);
        
         fclose(ptr_myfile);
-        return record;
+    
     }
     std::string FileReader::readTheValueOfDataRecord(offsetType offset,offsetType sizeOfValueFieldInDataRecord ) {
         FILE *ptr_myfile;

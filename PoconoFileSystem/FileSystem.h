@@ -167,11 +167,12 @@ namespace PoconoFileSystem {
             DataRecordMetaDataPtr dataRecordMetaData(new DataRecordMeataData());
             
             dataRecordMetaData->offsetOfDataRecord = offsetOfDataRecord;
-            dataRecordMetaData->offsetOfValueOfRecordInFile = offsetOfValueField;
             dataRecordMetaData->offsetOfDataRecordMetaData=offsetOfDataRecordMetaData;
             dataRecordMetaData->offsetOfNextDataRecordMetaData=-1;
             dataRecordMetaData->offsetOfPreviousDataRecordMetaData=-1;
             dataRecordMetaData->offsetOfCollection=collectionMetaData->offsetOfCollectionMetaDataInFile;
+
+            dataRecordMetaData->offsetOfValueOfRecordInFile = offsetOfValueField;
             dataRecordMetaData->lengthOfValueField =record->getValueAsString().size();
             
             
@@ -180,7 +181,7 @@ namespace PoconoFileSystem {
             record->sizeOfValueFieldInDataRecord = record->getValueAsString().size();
             record->dataRecordRemovedFlag = false;
             record->offsetOfValueOfRecordInFile = offsetOfValueField;
-            
+            record->offsetOfDataRecord = offsetOfDataRecord;
             
             
             
@@ -342,10 +343,15 @@ namespace PoconoFileSystem {
             }
             else
             {
-                DataRecordMetaDataPtr previouseRecordMetaData = getRecordMetaData(recordPtr->offsetOfPreviousDataRecordMetaData);
-                DataRecordMetaDataPtr nextRecordMetaData = getRecordMetaData(recordPtr->offsetOfNextDataRecordMetaData);
-                DataRecordMetaDataPtr currentRecordMetaData = getRecordMetaData(recordPtr->offsetOfCurrentDataRecordMetaData);
-
+                DataRecordMetaDataPtr currentRecordMetaData = getARecordMetaDataOnHeap();
+                DataRecordMetaDataPtr previouseRecordMetaData = getARecordMetaDataOnHeap();
+                DataRecordMetaDataPtr nextRecordMetaData = getARecordMetaDataOnHeap();
+                
+                fileReader->readDataRecordMetaDataFromFile(currentRecordMetaData,recordPtr->offsetOfDataRecordMetaData);
+                fileReader->readDataRecordMetaDataFromFile(previouseRecordMetaData,currentRecordMetaData->offsetOfPreviousDataRecordMetaData);
+                fileReader->readDataRecordMetaDataFromFile(nextRecordMetaData,currentRecordMetaData->offsetOfNextDataRecordMetaData);
+                
+                
                 //linking the previous to the next and the next to the previous
                 previouseRecordMetaData->offsetOfNextDataRecordMetaData = nextRecordMetaData->offsetOfDataRecordMetaData;
                 nextRecordMetaData->offsetOfPreviousDataRecordMetaData  = previouseRecordMetaData->offsetOfDataRecordMetaData;
@@ -363,6 +369,7 @@ namespace PoconoFileSystem {
                 return resp;
             }
         }  
+
         void addOffsetToFreeListOfCurrentMetaDataOffsets(offsetType freeOffsetOfDataRecordMetaData){
 
             //add this offset to a list and use this list for inserting new datarecordmetadata 
@@ -370,30 +377,54 @@ namespace PoconoFileSystem {
                 
         std::string updateData(std::string nameOfCollection,std::string key,std::string valueToBeOverwritten)
         {
-            DataRecordPtr recordPtr =  find(nameOfCollection,key);
-            if(recordPtr==NULL) {
-                string resp("There is no data associated with this key : ");
+            string resp;
+            DataRecordPtr record =  find(nameOfCollection,key);
+            if(record==NULL) {
+                resp.append("There is no data associated with this key : ");
                 resp.append(key);
                 return resp;
             }
             else
             {
-                offsetType offsetOfnewValue = PoconoFileSystem::getEndOfFileDataBlockOffsetAsMultipleOfBlock(filename, BLOCK_SIZE);//this should be 0 or 1024 , //getting a proper offset
-           
+             CollectionMetaDataPtr collecitonPtr = getCollectionMetaData (nameOfCollection);
+            record->setValue(valueToBeOverwritten,valueToBeOverwritten.size());
+            offsetType offsetOfnewValue = PoconoFileSystem::getEndOfFileDataBlockOffsetAsMultipleOfBlock(filename, BLOCK_SIZE);//this should be 0 or 1024 , //getting a proper offset
+            DataRecordMetaDataPtr dataRecordMetaData  = new DataRecordMeataData();
+            fileReader->readDataRecordMetaDataFromFile(dataRecordMetaData,record->offsetOfDataRecordMetaData);
 
-                DataRecordMetaDataPtr currentRecordMetaData = getRecordMetaData(recordPtr->offsetOfCurrentDataRecordMetaData);
-                recordPtr->sizeOfValueFieldInDataRecord = valueToBeOverwritten.size();
-                recordPtr->offsetOfValueField = offsetOfnewValue;
-                fileWriter->writeTheValueOfRecord(recordPtr,offsetOfnewValue);
 
-                std::string valueExpected = recordPtr->getValueAsString();
-                
-                fileWriter->writeDataRecordMetaData(currentRecordMetaData);
 
-                fileWriter->
+            dataRecordMetaData->offsetOfValueOfRecordInFile = offsetOfnewValue;
+            dataRecordMetaData->lengthOfValueField =record->getValueAsString().size();
+          
 
-                assert(fileReader->readTheValueOfDataRecord(offsetOfValueField,recordPtr->sizeOfValueFieldInDataRecord).compare(valueExpected)==0);
+            //update the  DataRecord
+            record->offsetOfCollection = collecitonPtr->offsetOfCollectionMetaDataInFile;
+            record->sizeOfValueFieldInDataRecord = record->getValueAsString().size();
+            record->dataRecordRemovedFlag = false;
+            record->offsetOfValueOfRecordInFile = offsetOfnewValue;
+            
+            
+            
+            
+            
+            /* writing the new value field in file */
+            
+            fileWriter->writeTheValueOfRecord(record,offsetOfnewValue);
+            std::string valueExpected = record->getValueAsString();
+            
+            assert(fileReader->readTheValueOfDataRecord(offsetOfnewValue,record->sizeOfValueFieldInDataRecord).compare(valueExpected)==0);
+            /*********************************/
+
+            fileWriter->writeDataRecordAtOffset(record,record->offsetOfDataRecord);
+            fileWriter->writeDataRecordMetaData(dataRecordMetaData);
             }
+            
+            resp.append("Data was updated , associated with this key : ");
+            resp.append(key);
+            
+            return resp;
+            
         }
         std::list<std::string> showAllCollections() {
             //this loads the collection without caching it to make sure that 
@@ -402,10 +433,8 @@ namespace PoconoFileSystem {
             loadAllCollectionMap();
             list<std::string> allCollectionNames;
             for(list<CollectionMetaDataRawPtr>::iterator iter = allCollectionsMap.begin();
-                iter!=allCollectionsMap.end();++iter)
-            {
+                iter!=allCollectionsMap.end();++iter) {
                 allCollectionNames.push_back((*iter)->getNameOfCollectionAsString());
-
             }
             
             return allCollectionNames;

@@ -165,7 +165,8 @@ namespace PoconoFileSystem {
         dataRecordStruct.dataRecordRemovedFlag=record->dataRecordRemovedFlag;
         dataRecordStruct.offsetOfValueOfRecordInFile = record->offsetOfValueOfRecordInFile;
         dataRecordStruct.offsetOfCollection = record->offsetOfCollection;
-        
+        dataRecordStruct.offsetOfDataRecordMetaData = record->offsetOfDataRecordMetaData;
+        dataRecordStruct.offsetOfDataRecord =record->offsetOfDataRecord;
         
         fseek ( ptr_myfile , offsetOfDataRecord , SEEK_SET );
         fwrite(&dataRecordStruct, sizeof(struct DataRecordStruct), 1, ptr_myfile);

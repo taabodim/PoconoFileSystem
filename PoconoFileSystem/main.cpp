@@ -190,10 +190,12 @@ void testWriting10DataRecordAndDeletingTheOneWithSmallKey8() {
     }
     //find the one with key : smallKey8
     std::string key("smallKey8");
-    DataRecordPtr foundRecord = testFS.find(nameOfCollection,key);
-    assert(foundRecord!=NULL);
-    assert(foundRecord->getKeyAsString().compare(key)==0);
-    std::cout<<"foundRecord Data Record is "<<(foundRecord)->toString()<<std::endl;
+    std::string response = testFS.deleteData(nameOfCollection,key);
+    string respExpected("record was deleted with this key : ");
+                respExpected.append(key);
+     assert(respExpected.compare(response)==0);
+    // assert(foundRecord->getKeyAsString().compare(key)==0);
+     std::cout<<"response for deleting the Data Record is "<<response<<std::endl;
     
     
 }
