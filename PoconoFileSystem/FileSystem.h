@@ -164,7 +164,7 @@ namespace PoconoFileSystem {
             
             
             //prepare DataRecord meta data
-            DataRecordMetaDataPtr dataRecordMetaData(new DataRecordMeataData());
+            DataRecordMetaDataPtr dataRecordMetaData = getARecordMetaDataOnHeap();
             
             dataRecordMetaData->offsetOfDataRecord = offsetOfDataRecord;
             dataRecordMetaData->offsetOfDataRecordMetaData=offsetOfDataRecordMetaData;
@@ -216,7 +216,7 @@ namespace PoconoFileSystem {
             
             
             
-            DataRecordMetaDataPtr firstDataMetaDataPtr = new DataRecordMeataData();
+            DataRecordMetaDataPtr firstDataMetaDataPtr = getARecordMetaDataOnHeap();
             
             //2. get the first data record and append to the list
             fileReader->readDataRecordMetaDataFromFile(firstDataMetaDataPtr,collection->offsetOfFirstDataRecordMetaData);
@@ -258,7 +258,7 @@ namespace PoconoFileSystem {
         
         DataRecordMetaDataPtr getLastDataRecordMetaDataOfCollection(CollectionMetaDataPtr collection)
         {
-            DataRecordMetaDataPtr record = new DataRecordMeataData();
+            DataRecordMetaDataPtr record = getARecordMetaDataOnHeap();
             if(collection->offsetOfLastDataRecordMetaData==-1) return NULL;
             else
             {
@@ -389,7 +389,7 @@ namespace PoconoFileSystem {
              CollectionMetaDataPtr collecitonPtr = getCollectionMetaData (nameOfCollection);
             record->setValue(valueToBeOverwritten,valueToBeOverwritten.size());
             offsetType offsetOfnewValue = PoconoFileSystem::getEndOfFileDataBlockOffsetAsMultipleOfBlock(filename, BLOCK_SIZE);//this should be 0 or 1024 , //getting a proper offset
-            DataRecordMetaDataPtr dataRecordMetaData  = new DataRecordMeataData();
+            DataRecordMetaDataPtr dataRecordMetaData  = getARecordMetaDataOnHeap();
             fileReader->readDataRecordMetaDataFromFile(dataRecordMetaData,record->offsetOfDataRecordMetaData);
 
 

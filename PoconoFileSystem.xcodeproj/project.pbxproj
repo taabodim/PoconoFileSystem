@@ -31,6 +31,7 @@
 		A5D9A14F1942AF22000F1170 /* Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		A5D9A1501942AF99000F1170 /* Configs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Configs.h; sourceTree = "<group>"; };
 		A5D9A1511942B91C000F1170 /* SuperBlock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SuperBlock.h; sourceTree = "<group>"; };
+		E23075B81953332C0088072E /* CRUDTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CRUDTests.h; sourceTree = "<group>"; };
 		E23EB36A194269AB00C4DECA /* PoconoFileSystem */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PoconoFileSystem; sourceTree = BUILT_PRODUCTS_DIR; };
 		E23EB36D194269AB00C4DECA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		E23EB36F194269AB00C4DECA /* PoconoFileSystem.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = PoconoFileSystem.1; sourceTree = "<group>"; };
@@ -39,6 +40,7 @@
 		E23EB37A19426EDD00C4DECA /* FileSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileSystem.h; sourceTree = "<group>"; };
 		E23EB37B19426F5100C4DECA /* DataRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataRecord.h; sourceTree = "<group>"; };
 		E23EB37E1945F55800C4DECA /* DataRecordMetaData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataRecordMetaData.h; sourceTree = "<group>"; };
+		E25389DB1953208600D2C294 /* Index.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Index.h; sourceTree = "<group>"; };
 		E2649624194BA94300638312 /* Logger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
 		E2649625194BADFF00638312 /* LoggerWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoggerWrapper.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -54,6 +56,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E23075B71953330A0088072E /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				E23075B81953332C0088072E /* CRUDTests.h */,
+			);
+			name = Tests;
+			sourceTree = "<group>";
+		};
 		E23EB361194269AB00C4DECA = {
 			isa = PBXGroup;
 			children = (
@@ -73,6 +83,7 @@
 		E23EB36C194269AB00C4DECA /* PoconoFileSystem */ = {
 			isa = PBXGroup;
 			children = (
+				E23075B71953330A0088072E /* Tests */,
 				E23EB36D194269AB00C4DECA /* main.cpp */,
 				E23EB36F194269AB00C4DECA /* PoconoFileSystem.1 */,
 				E23EB37719426B5200C4DECA /* FileWriter.h */,
@@ -88,6 +99,7 @@
 				E2649625194BADFF00638312 /* LoggerWrapper.h */,
 				A53270ED194CFEFE00530E5B /* FileSystemAPI.h */,
 				A53270EE194D014700530E5B /* CollectionMetaData.h */,
+				E25389DB1953208600D2C294 /* Index.h */,
 			);
 			path = PoconoFileSystem;
 			sourceTree = "<group>";

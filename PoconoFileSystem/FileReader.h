@@ -89,7 +89,7 @@ namespace PoconoFileSystem {
         fseek ( ptr_myfile , offset , SEEK_SET );
         fread(&dataRecordStruct,sizeof(struct DataRecordStruct),1,ptr_myfile);
        
-        DataRecordPtr record ( new DataRecord());
+        DataRecordPtr record  = getARecordDataOnHeap();
         
         
         for(offsetType i=0;i<MAX_KEY_SIZE;i++)

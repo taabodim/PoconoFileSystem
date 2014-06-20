@@ -172,6 +172,11 @@ namespace PoconoFileSystem {
    
     typedef std::shared_ptr<DataRecord> DataRecordPtr;
     
+    static DataRecordPtr getARecordDataOnHeap() {
+        //later count how many objects are created
+        std::shared_ptr<DataRecord> ptr(new DataRecord());
+        return ptr;
+    }
 }
 
 #endif

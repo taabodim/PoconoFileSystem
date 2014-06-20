@@ -48,9 +48,9 @@ namespace PoconoFileSystem {
             return fs_.deleteData(nameOfCollection,key);
         }
         
-        void updateData(std::string nameOfCollection,DataRecordPtr record)
-        {
-            
+        std::string updateData(std::string nameOfCollection,std::string key,std::string valueToBeOverwritten)
+            {
+             return fs_.updateData(nameOfCollection,key,valueToBeOverwritten);
         }
         list<std::string> showAllCollections() {
             return fs_.showAllCollections();

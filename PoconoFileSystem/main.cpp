@@ -170,7 +170,7 @@ void testDeletingFourCollections()
     
 }
 
-//incomplete , finish this test
+//incomplete , finish this test , debug this test and make sure it works
 void testWriting10DataRecordAndDeletingTheOneWithSmallKey8() {
     FileSystemAPI testFS;
     std::string nameOfCollection("testCollection");
@@ -180,7 +180,7 @@ void testWriting10DataRecordAndDeletingTheOneWithSmallKey8() {
     CollectionMetaDataPtr collection =testFS.openCollection(nameOfCollection);
     
     
-    for(int i=0;i<100;i++)
+    for(int i=0;i<10;i++)
     {
         std::string key("smallKey");
         key.append(toStr(i));
@@ -196,6 +196,80 @@ void testWriting10DataRecordAndDeletingTheOneWithSmallKey8() {
      assert(respExpected.compare(response)==0);
     // assert(foundRecord->getKeyAsString().compare(key)==0);
      std::cout<<"response for deleting the Data Record is "<<response<<std::endl;
+    
+    
+}
+
+//incomplete , finish this test , debug this test and make sure it works
+void testWriting10DataRecordAndDeletingAllOfThem() {
+    FileSystemAPI testFS;
+    std::string nameOfCollection("testCollection");
+    
+    testFS.deleteCollection(nameOfCollection);
+    
+    CollectionMetaDataPtr collection =testFS.openCollection(nameOfCollection);
+    
+    
+    for(int i=0;i<10;i++)
+    {
+        std::string key("smallKey");
+        key.append(toStr(i));
+        
+        DataRecordPtr record(new DataRecord(key,"smallValue***************************************************************************************EhdOfValue"));
+        testFS.insertData(collection, record);
+    }
+
+     for(int i=0;i<10;i++)
+    {
+        std::string key("smallKey");
+        key.append(toStr(i));
+        
+        std::string updateValue("smallValue***************************************************************************************EhdOfValue");
+        updateValue.append(toStr(i));
+        
+        testFS.deleteData(nameOfCollection, key);
+        DataRecordPtr foundRecord = testFS.find(nameOfCollection,key);
+        assert(foundRecord==NULL);
+    
+    }
+    
+}
+
+//incomplete , finish this test , debug this test and make sure it works
+void testWriting10DataRecordAndUpdatingAllOfThem() {
+    FileSystemAPI testFS;
+    std::string nameOfCollection("testCollection");
+    
+    testFS.deleteCollection(nameOfCollection);
+    
+    CollectionMetaDataPtr collection =testFS.openCollection(nameOfCollection);
+    
+    
+    for(int i=0;i<10;i++)
+    {
+        std::string key("smallKey");
+        key.append(toStr(i));
+        
+        DataRecordPtr record(new DataRecord(key,"smallValue***************************************************************************************EhdOfValue"));
+        testFS.insertData(collection, record);
+    }
+
+
+     for(int i=0;i<10;i++)
+    {
+        std::string key("smallKey");
+        key.append(toStr(i));
+        
+        std::string updateValue("smallValue***************************************************************************************EhdOfValue");
+        updateValue.append(toStr(i));
+        
+        testFS.updateData(nameOfCollection, key, updateValue);
+        DataRecordPtr foundRecord = testFS.find(nameOfCollection,key);
+        assert(foundRecord!=NULL);
+        assert(foundRecord->getValueAsString().compare(updateValue)==0);
+  
+    }
+
     
     
 }
