@@ -279,7 +279,9 @@ void allOfTests() {
     //testWritingAndReadingSmallValuesInOneCollection();
     //testWritingAndReadingSmallValuesInThreeCollections();
     //testWriting10DataRecordAndDeletingTheOneWithSmallKey8();
+    //testDeletingFourCollections();
     
+    testWriting10DataRecordAndDeletingAllOfThem();
 }
 int main(int argc, const char * argv[])
 {
@@ -300,7 +302,6 @@ int main(int argc, const char * argv[])
     truncateTheFile(dataFilename);
     allOfTests();
   
-    testDeletingFourCollections();
     
     return 0;
 }

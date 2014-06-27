@@ -291,6 +291,11 @@ namespace PoconoFileSystem {
         void deleteCollection(std::string nameOfCollection){
             //mark the collection as deleted....
             CollectionMetaDataPtr collecitonPtr = getCollectionMetaData (nameOfCollection);
+            if(collecitonPtr==NULL) {
+                //collecitonPtr  = getNewInstanceFromHeap(nameOfCollection);
+                return ;
+            }
+            
             collecitonPtr->isCollectionDeleted = DELETED;//88  means its deleted
             fileWriter->writeCollectionMetaData(collecitonPtr,collecitonPtr->offsetOfCollectionMetaDataInFile);
             
@@ -308,6 +313,7 @@ namespace PoconoFileSystem {
                     break;
                 }
             }
+            
             
         }
         

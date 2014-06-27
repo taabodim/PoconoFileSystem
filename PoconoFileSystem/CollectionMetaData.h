@@ -13,6 +13,11 @@
 #include <memory>
 #include <iostream>
 namespace PoconoFileSystem {
+    //typedef std::shared_ptr<CollectionMetaData> CollectionMetaDataPtr;
+    class CollectionMetaData;
+    typedef CollectionMetaData* CollectionMetaDataPtr;
+    
+    typedef CollectionMetaData* CollectionMetaDataRawPtr;
     
     struct CollectionMetaDataStruct{
         char nameOfCollection [32];
@@ -137,14 +142,14 @@ namespace PoconoFileSystem {
         {
             return shared_from_this();
         }
+        CollectionMetaDataRawPtr getNewInstanceOnHeap(std::string nameOfCollection)
+        {
+            return new CollectionMetaData(nameOfCollection);
+        }
         
     };
     
-    //typedef std::shared_ptr<CollectionMetaData> CollectionMetaDataPtr;
-    typedef CollectionMetaData* CollectionMetaDataPtr;
-    
-    typedef CollectionMetaData* CollectionMetaDataRawPtr;
-    
+   
 }
 
 
