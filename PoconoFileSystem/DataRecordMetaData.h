@@ -76,8 +76,9 @@ namespace PoconoFileSystem {
  		}
  		 std::string toString()
         {
-            std::string recordStr("RecordMetaData is {");
-            
+            std::string recordStr;
+//            recordStr.reserve(1000);
+            recordStr.append("RecordMetaData is {");
 
             recordStr.append("offsetOfDataRecord : ");
             recordStr.append(PoconoFileSystem::toStr(offsetOfDataRecord));
@@ -120,7 +121,8 @@ namespace PoconoFileSystem {
     typedef DataRecordMeataData* DataRecordMetaDataPtr;
     static DataRecordMetaDataPtr getARecordMetaDataOnHeap() { 
         //later count how many objects are created
-        return new DataRecordMeataData();
+        DataRecordMetaDataPtr ptr = new DataRecordMeataData();
+        return ptr; 
     }
 }
 

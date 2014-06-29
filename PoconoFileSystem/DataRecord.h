@@ -10,6 +10,7 @@
 #define PoconoFileSystem_DataRecord_h
 #include "Utils.h"
 #include <string.h>
+#include <list>
 
 namespace PoconoFileSystem {
     const static size_t MAX_KEY_SIZE = 32;
@@ -62,7 +63,7 @@ namespace PoconoFileSystem {
             //sizeOfValueFieldInDataRecord = -1;
             offsetOfCollection = -1;
             offsetOfDataRecord =-1;
-            
+            value=0;
         }
         DataRecord(std::string keyStr,std::string valueStr)
         {
@@ -120,7 +121,7 @@ namespace PoconoFileSystem {
             memcpy ( keyArrayCopy, key, MAX_KEY_SIZE );
             std::string keyStrNew (key);
             keyStr.append(keyStrNew);
-            std::cout<<"keyStr : "<<keyStr<<std::endl;
+            //std::cout<<"keyStr : "<<keyStr<<std::endl;
             }
             return keyStr;
         }
@@ -132,7 +133,7 @@ namespace PoconoFileSystem {
             
             memcpy ( valueArrayCopy, value, sizeOfValueFieldInDataRecord );
             std::string val (valueArrayCopy,sizeOfValueFieldInDataRecord);
-            std::cout<<"getValueAsString : "<<val<<std::endl;
+            //std::cout<<"getValueAsString : "<<val<<std::endl;
             assert(value!=NULL);
             return val;
 
@@ -171,12 +172,20 @@ namespace PoconoFileSystem {
     };
    
     typedef std::shared_ptr<DataRecord> DataRecordPtr;
-    
-    static DataRecordPtr getARecordDataOnHeap() {
+//    typedef DataRecord* DataRecordPtr;
+    typedef std::shared_ptr<std::list<DataRecordPtr>> ListOfDataRecordPtr;
+    DataRecordPtr getARecordDataOnHeap() {
         //later count how many objects are created
         std::shared_ptr<DataRecord> ptr(new DataRecord());
+//        DataRecordPtr ptr = new DataRecord();
         return ptr;
     }
+    
+     ListOfDataRecordPtr getAListOfDataRecordOnHeap() {
+        std::shared_ptr<std::list<DataRecordPtr>> allData(new std::list<DataRecordPtr>());
+        return allData;
+   }
+    
 }
 
 #endif

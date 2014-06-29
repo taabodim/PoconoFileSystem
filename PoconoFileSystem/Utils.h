@@ -215,7 +215,6 @@ namespace PoconoFileSystem{
     }
     void setTheStackSize()
     {
-        
         const rlim_t kStackSize = 32L * 1024L * 1024L;   // min stack size = 64 Mb
         struct rlimit rl;
         int result;
@@ -231,6 +230,7 @@ namespace PoconoFileSystem{
                 {
                     fprintf(stderr, "setrlimit returned result = %d\n", result);
                 }
+                std::cout<<"result of stack change is "<<result<<std::endl;
             }
         }
         

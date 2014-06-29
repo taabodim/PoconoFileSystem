@@ -29,7 +29,7 @@ namespace PoconoFileSystem {
                 PoconoFileSystem::openFileIfItDoesntExist(filename);
             }
         }
-        void writeDataRecordAtOffset(std::shared_ptr<DataRecord> record,offsetType offsetOfDataRecord);
+        void writeDataRecordAtOffset(DataRecordPtr record,offsetType offsetOfDataRecord);
         void writeCollectionMetaData(CollectionMetaDataRawPtr collectionMetaDataPtr,offsetType offsetOfCollectionMetaData);
        
         void writeDataRecordMetaData(DataRecordMetaDataPtr dataRecordMetaDataPtr);
@@ -137,7 +137,7 @@ namespace PoconoFileSystem {
         
     }
    
-    void  FileWriter::writeDataRecordAtOffset (std::shared_ptr<DataRecord> record,offsetType offsetOfDataRecord) {
+    void  FileWriter::writeDataRecordAtOffset (DataRecordPtr record,offsetType offsetOfDataRecord) {
         
         FILE *ptr_myfile;
 //        struct recordInDatabase my_record;

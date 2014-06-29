@@ -35,10 +35,10 @@ void testWritingAndReadingSmallValuesInOneCollection()
         testFS.insertData(collection, record);
     }
     
-    std::list<DataRecordPtr> allData;
+    ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
      testFS.getAllData(allData,collection);
-    for(std::list<DataRecordPtr>::iterator it = allData.begin();
-        it!=allData.end();++it)
+    for(std::list<DataRecordPtr>::iterator it = allData->begin();
+        it!=allData->end();++it)
     {
         std::cout<<"Data Record is "<<(*it)->toString()<<std::endl;
     }
@@ -55,14 +55,65 @@ void testWritingAndReadingOneSmallValueInOneCollection() {
         testFS.insertData(collection, record);
     }
     
-    std::list<DataRecordPtr> allData;
+    ListOfDataRecordPtr allData  = getAListOfDataRecordOnHeap();
     testFS.getAllData(allData,collection);
-    for(std::list<DataRecordPtr>::iterator it = allData.begin();
-        it!=allData.end();++it)
+    for(std::list<DataRecordPtr>::iterator it = allData->begin();
+        it!=allData->end();++it)
     {
         std::cout<<"Data Record is "<<(*it)->toString()<<std::endl;
     }
 
+}
+void testWritingAndReadingSmall1000ValuesInThreeCollections() {
+    
+    
+    FileSystemAPI testFS;
+    int numOfCollectionsInTest =3;
+    
+    //    for(int col = 0 ; col<numOfCollectionsInTest;col++)
+    //    {
+    std::string colName1 ("testCollection1");
+    std::string colName2 ("testCollection2");
+    std::string colName3 ("testCollection3");
+    
+    
+    CollectionMetaDataPtr collection1 =testFS.openCollection(colName1);
+    CollectionMetaDataPtr collection2 =testFS.openCollection(colName2);
+    CollectionMetaDataPtr collection3 =testFS.openCollection(colName3);
+    CollectionMetaDataPtr allCollections [3]={collection1,collection2,collection3};
+    
+    int num = 1000;
+    for(int j=0;j<3;j++)
+    {
+        for(int i=0;i<num;i++)
+        {
+            std::string key("smallKey");
+            key.append(toStr(i));
+            key.append(allCollections[j]->getNameOfCollectionAsString());
+            
+            std::string value("smallValue***************************************************************************************EhdOfValue");
+            value.append(toStr(i));
+            value.append(allCollections[j]->getNameOfCollectionAsString());
+            
+            DataRecordPtr record(new DataRecord(key,value));
+            testFS.insertData(allCollections[j], record);
+        }
+    }
+    
+    for(int j=0;j<3;j++)
+    {
+        std::cout<<"data in the next collections *************"<<std::endl;
+        
+        ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
+        testFS.getAllData(allData,allCollections[j]);
+        for(std::list<DataRecordPtr>::iterator it = allData->begin();
+            it!=allData->end();++it)
+        {
+            std::cout<<"Data Record is "<<(*it)->toString()<<std::endl;
+        }
+        
+    }
+    
 }
 void testWritingAndReadingSmallValuesInThreeCollections()
 {
@@ -105,10 +156,10 @@ void testWritingAndReadingSmallValuesInThreeCollections()
     {
         std::cout<<"data in the next collections *************"<<std::endl;
         
-        std::list<DataRecordPtr> allData;
+        ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
         testFS.getAllData(allData,allCollections[j]);
-    for(std::list<DataRecordPtr>::iterator it = allData.begin();
-        it!=allData.end();++it)
+    for(std::list<DataRecordPtr>::iterator it = allData->begin();
+        it!=allData->end();++it)
     {
         std::cout<<"Data Record is "<<(*it)->toString()<<std::endl;
     }
@@ -280,14 +331,43 @@ void allOfTests() {
     //testWritingAndReadingSmallValuesInThreeCollections();
     //testWriting10DataRecordAndDeletingTheOneWithSmallKey8();
     //testDeletingFourCollections();
+    testWritingAndReadingSmall1000ValuesInThreeCollections();
+    //testWriting10DataRecordAndDeletingAllOfThem(); //its buggy  fix it
+}
+void memoryTest() {
+    const long num = 10000;
+//    string allStrings[num];
+//    for(int j=0;j<num;j++)
+//    {
+//        for(int i=0;i<num;i++) {
+//            std::string nameOfCollection("testCollection");
+//            allStrings[i] = nameOfCollection;
+//            std::cout<<"allocating "<<i<<std::endl;
+//    }
+//    }
     
-    testWriting10DataRecordAndDeletingAllOfThem();
+    string* allStrings[num];
+    for(int j=0;j<num;j++)
+    {
+        for(int i=0;i<num;i++) {
+            std::string* nameOfCollection = new std::string("testCollection");
+            allStrings[i] = nameOfCollection;
+            std::cout<<"allocating "<<i<<std::endl;
+        }
+    }
+    
 }
 int main(int argc, const char * argv[])
 {
+    try {
+        std::string("abc").substr(10); // throws std::length_error
+        // } catch( std::exception e ) { // copy-initialization from the std::exception base
+        //     std::cout << e.what(); // information from length_error is lost
+        // }
+    
     // This is the PoconoFileSystem first commit
-    bool homeSetting = false;
-    //setTheStackSize();
+    bool homeSetting = true;
+    setTheStackSize();
     if(homeSetting)
     {
         Configs::logDir.clear();
@@ -301,8 +381,11 @@ int main(int argc, const char * argv[])
 
     truncateTheFile(dataFilename);
     allOfTests();
-  
+//memoryTest();
     
+    } catch( const std::exception& e ) { // reference to the base of a polymorphic object
+        std::cout << "exception thrown : "<<e.what(); // information from length_error printed
+    }
     return 0;
 }
 
