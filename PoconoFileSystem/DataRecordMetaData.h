@@ -48,11 +48,9 @@ namespace PoconoFileSystem {
     class DataRecordMeataData {
  	
 
- 		private: 
-
+        public :
  		
- 		public : 
- 		offsetType offsetOfDataRecord; //this is the offset of data record that this meta data points to
+        offsetType offsetOfDataRecord; //this is the offset of data record that this meta data points to
         offsetType offsetOfValueOfRecordInFile;
         offsetType lengthOfValueField;
  		offsetType offsetOfDataRecordMetaData;//this is where this class sits in filesystem
@@ -74,6 +72,28 @@ namespace PoconoFileSystem {
        
 
  		}
+        DataRecordMeataData(const DataRecordMeataData& from) {
+            this->offsetOfDataRecordMetaData= from.offsetOfDataRecordMetaData;
+ 			this->offsetOfDataRecord= from.offsetOfDataRecord;
+ 			this->offsetOfCollection=from.offsetOfCollection;
+            this->offsetOfNextDataRecordMetaData=from.offsetOfNextDataRecordMetaData;
+            this->offsetOfPreviousDataRecordMetaData=from.offsetOfPreviousDataRecordMetaData;
+            this->offsetOfValueOfRecordInFile=from.offsetOfValueOfRecordInFile;
+            this->lengthOfValueField=from.lengthOfValueField;
+            this->isDataRecordMetaDeleted= from.isDataRecordMetaDeleted;
+            
+        }
+        DataRecordMeataData operator=(const DataRecordMeataData& from){
+            this->offsetOfDataRecordMetaData= from.offsetOfDataRecordMetaData;
+ 			this->offsetOfDataRecord= from.offsetOfDataRecord;
+ 			this->offsetOfCollection=from.offsetOfCollection;
+            this->offsetOfNextDataRecordMetaData=from.offsetOfNextDataRecordMetaData;
+            this->offsetOfPreviousDataRecordMetaData=from.offsetOfPreviousDataRecordMetaData;
+            this->offsetOfValueOfRecordInFile=from.offsetOfValueOfRecordInFile;
+            this->lengthOfValueField=from.lengthOfValueField;
+            this->isDataRecordMetaDeleted= from.isDataRecordMetaDeleted;
+            return *this;
+        }
  		 std::string toString()
         {
             std::string recordStr;
@@ -115,7 +135,12 @@ namespace PoconoFileSystem {
            
             return recordStr;
         }
- 	};
+        
+ 	virtual ~DataRecordMeataData()
+        {
+           // std::cout<<"~DataRecordMeataData object's out"<<std::endl;
+        }
+    };
 
 // 	typedef std::shared_ptr<DataRecordMeataData> DataRecordMetaDataPtr;
     typedef DataRecordMeataData* DataRecordMetaDataPtr;

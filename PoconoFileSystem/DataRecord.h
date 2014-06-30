@@ -140,7 +140,8 @@ namespace PoconoFileSystem {
         }
         std::string toString()
         {
-            std::string recordStr(key);
+            std::string recordStr;
+            recordStr.append(key);
             recordStr.append(";");
             if(value==NULL)
             {
@@ -183,8 +184,18 @@ namespace PoconoFileSystem {
     
      ListOfDataRecordPtr getAListOfDataRecordOnHeap() {
         std::shared_ptr<std::list<DataRecordPtr>> allData(new std::list<DataRecordPtr>());
+         
         return allData;
    }
+    std::list<DataRecordPtr> getAListOfDataRecordOnHeapModified() {
+        //        std::shared_ptr<std::list<DataRecordPtr>> allData(new std::list<DataRecordPtr>());
+        
+        std::list<DataRecordPtr> allData;
+        
+        return allData;
+    }
+
+    
     
 }
 

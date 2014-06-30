@@ -36,7 +36,7 @@ void testWritingAndReadingSmallValuesInOneCollection()
     }
     
     ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
-     testFS.getAllData(allData,collection);
+     testFS.getAllData(collection);
     for(std::list<DataRecordPtr>::iterator it = allData->begin();
         it!=allData->end();++it)
     {
@@ -56,7 +56,7 @@ void testWritingAndReadingOneSmallValueInOneCollection() {
     }
     
     ListOfDataRecordPtr allData  = getAListOfDataRecordOnHeap();
-    testFS.getAllData(allData,collection);
+    testFS.getAllData(collection);
     for(std::list<DataRecordPtr>::iterator it = allData->begin();
         it!=allData->end();++it)
     {
@@ -104,10 +104,10 @@ void testWritingAndReadingSmall1000ValuesInThreeCollections() {
     {
         std::cout<<"data in the next collections *************"<<std::endl;
         
-        ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
-        testFS.getAllData(allData,allCollections[j]);
-        for(std::list<DataRecordPtr>::iterator it = allData->begin();
-            it!=allData->end();++it)
+        std::list<DataRecordPtr> allData = getAListOfDataRecordOnHeapModified();
+        testFS.getAllData(allCollections[j]);
+        for(std::list<DataRecordPtr>::iterator it = allData.begin();
+            it!=allData.end();++it)
         {
             std::cout<<"Data Record is "<<(*it)->toString()<<std::endl;
         }
@@ -157,7 +157,7 @@ void testWritingAndReadingSmallValuesInThreeCollections()
         std::cout<<"data in the next collections *************"<<std::endl;
         
         ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
-        testFS.getAllData(allData,allCollections[j]);
+        testFS.getAllData(allCollections[j]);
     for(std::list<DataRecordPtr>::iterator it = allData->begin();
         it!=allData->end();++it)
     {
@@ -360,11 +360,7 @@ void memoryTest() {
 int main(int argc, const char * argv[])
 {
     try {
-        std::string("abc").substr(10); // throws std::length_error
-        // } catch( std::exception e ) { // copy-initialization from the std::exception base
-        //     std::cout << e.what(); // information from length_error is lost
-        // }
-    
+     
     // This is the PoconoFileSystem first commit
     bool homeSetting = true;
     setTheStackSize();

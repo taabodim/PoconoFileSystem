@@ -146,6 +146,9 @@ namespace PoconoFileSystem {
         {
             return new CollectionMetaData(nameOfCollection);
         }
+        virtual  ~CollectionMetaData() {
+            
+        }
         
     };
     

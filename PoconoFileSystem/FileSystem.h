@@ -214,7 +214,21 @@ namespace PoconoFileSystem {
              fileWriter->writeCollectionMetaData(collectionMetaData,collectionMetaData->offsetOfCollectionMetaDataInFile);
             
         }
-        void getAllData(std::shared_ptr<std::list<DataRecordPtr>> allData, CollectionMetaDataPtr collectionArg)
+        
+        void getAllData(CollectionMetaDataPtr collectionArg)
+        {
+            DataRecordMeataData* firstDataMetaDataPtr = new DataRecordMeataData();
+
+            std::list<DataRecord> allData;
+            CollectionMetaData* collection(new CollectionMetaData());
+            fileReader->readCollectionMetaDataFromFile(collection,collectionArg->offsetOfCollectionMetaDataInFile);
+//            if(collection)
+//                delete collection;
+//            if(firstDataMetaDataPtr)
+//                delete firstDataMetaDataPtr;
+
+        }
+        void getAllDataReal(std::shared_ptr<std::list<DataRecordPtr>> allData, CollectionMetaDataPtr collectionArg)
         {
             //1.get the most updated version of collectionMetaData
             
@@ -248,7 +262,7 @@ namespace PoconoFileSystem {
 
             while(nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData!=-1)
             {
-                dataPtr = fileReader->readDataRecordFromFile(nextDataRecordMetaDataPtr->offsetOfDataRecord);
+                DataRecordPtr dataPtr = fileReader->readDataRecordFromFile(nextDataRecordMetaDataPtr->offsetOfDataRecord);
                 
                 std::string valueOfDataRecord = fileReader->readTheValueOfDataRecord(dataPtr->offsetOfValueOfRecordInFile,dataPtr->sizeOfValueFieldInDataRecord);
                 
@@ -331,7 +345,7 @@ namespace PoconoFileSystem {
         DataRecordPtr find(std::string nameOfCollection,std::string key) {
             CollectionMetaDataPtr collectionPtr = openCollection(nameOfCollection);
             ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
-            getAllData(allData,collectionPtr);
+            getAllData(collectionPtr);
             for(std::list<DataRecordPtr>::iterator it = allData->begin();
                 it!=allData->end();++it)
             {

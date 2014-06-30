@@ -231,6 +231,7 @@ namespace PoconoFileSystem{
                     fprintf(stderr, "setrlimit returned result = %d\n", result);
                 }
                 std::cout<<"result of stack change is "<<result<<std::endl;
+                assert(result==0);
             }
         }
         
