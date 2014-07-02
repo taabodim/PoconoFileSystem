@@ -30,11 +30,14 @@ namespace PoconoFileSystem {
         public :
         
         
-        FileSystem(std::string fileName):filename(fileName),fileReader(new FileReader(filename)),
-        fileWriter(new FileWriter(filename))
-        {
-            filename = PoconoFileSystem::getFullCollectionName(filename);
+        FileSystem(std::string fileName):filename(fileName){
+            this->filename = PoconoFileSystem::getFullCollectionName(filename);
             openFileIfItDoesntExist(filename);
+            FileReaderPtr tmpReader (new FileReader(filename));
+            FileWriterPtr tmpWriter (new FileWriter(filename));
+            this->fileReader = tmpReader;
+            this->fileWriter = tmpWriter;
+
             //read all the collectionOffsets from the file , and load the collectionMap
             
             loadAllCollectionMap();
@@ -50,12 +53,14 @@ namespace PoconoFileSystem {
             }
             else {
                 
-                //                CollectionMetaDataPtr colIndex(new CollectionMetaData(nameOfCollection));
                 CollectionMetaDataRawPtr colIndex = new CollectionMetaData(nameOfCollection);
                 
-                offsetType offsetOfCollectionMetaDataInFile =STARTING_OFFSET_OF_COLLECITON_INDEXS + ((allCollectionsMap.size()-1) * sizeof(class CollectionMetaData));
-                colIndex->offsetOfCollectionMetaDataInFile = offsetOfCollectionMetaDataInFile;
+                offsetType offsetOfCollectionMetaDataInFile =STARTING_OFFSET_OF_COLLECITON_INDEXS + ((allCollectionsMap.size()) * sizeof(class CollectionMetaData));
                 
+                assert(offsetOfCollectionMetaDataInFile>=0);
+                
+                colIndex->offsetOfCollectionMetaDataInFile = offsetOfCollectionMetaDataInFile;
+//                std::cout<<"openCollection: going to write this collection in File"<<colIndex->toString()<<std::endl;
                 allCollectionsMap.push_back(colIndex);
                 
                 fileWriter->writeCollectionMetaData(colIndex,offsetOfCollectionMetaDataInFile);
@@ -215,7 +220,7 @@ namespace PoconoFileSystem {
             
         }
         
-        void getAllData(CollectionMetaDataPtr collectionArg)
+        void getAllDataFakeVersion(CollectionMetaDataPtr collectionArg)
         {
             DataRecordMeataData* firstDataMetaDataPtr = new DataRecordMeataData();
 
@@ -228,14 +233,14 @@ namespace PoconoFileSystem {
 //                delete firstDataMetaDataPtr;
 
         }
-        void getAllDataReal(std::shared_ptr<std::list<DataRecordPtr>> allData, CollectionMetaDataPtr collectionArg)
+        ListOfDataRecordPtr getAllData(CollectionMetaDataPtr collectionArg)
         {
             //1.get the most updated version of collectionMetaData
-            
+             ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
             DataRecordMetaDataPtr firstDataMetaDataPtr = new DataRecordMeataData();
             
             CollectionMetaDataRawPtr collection = new CollectionMetaData();
-            
+            assert(collectionArg->offsetOfCollectionMetaDataInFile>=0);
             fileReader->readCollectionMetaDataFromFile(collection,collectionArg->offsetOfCollectionMetaDataInFile);
             
             //DataRecordMetaDataPtr firstDataMetaDataPtr = getARecordMetaDataOnHeap();
@@ -276,7 +281,7 @@ namespace PoconoFileSystem {
                 
                 
             }
-            
+            return allData;
         }
         
         DataRecordMetaDataPtr getLastDataRecordMetaDataOfCollection(CollectionMetaDataPtr collection)

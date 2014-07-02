@@ -38,9 +38,9 @@ namespace PoconoFileSystem {
         {
             fs_.insertData(collection,record);
         }
-        void  getAllData(CollectionMetaDataPtr collection)
+        ListOfDataRecordPtr  getAllData(CollectionMetaDataPtr collection)
         {
-            fs_.getAllData(collection);
+           return  fs_.getAllData(collection);
         }
         
         std::string deleteData(std::string nameOfCollection,std::string key)

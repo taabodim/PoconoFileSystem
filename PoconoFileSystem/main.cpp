@@ -104,10 +104,10 @@ void testWritingAndReadingSmall1000ValuesInThreeCollections() {
     {
         std::cout<<"data in the next collections *************"<<std::endl;
         
-        std::list<DataRecordPtr> allData = getAListOfDataRecordOnHeapModified();
-        testFS.getAllData(allCollections[j]);
-        for(std::list<DataRecordPtr>::iterator it = allData.begin();
-            it!=allData.end();++it)
+        ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
+        allData = testFS.getAllData(allCollections[j]);
+        for(std::list<DataRecordPtr>::iterator it = allData->begin();
+            it!=allData->end();++it)
         {
             std::cout<<"Data Record is "<<(*it)->toString()<<std::endl;
         }
@@ -157,7 +157,7 @@ void testWritingAndReadingSmallValuesInThreeCollections()
         std::cout<<"data in the next collections *************"<<std::endl;
         
         ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
-        testFS.getAllData(allCollections[j]);
+        allData = testFS.getAllData(allCollections[j]);
     for(std::list<DataRecordPtr>::iterator it = allData->begin();
         it!=allData->end();++it)
     {
@@ -362,7 +362,7 @@ int main(int argc, const char * argv[])
     try {
      
     // This is the PoconoFileSystem first commit
-    bool homeSetting = true;
+    bool homeSetting = false;
     setTheStackSize();
     if(homeSetting)
     {
@@ -372,9 +372,10 @@ int main(int argc, const char * argv[])
         Configs::dataDir.append("/Users/mahmoudtaabodi/Documents/pico_data/");
         
     }
-    std::string dataFilename(Configs::dataDir);
-    dataFilename.append("test.dat");
-
+    std::string dataFilename("test");
+    
+    dataFilename=PoconoFileSystem::getFullCollectionName(dataFilename);
+        
     truncateTheFile(dataFilename);
     allOfTests();
 //memoryTest();

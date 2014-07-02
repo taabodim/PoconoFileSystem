@@ -23,11 +23,7 @@ namespace PoconoFileSystem {
         public :
         FileWriter(std::string fileName) 
         {
-            filename=PoconoFileSystem::getFullCollectionName(fileName);
-            if(!PoconoFileSystem::checkFileExist(filename))
-            {
-                PoconoFileSystem::openFileIfItDoesntExist(filename);
-            }
+            this->filename=fileName;
         }
         void writeDataRecordAtOffset(DataRecordPtr record,offsetType offsetOfDataRecord);
         void writeCollectionMetaData(CollectionMetaDataRawPtr collectionMetaDataPtr,offsetType offsetOfCollectionMetaData);

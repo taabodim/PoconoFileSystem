@@ -119,20 +119,20 @@ namespace PoconoFileSystem {
         std::string toString()
         {
             std::string recordStr;
-           
+            recordStr.reserve(1000);
             recordStr.append(getNameOfCollectionAsString());
             recordStr.append(";");
-            recordStr.append(toStr("offsetOfFirstDataRecord : "));
+            recordStr.append("offsetOfFirstDataRecord : ");
             recordStr.append(PoconoFileSystem::toStr(offsetOfFirstDataRecordMetaData));
             
-            recordStr.append(toStr("offsetOfLastDataRecord : "));
+            recordStr.append("offsetOfLastDataRecord : ");
             recordStr.append(PoconoFileSystem::toStr(offsetOfLastDataRecordMetaData));
             
             
-            recordStr.append(toStr("isCollectionDeleted : "));
+            recordStr.append("isCollectionDeleted : ");
             recordStr.append(PoconoFileSystem::toStr(isCollectionDeleted));
           
-            recordStr.append(toStr("offsetOfCollectionMetaDataInFile : "));
+            recordStr.append("offsetOfCollectionMetaDataInFile : ");
             recordStr.append(PoconoFileSystem::toStr(offsetOfCollectionMetaDataInFile));
             
           
