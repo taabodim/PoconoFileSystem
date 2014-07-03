@@ -25,17 +25,17 @@ namespace PoconoFileSystem {
         char  key [MAX_KEY_SIZE];
         DataRecordStruct()
         {
-            for(size_t i=0;i<MAX_KEY_SIZE;i++)
-            {
-                key[i] = '\0';
-            }
-            sizeOfValueFieldInDataRecord = -1;
-            
-            dataRecordRemovedFlag = false;
-            offsetOfValueOfRecordInFile = -1;
-            offsetOfCollection = -1;
-            offsetOfDataRecordMetaData =-1;
-            offsetOfDataRecord = -1;
+//            for(size_t i=0;i<MAX_KEY_SIZE;i++)
+//            {
+//                key[i] = '\0';
+//            }
+//            sizeOfValueFieldInDataRecord = -1;
+//            
+//            dataRecordRemovedFlag = false;
+//            offsetOfValueOfRecordInFile = -1;
+//            offsetOfCollection = -1;
+//            offsetOfDataRecordMetaData =-1;
+//            offsetOfDataRecord = -1;
         }
     };
     class DataRecord {
@@ -55,15 +55,21 @@ namespace PoconoFileSystem {
         char  key [MAX_KEY_SIZE];
         char*  value;
         
-        DataRecord()
-        {//for reading the data into array, init the arrays later
+        DataRecord() {
+            //for reading the data into array, init the arrays later
             // offsetOfNextDataRecordMetaData = -1;
             // offsetOfPreviousDataRecordMetaData = -1;
            // offsetOfDataRecord = -1;
             //sizeOfValueFieldInDataRecord = -1;
-            offsetOfCollection = -1;
-            offsetOfDataRecord =-1;
-            value=0;
+//            offsetOfCollection = -1;
+//            offsetOfDataRecord =-1;
+//            
+//            for(int i=0;i<MAX_KEY_SIZE;i++)
+//                
+//            {
+//                key[i] = '\0';
+//                
+//            }
         }
         DataRecord(std::string keyStr,std::string valueStr)
         {
@@ -90,7 +96,7 @@ namespace PoconoFileSystem {
         }
         void setValue(std::string valueStr,offsetType length)
         {
-             const char* valuePtr = valueStr.c_str();
+            const char* valuePtr = valueStr.c_str();
             value = new char[length];
             for(int i=0;i<length;i++)
                 
@@ -174,7 +180,7 @@ namespace PoconoFileSystem {
    
     typedef std::shared_ptr<DataRecord> DataRecordPtr;
 //    typedef DataRecord* DataRecordPtr;
-    typedef std::shared_ptr<std::list<DataRecordPtr>> ListOfDataRecordPtr;
+    typedef std::shared_ptr<std::list<DataRecord>> ListOfDataRecordPtr;
     DataRecordPtr getARecordDataOnHeap() {
         //later count how many objects are created
         std::shared_ptr<DataRecord> ptr(new DataRecord());
@@ -183,7 +189,7 @@ namespace PoconoFileSystem {
     }
     
      ListOfDataRecordPtr getAListOfDataRecordOnHeap() {
-        std::shared_ptr<std::list<DataRecordPtr>> allData(new std::list<DataRecordPtr>());
+        std::shared_ptr<std::list<DataRecord>> allData(new std::list<DataRecord>());
          
         return allData;
    }

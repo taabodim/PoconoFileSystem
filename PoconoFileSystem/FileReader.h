@@ -27,7 +27,7 @@ namespace PoconoFileSystem {
             this->filename=fileName;
             
         }
-        DataRecordPtr readDataRecordFromFile(offsetType offset);
+        DataRecord readDataRecordFromFile(offsetType offset);
         void readCollectionMetaDataFromFile(CollectionMetaData* collectionPtr,offsetType offset);
         void readDataRecordMetaDataFromFile(DataRecordMetaDataPtr record,offsetType offset);
         std::string readTheValueOfDataRecord(offsetType offset,offsetType sizeOfValueField);
@@ -76,13 +76,14 @@ namespace PoconoFileSystem {
 //        std::shared_ptr<DataRecord> record (new DataRecord());
 //        return record;
 //    }
-    DataRecordPtr FileReader::readDataRecordFromFile(offsetType offset) {
-        std::shared_ptr<DataRecord> record (new DataRecord());
-
+    DataRecord FileReader::readDataRecordFromFile(offsetType offset) {
+      
+        
+      
 //        DataRecordPtr record  = getARecordDataOnHeap();
 //        DataRecordPtr record(new DataRecord());
-        DataRecordStruct* dataRecordStruct (new DataRecordStruct());
-//        std::shared_ptr<DataRecordStruct> dataRecordStruct(new DataRecordStruct());
+        //DataRecordStruct* dataRecordStruct (new DataRecordStruct());
+
         FILE *ptr_myfile;
         ptr_myfile=fopen(filename.c_str(),"rb");
         if (!ptr_myfile)
@@ -95,24 +96,29 @@ namespace PoconoFileSystem {
         
         
         fseek ( ptr_myfile , offset , SEEK_SET );
-        fread(&(*dataRecordStruct),sizeof(struct DataRecordStruct),1,ptr_myfile);
-       
+//        std::shared_ptr<DataRecordStruct> dataRecordStruct(new DataRecordStruct());
+        DataRecordStruct dataRecordStruct;
+        fread(&dataRecordStruct,sizeof(struct DataRecordStruct),1,ptr_myfile);
+        
+        //std::shared_ptr<DataRecord> record (new DataRecord());
+        DataRecord record;
         
         for(offsetType i=0;i<MAX_KEY_SIZE;i++)
         {
-            record->key[i] = dataRecordStruct->key[i];
+            record.key[i] = dataRecordStruct.key[i];
         }
-        record->sizeOfValueFieldInDataRecord = dataRecordStruct->sizeOfValueFieldInDataRecord;
+        record.sizeOfValueFieldInDataRecord = dataRecordStruct.sizeOfValueFieldInDataRecord;
         
-        record->dataRecordRemovedFlag = dataRecordStruct->dataRecordRemovedFlag;
-        record->offsetOfValueOfRecordInFile = dataRecordStruct->offsetOfValueOfRecordInFile;
-        record->offsetOfCollection = dataRecordStruct->offsetOfCollection;
-        record->offsetOfDataRecordMetaData =   dataRecordStruct->offsetOfDataRecordMetaData ;
-        record->offsetOfDataRecord =  dataRecordStruct->offsetOfDataRecord;
+        record.dataRecordRemovedFlag = dataRecordStruct.dataRecordRemovedFlag;
+        record.offsetOfValueOfRecordInFile = dataRecordStruct.offsetOfValueOfRecordInFile;
+        record.offsetOfCollection = dataRecordStruct.offsetOfCollection;
+        record.offsetOfDataRecordMetaData =   dataRecordStruct.offsetOfDataRecordMetaData ;
+        record.offsetOfDataRecord =  dataRecordStruct.offsetOfDataRecord;
         
 //         std::cout<<"At offset "<<offset<<" with size of "<<sizeof(struct DataRecordStruct)<<",this record was read from file "<<record->toString()<<std::endl;
 
         fclose(ptr_myfile);
+        
         return record;
     }
     void FileReader::readDataRecordMetaDataFromFile(DataRecordMetaDataPtr record,offsetType offset) {

@@ -37,10 +37,10 @@ void testWritingAndReadingSmallValuesInOneCollection()
     
     ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
      testFS.getAllData(collection);
-    for(std::list<DataRecordPtr>::iterator it = allData->begin();
+    for(std::list<DataRecord>::iterator it = allData->begin();
         it!=allData->end();++it)
     {
-        std::cout<<"Data Record is "<<(*it)->toString()<<std::endl;
+        std::cout<<"Data Record is "<<(it)->toString()<<std::endl;
     }
 }
 void testWritingAndReadingOneSmallValueInOneCollection() {
@@ -57,10 +57,10 @@ void testWritingAndReadingOneSmallValueInOneCollection() {
     
     ListOfDataRecordPtr allData  = getAListOfDataRecordOnHeap();
     testFS.getAllData(collection);
-    for(std::list<DataRecordPtr>::iterator it = allData->begin();
+    for(std::list<DataRecord>::iterator it = allData->begin();
         it!=allData->end();++it)
     {
-        std::cout<<"Data Record is "<<(*it)->toString()<<std::endl;
+        std::cout<<"Data Record is "<<(it)->toString()<<std::endl;
     }
 
 }
@@ -100,16 +100,21 @@ void testWritingAndReadingSmall1000ValuesInThreeCollections() {
         }
     }
     
+    for(int i=0;i<1000;i++) {
+        std::shared_ptr<DataRecord> record (new DataRecord());//just for test
+        std::shared_ptr<DataRecordStruct> dataRecordStruct(new DataRecordStruct());//just for test
+        
+    }
     for(int j=0;j<3;j++)
     {
         std::cout<<"data in the next collections *************"<<std::endl;
         
         ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
         allData = testFS.getAllData(allCollections[j]);
-        for(std::list<DataRecordPtr>::iterator it = allData->begin();
+        for(std::list<DataRecord>::iterator it = allData->begin();
             it!=allData->end();++it)
         {
-            std::cout<<"Data Record is "<<(*it)->toString()<<std::endl;
+            std::cout<<"Data Record is "<<(it)->toString()<<std::endl;
         }
         
     }
@@ -158,10 +163,10 @@ void testWritingAndReadingSmallValuesInThreeCollections()
         
         ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
         allData = testFS.getAllData(allCollections[j]);
-    for(std::list<DataRecordPtr>::iterator it = allData->begin();
+    for(std::list<DataRecord>::iterator it = allData->begin();
         it!=allData->end();++it)
     {
-        std::cout<<"Data Record is "<<(*it)->toString()<<std::endl;
+        std::cout<<"Data Record is "<<(it)->toString()<<std::endl;
     }
     
     }
@@ -362,7 +367,7 @@ int main(int argc, const char * argv[])
     try {
      
     // This is the PoconoFileSystem first commit
-    bool homeSetting = false;
+    bool homeSetting = true;
     setTheStackSize();
     if(homeSetting)
     {

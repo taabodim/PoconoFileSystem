@@ -236,7 +236,7 @@ namespace PoconoFileSystem {
         ListOfDataRecordPtr getAllData(CollectionMetaDataPtr collectionArg)
         {
             //1.get the most updated version of collectionMetaData
-             ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
+            ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
             DataRecordMetaDataPtr firstDataMetaDataPtr = new DataRecordMeataData();
             
             CollectionMetaDataRawPtr collection = new CollectionMetaData();
@@ -249,31 +249,31 @@ namespace PoconoFileSystem {
             fileReader->readDataRecordMetaDataFromFile(firstDataMetaDataPtr,collection->offsetOfFirstDataRecordMetaData);
             
             //read the data record that is pointed by the first pointer
-            DataRecordPtr firstDataPtr = fileReader->readDataRecordFromFile(firstDataMetaDataPtr->offsetOfDataRecord);
+            DataRecord firstDataPtr = fileReader->readDataRecordFromFile(firstDataMetaDataPtr->offsetOfDataRecord);
             
             //read the value that is pointed by the first pointer
-            std::string valueOfDataRecord = fileReader->readTheValueOfDataRecord(firstDataPtr->offsetOfValueOfRecordInFile,firstDataPtr->sizeOfValueFieldInDataRecord);
+            std::string valueOfDataRecord = fileReader->readTheValueOfDataRecord(firstDataPtr.offsetOfValueOfRecordInFile,firstDataPtr.sizeOfValueFieldInDataRecord);
             
-            firstDataPtr->setValue(valueOfDataRecord,firstDataMetaDataPtr->lengthOfValueField);
+            firstDataPtr.setValue(valueOfDataRecord,firstDataMetaDataPtr->lengthOfValueField);
             
             
             assert(!valueOfDataRecord.empty());
             allData->push_back(firstDataPtr);
-    
+            
             
             
             DataRecordMetaDataPtr nextDataRecordMetaDataPtr = firstDataMetaDataPtr;
             DataRecordPtr dataPtr;
-
+            
             while(nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData!=-1)
             {
-                DataRecordPtr dataPtr = fileReader->readDataRecordFromFile(nextDataRecordMetaDataPtr->offsetOfDataRecord);
+                DataRecord dataPtr = fileReader->readDataRecordFromFile(nextDataRecordMetaDataPtr->offsetOfDataRecord);
                 
-                std::string valueOfDataRecord = fileReader->readTheValueOfDataRecord(dataPtr->offsetOfValueOfRecordInFile,dataPtr->sizeOfValueFieldInDataRecord);
+                std::string valueOfDataRecord = fileReader->readTheValueOfDataRecord(dataPtr.offsetOfValueOfRecordInFile,dataPtr.sizeOfValueFieldInDataRecord);
+                dataPtr.setValue(valueOfDataRecord,nextDataRecordMetaDataPtr->lengthOfValueField);
                 
-                std::cout<<" pushing back data dataPtr->offsetOfNextDataRecordMetaData : "<<nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData<<",dataPtr->toString() "<<dataPtr->toString()<<std::endl;
+                std::cout<<" pushing back data dataPtr->offsetOfNextDataRecordMetaData : "<<nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData<<",dataPtr->toString() "<<dataPtr.toString()<<std::endl;
                 
-                dataPtr->setValue(valueOfDataRecord,nextDataRecordMetaDataPtr->lengthOfValueField);
                 
                 allData->push_back(dataPtr);
                 
@@ -283,6 +283,56 @@ namespace PoconoFileSystem {
             }
             return allData;
         }
+//        ListOfDataRecordPtr getAllDataOriginal(CollectionMetaDataPtr collectionArg)
+//        {
+//            //1.get the most updated version of collectionMetaData
+//             ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
+//            DataRecordMetaDataPtr firstDataMetaDataPtr = new DataRecordMeataData();
+//            
+//            CollectionMetaDataRawPtr collection = new CollectionMetaData();
+//            assert(collectionArg->offsetOfCollectionMetaDataInFile>=0);
+//            fileReader->readCollectionMetaDataFromFile(collection,collectionArg->offsetOfCollectionMetaDataInFile);
+//            
+//            //DataRecordMetaDataPtr firstDataMetaDataPtr = getARecordMetaDataOnHeap();
+//            
+//            //2. get the first data record and append to the list
+//            fileReader->readDataRecordMetaDataFromFile(firstDataMetaDataPtr,collection->offsetOfFirstDataRecordMetaData);
+//            
+//            //read the data record that is pointed by the first pointer
+//            DataRecordPtr firstDataPtr = fileReader->readDataRecordFromFile(firstDataMetaDataPtr->offsetOfDataRecord);
+//            
+//            //read the value that is pointed by the first pointer
+//            std::string valueOfDataRecord = fileReader->readTheValueOfDataRecord(firstDataPtr->offsetOfValueOfRecordInFile,firstDataPtr->sizeOfValueFieldInDataRecord);
+//            
+//            firstDataPtr->setValue(valueOfDataRecord,firstDataMetaDataPtr->lengthOfValueField);
+//            
+//            
+//            assert(!valueOfDataRecord.empty());
+//            allData->push_back(firstDataPtr);
+//    
+//            
+//            
+//            DataRecordMetaDataPtr nextDataRecordMetaDataPtr = firstDataMetaDataPtr;
+//            DataRecordPtr dataPtr;
+//
+//            while(nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData!=-1)
+//            {
+//                DataRecordPtr dataPtr = fileReader->readDataRecordFromFile(nextDataRecordMetaDataPtr->offsetOfDataRecord);
+//                
+//                std::string valueOfDataRecord = fileReader->readTheValueOfDataRecord(dataPtr->offsetOfValueOfRecordInFile,dataPtr->sizeOfValueFieldInDataRecord);
+//                dataPtr->setValue(valueOfDataRecord,nextDataRecordMetaDataPtr->lengthOfValueField);
+//                
+//                std::cout<<" pushing back data dataPtr->offsetOfNextDataRecordMetaData : "<<nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData<<",dataPtr->toString() "<<dataPtr->toString()<<std::endl;
+//                
+//                
+//                allData->push_back(dataPtr);
+//                
+//                fileReader->readDataRecordMetaDataFromFile(nextDataRecordMetaDataPtr,nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData);
+//                
+//                
+//            }
+//            return allData;
+//        }
         
         DataRecordMetaDataPtr getLastDataRecordMetaDataOfCollection(CollectionMetaDataPtr collection)
         {
@@ -351,14 +401,14 @@ namespace PoconoFileSystem {
             CollectionMetaDataPtr collectionPtr = openCollection(nameOfCollection);
             ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
             getAllData(collectionPtr);
-            for(std::list<DataRecordPtr>::iterator it = allData->begin();
+            for(std::list<DataRecord>::iterator it = allData->begin();
                 it!=allData->end();++it)
             {
-                if((*it)->keyIsEqualTo(key))
+                if((it)->keyIsEqualTo(key))
                 {
-                    std::cout<<"find:  Data Record found for key "<<key<<" : "<<(*it)->toString()<<std::endl;
-                    
-                    return (*it);
+                    std::cout<<"find:  Data Record found for key "<<key<<" : "<<(it)->toString()<<std::endl;
+                    return NULL;//fix this later
+//                    return (it);
                  }
             }
 
