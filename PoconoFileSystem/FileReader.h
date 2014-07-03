@@ -186,13 +186,15 @@ namespace PoconoFileSystem {
         fread(valueReadFromFile,sizeOfValueFieldInDataRecord,1,ptr_myfile);
      
         std::cout<<"valueReadFromFile array : "<<std::endl;
-        
+        std::string valueReadFromFileStr;
+        valueReadFromFileStr.reserve(1000);
         for(int i=0;i<sizeOfValueFieldInDataRecord;i++) {
+            valueReadFromFileStr.push_back(valueReadFromFile[i]);
             std::cout<<valueReadFromFile[i];
+            
         }
-        std::string valueReadFromFileStr(valueReadFromFile);
         
-        std::cout<<"At offset "<<offset<<" with size of "<<sizeOfValueFieldInDataRecord<<",this value was read from file "<<valueReadFromFile<<std::endl;
+        std::cout<<"\nAt offset "<<offset<<" with size of "<<sizeOfValueFieldInDataRecord<<",this value was read from file "<<valueReadFromFile<<std::endl;
         
         assert(!valueReadFromFileStr.empty());
         fclose(ptr_myfile);

@@ -254,11 +254,12 @@ namespace PoconoFileSystem {
             //read the value that is pointed by the first pointer
             std::string valueOfDataRecord = fileReader->readTheValueOfDataRecord(firstDataPtr.offsetOfValueOfRecordInFile,firstDataPtr.sizeOfValueFieldInDataRecord);
             
+            
             firstDataPtr.setValue(valueOfDataRecord,firstDataMetaDataPtr->lengthOfValueField);
             
             
             assert(!valueOfDataRecord.empty());
-            allData->push_back(firstDataPtr);
+            allData.push_back(firstDataPtr);
             
             
             
@@ -275,7 +276,7 @@ namespace PoconoFileSystem {
                 std::cout<<" pushing back data dataPtr->offsetOfNextDataRecordMetaData : "<<nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData<<",dataPtr->toString() "<<dataPtr.toString()<<std::endl;
                 
                 
-                allData->push_back(dataPtr);
+                allData.push_back(dataPtr);
                 
                 fileReader->readDataRecordMetaDataFromFile(nextDataRecordMetaDataPtr,nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData);
                 
@@ -308,7 +309,7 @@ namespace PoconoFileSystem {
 //            
 //            
 //            assert(!valueOfDataRecord.empty());
-//            allData->push_back(firstDataPtr);
+//            allData.push_back(firstDataPtr);
 //    
 //            
 //            
@@ -325,7 +326,7 @@ namespace PoconoFileSystem {
 //                std::cout<<" pushing back data dataPtr->offsetOfNextDataRecordMetaData : "<<nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData<<",dataPtr->toString() "<<dataPtr->toString()<<std::endl;
 //                
 //                
-//                allData->push_back(dataPtr);
+//                allData.push_back(dataPtr);
 //                
 //                fileReader->readDataRecordMetaDataFromFile(nextDataRecordMetaDataPtr,nextDataRecordMetaDataPtr->offsetOfNextDataRecordMetaData);
 //                
@@ -401,8 +402,8 @@ namespace PoconoFileSystem {
             CollectionMetaDataPtr collectionPtr = openCollection(nameOfCollection);
             ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
             getAllData(collectionPtr);
-            for(std::list<DataRecord>::iterator it = allData->begin();
-                it!=allData->end();++it)
+            for(std::list<DataRecord>::iterator it = allData.begin();
+                it!=allData.end();++it)
             {
                 if((it)->keyIsEqualTo(key))
                 {

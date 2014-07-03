@@ -86,7 +86,7 @@ namespace PoconoFileSystem {
                 key[i] = '\0';
             }
             
-            setValue(valueStr,valueStr.size());
+            setValue(valueStr,valueStr.size()+1);
             //offsetOfDataRecord = -1;
             offsetOfCollection = -1;
             offsetOfDataRecord =-1;
@@ -104,7 +104,7 @@ namespace PoconoFileSystem {
                 value[i] = *valuePtr;
                 ++valuePtr;
             }
-            value[length+1]='\0';
+            value[length]='\0';
             sizeOfValueFieldInDataRecord = length;
             assert(sizeOfValueFieldInDataRecord== length);
 
@@ -147,6 +147,7 @@ namespace PoconoFileSystem {
         std::string toString()
         {
             std::string recordStr;
+            recordStr.reserve(1000);
             recordStr.append(key);
             recordStr.append(";");
             if(value==NULL)
@@ -180,7 +181,9 @@ namespace PoconoFileSystem {
    
     typedef std::shared_ptr<DataRecord> DataRecordPtr;
 //    typedef DataRecord* DataRecordPtr;
-    typedef std::shared_ptr<std::list<DataRecord>> ListOfDataRecordPtr;
+//    typedef std::shared_ptr<std::list<DataRecord>> ListOfDataRecordPtr;
+    typedef std::list<DataRecord> ListOfDataRecordPtr;
+    
     DataRecordPtr getARecordDataOnHeap() {
         //later count how many objects are created
         std::shared_ptr<DataRecord> ptr(new DataRecord());
@@ -189,7 +192,7 @@ namespace PoconoFileSystem {
     }
     
      ListOfDataRecordPtr getAListOfDataRecordOnHeap() {
-        std::shared_ptr<std::list<DataRecord>> allData(new std::list<DataRecord>());
+        std::list<DataRecord> allData;
          
         return allData;
    }

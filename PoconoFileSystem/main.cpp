@@ -37,8 +37,8 @@ void testWritingAndReadingSmallValuesInOneCollection()
     
     ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
      testFS.getAllData(collection);
-    for(std::list<DataRecord>::iterator it = allData->begin();
-        it!=allData->end();++it)
+    for(std::list<DataRecord>::iterator it = allData.begin();
+        it!=allData.end();++it)
     {
         std::cout<<"Data Record is "<<(it)->toString()<<std::endl;
     }
@@ -57,8 +57,8 @@ void testWritingAndReadingOneSmallValueInOneCollection() {
     
     ListOfDataRecordPtr allData  = getAListOfDataRecordOnHeap();
     testFS.getAllData(collection);
-    for(std::list<DataRecord>::iterator it = allData->begin();
-        it!=allData->end();++it)
+    for(std::list<DataRecord>::iterator it = allData.begin();
+        it!=allData.end();++it)
     {
         std::cout<<"Data Record is "<<(it)->toString()<<std::endl;
     }
@@ -82,7 +82,7 @@ void testWritingAndReadingSmall1000ValuesInThreeCollections() {
     CollectionMetaDataPtr collection3 =testFS.openCollection(colName3);
     CollectionMetaDataPtr allCollections [3]={collection1,collection2,collection3};
     
-    int num = 1000;
+    int num = 10000;
     for(int j=0;j<3;j++)
     {
         for(int i=0;i<num;i++)
@@ -111,8 +111,8 @@ void testWritingAndReadingSmall1000ValuesInThreeCollections() {
         
         ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
         allData = testFS.getAllData(allCollections[j]);
-        for(std::list<DataRecord>::iterator it = allData->begin();
-            it!=allData->end();++it)
+        for(std::list<DataRecord>::iterator it = allData.begin();
+            it!=allData.end();++it)
         {
             std::cout<<"Data Record is "<<(it)->toString()<<std::endl;
         }
@@ -163,8 +163,8 @@ void testWritingAndReadingSmallValuesInThreeCollections()
         
         ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
         allData = testFS.getAllData(allCollections[j]);
-    for(std::list<DataRecord>::iterator it = allData->begin();
-        it!=allData->end();++it)
+    for(std::list<DataRecord>::iterator it = allData.begin();
+        it!=allData.end();++it)
     {
         std::cout<<"Data Record is "<<(it)->toString()<<std::endl;
     }
