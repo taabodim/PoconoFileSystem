@@ -25,8 +25,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A51ACC4A1965EE5400C0AB67 /* ConcurrentCRUDtests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConcurrentCRUDtests.h; sourceTree = "<group>"; };
 		A53270ED194CFEFE00530E5B /* FileSystemAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileSystemAPI.h; sourceTree = "<group>"; };
 		A53270EE194D014700530E5B /* CollectionMetaData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollectionMetaData.h; sourceTree = "<group>"; };
+		A592008E1966ED5D0002E082 /* PoconoClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PoconoClient.h; sourceTree = "<group>"; };
 		A5D9A14E1942AE9C000F1170 /* PoconoConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PoconoConfig.h; sourceTree = "<group>"; };
 		A5D9A14F1942AF22000F1170 /* Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		A5D9A1501942AF99000F1170 /* Configs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Configs.h; sourceTree = "<group>"; };
@@ -56,36 +58,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		E23075B71953330A0088072E /* Tests */ = {
+		A51ACC4B1965F08400C0AB67 /* PoconoServer */ = {
 			isa = PBXGroup;
 			children = (
-				E23075B81953332C0088072E /* CRUDTests.h */,
 			);
-			name = Tests;
+			name = PoconoServer;
 			sourceTree = "<group>";
 		};
-		E23EB361194269AB00C4DECA = {
+		A51ACC4C1965F0BB00C0AB67 /* PoconoClient */ = {
 			isa = PBXGroup;
 			children = (
-				E23EB36C194269AB00C4DECA /* PoconoFileSystem */,
-				E23EB36B194269AB00C4DECA /* Products */,
+				A592008E1966ED5D0002E082 /* PoconoClient.h */,
 			);
+			name = PoconoClient;
 			sourceTree = "<group>";
 		};
-		E23EB36B194269AB00C4DECA /* Products */ = {
+		A51ACC4D1965F0C900C0AB67 /* PoconoShellClient */ = {
 			isa = PBXGroup;
 			children = (
-				E23EB36A194269AB00C4DECA /* PoconoFileSystem */,
 			);
-			name = Products;
+			name = PoconoShellClient;
 			sourceTree = "<group>";
 		};
-		E23EB36C194269AB00C4DECA /* PoconoFileSystem */ = {
+		A51ACC4E1965F0E000C0AB67 /* PoconcoDBEngine */ = {
 			isa = PBXGroup;
 			children = (
-				E23075B71953330A0088072E /* Tests */,
-				E23EB36D194269AB00C4DECA /* main.cpp */,
-				E23EB36F194269AB00C4DECA /* PoconoFileSystem.1 */,
 				E23EB37719426B5200C4DECA /* FileWriter.h */,
 				E23EB37819426B6200C4DECA /* FileReader.h */,
 				E23EB37A19426EDD00C4DECA /* FileSystem.h */,
@@ -101,6 +98,46 @@
 				A53270EE194D014700530E5B /* CollectionMetaData.h */,
 				E25389DB1953208600D2C294 /* Index.h */,
 			);
+			name = PoconcoDBEngine;
+			sourceTree = "<group>";
+		};
+		E23075B71953330A0088072E /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				E23075B81953332C0088072E /* CRUDTests.h */,
+				A51ACC4A1965EE5400C0AB67 /* ConcurrentCRUDtests.h */,
+			);
+			name = Tests;
+			sourceTree = "<group>";
+		};
+		E23EB361194269AB00C4DECA = {
+			isa = PBXGroup;
+			children = (
+				E23EB36C194269AB00C4DECA /* PoconoDB */,
+				E23EB36B194269AB00C4DECA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E23EB36B194269AB00C4DECA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E23EB36A194269AB00C4DECA /* PoconoFileSystem */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E23EB36C194269AB00C4DECA /* PoconoDB */ = {
+			isa = PBXGroup;
+			children = (
+				A51ACC4E1965F0E000C0AB67 /* PoconcoDBEngine */,
+				A51ACC4D1965F0C900C0AB67 /* PoconoShellClient */,
+				A51ACC4C1965F0BB00C0AB67 /* PoconoClient */,
+				A51ACC4B1965F08400C0AB67 /* PoconoServer */,
+				E23075B71953330A0088072E /* Tests */,
+				E23EB36D194269AB00C4DECA /* main.cpp */,
+				E23EB36F194269AB00C4DECA /* PoconoFileSystem.1 */,
+			);
+			name = PoconoDB;
 			path = PoconoFileSystem;
 			sourceTree = "<group>";
 		};
