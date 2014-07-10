@@ -1,14 +1,14 @@
 //
 //  CRUDTests.h
-//  PoconoFileSystem
+//  PoconoDB
 //
 //  Created by Mahmoud Taabodi on 6/19/14.
 //  Copyright (c) 2014 Mahmoud Taabodi. All rights reserved.
 //
 
-#ifndef PoconoFileSystem_CRUDTests_h
-#define PoconoFileSystem_CRUDTests_h
-namespace PoconoFileSystem{
+#ifndef PoconoDB_CRUDTests_h
+#define PoconoDB_CRUDTests_h
+namespace PoconoDB {
     
     void testWritingAndReadingSmallValuesInOneCollection()
     {
@@ -71,7 +71,7 @@ namespace PoconoFileSystem{
         CollectionMetaDataPtr collection3 =testFS.openCollection(colName3);
         CollectionMetaDataPtr allCollections [3]={collection1,collection2,collection3};
         
-        int num = 10000;
+        int num = 100;
         for(int j=0;j<3;j++)
         {
             for(int i=0;i<num;i++)
@@ -89,7 +89,7 @@ namespace PoconoFileSystem{
             }
         }
         
-        for(int i=0;i<1000;i++) {
+        for(int i=0;i<num;i++) {
             std::shared_ptr<DataRecord> record (new DataRecord());//just for test
             std::shared_ptr<DataRecordStruct> dataRecordStruct(new DataRecordStruct());//just for test
             

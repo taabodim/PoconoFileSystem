@@ -1,6 +1,6 @@
 //
 //  main.cpp
-//  PoconoFileSystem
+//  PoconoDB
 //
 //  Created by Mahmoud Taabodi on 6/6/14.
 //  Copyright (c) 2014 Mahmoud Taabodi. All rights reserved.
@@ -13,12 +13,13 @@
 #include "Utils.h"
 #include "CRUDTests.h"
 #include <sys/resource.h>
+#include "ClientServerExample.h"
 
-using namespace PoconoFileSystem;
+using namespace PoconoDB;
 
-std::string PoconoFileSystem::Configs::dataDir("/Users/mtaabodi/Documents/pico_data/");
-std::string PoconoFileSystem::Configs::logDir("/Users/mtaabodi/Documents/pico_logs/");
-std::string PoconoFileSystem::Configs::logFileName("");
+std::string PoconoDB::Configs::dataDir("/Users/mtaabodi/Documents/pico_data/");
+std::string PoconoDB::Configs::logDir("/Users/mtaabodi/Documents/pico_logs/");
+std::string PoconoDB::Configs::logFileName("");
 
 void memoryTest() {
     const long num = 10000;
@@ -47,8 +48,8 @@ int main(int argc, const char * argv[])
 {
     try {
      
-    // This is the PoconoFileSystem first commit
-    bool homeSetting = true;
+    // This is the PoconoDB first commit
+    bool homeSetting = false;
     setTheStackSize();
     if(homeSetting)
     {
@@ -60,12 +61,12 @@ int main(int argc, const char * argv[])
     }
     std::string dataFilename("test");
     
-    dataFilename=PoconoFileSystem::getFullCollectionName(dataFilename);
+    dataFilename=PoconoDB::getFullCollectionName(dataFilename);
         
     truncateTheFile(dataFilename);
-    PoconoFileSystem::allOfTests();
+    //    PoconoDB::allOfTests();
     //memoryTest();
-    
+        PoconoDB::clientServerExample();
     } catch( const std::exception& e ) { // reference to the base of a polymorphic object
         std::cout << "exception thrown : "<<e.what(); // information from length_error printed
     }

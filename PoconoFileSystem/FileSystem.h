@@ -1,13 +1,13 @@
 //
 //  FileSystem.h
-//  PoconoFileSystem
+//  PoconoDB
 //
 //  Created by Mahmoud Taabodi on 6/6/14.
 //  Copyright (c) 2014 Mahmoud Taabodi. All rights reserved.
 //
 
-#ifndef PoconoFileSystem_FileSystem_h
-#define PoconoFileSystem_FileSystem_h
+#ifndef PoconoDB_FileSystem_h
+#define PoconoDB_FileSystem_h
 #include "FileWriter.h"
 #include "FileReader.h"
 #include "CollectionMetaData.h"
@@ -15,8 +15,8 @@
 #include "SuperBlock.h"
 #include "Utils.h"
 #include "DataRecordMetaData.h"
-namespace PoconoFileSystem {
-    class FileSystem : public loggerWrapper {
+namespace PoconoDB {
+    class FileSystem : public LoggerWrapper {
         private :
         const static int DELETED = 88;
         std::string filename;
@@ -31,7 +31,7 @@ namespace PoconoFileSystem {
         
         
         FileSystem(std::string fileName):filename(fileName){
-            this->filename = PoconoFileSystem::getFullCollectionName(filename);
+            this->filename = PoconoDB::getFullCollectionName(filename);
             openFileIfItDoesntExist(filename);
             FileReaderPtr tmpReader (new FileReader(filename));
             FileWriterPtr tmpWriter (new FileWriter(filename));
@@ -100,7 +100,7 @@ namespace PoconoFileSystem {
             std::string res;
             if(!collectionExists(nameOfCollection))
             {
-                size_t offset = PoconoFileSystem::getEndOfFileOffset(filename);
+                size_t offset = PoconoDB::getEndOfFileOffset(filename);
                 //                CollectionMetaDataPtr colIndex(new CollectionMetaData(nameOfCollection));
                 CollectionMetaDataRawPtr colIndex=new CollectionMetaData(nameOfCollection);
                 
@@ -163,7 +163,7 @@ namespace PoconoFileSystem {
         {
             
             
-            offsetType offsetOfDataRecordMetaData = PoconoFileSystem::getEndOfFileDataBlockOffsetAsMultipleOfBlock(filename, BLOCK_SIZE);//this should be 0 or 1024 , //getting a proper offset
+            offsetType offsetOfDataRecordMetaData = PoconoDB::getEndOfFileDataBlockOffsetAsMultipleOfBlock(filename, BLOCK_SIZE);//this should be 0 or 1024 , //getting a proper offset
             offsetType offsetOfDataRecord =offsetOfDataRecordMetaData + sizeof(struct DataRecordMetaDataStruct) * 2;
             offsetType offsetOfValueField = offsetOfDataRecord + sizeof(struct DataRecordStruct)* 2;
             
@@ -473,7 +473,7 @@ namespace PoconoFileSystem {
             {
              CollectionMetaDataPtr collecitonPtr = getCollectionMetaData (nameOfCollection);
             record->setValue(valueToBeOverwritten,valueToBeOverwritten.size());
-            offsetType offsetOfnewValue = PoconoFileSystem::getEndOfFileDataBlockOffsetAsMultipleOfBlock(filename, BLOCK_SIZE);//this should be 0 or 1024 , //getting a proper offset
+            offsetType offsetOfnewValue = PoconoDB::getEndOfFileDataBlockOffsetAsMultipleOfBlock(filename, BLOCK_SIZE);//this should be 0 or 1024 , //getting a proper offset
             DataRecordMetaDataPtr dataRecordMetaData  = getARecordMetaDataOnHeap();
             fileReader->readDataRecordMetaDataFromFile(dataRecordMetaData,record->offsetOfDataRecordMetaData);
 

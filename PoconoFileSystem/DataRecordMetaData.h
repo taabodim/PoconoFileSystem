@@ -1,16 +1,16 @@
 //
 //  DataRecordMetaData.h
-//  PoconoFileSystem
+//  PoconoDB
 //
 //  Created by Mahmoud Taabodi on 6/9/14.
 //  Copyright (c) 2014 Mahmoud Taabodi. All rights reserved.
 //
 
-#ifndef PoconoFileSystem_DataRecordMetaData_h
-#define PoconoFileSystem_DataRecordMetaData_h
+#ifndef PoconoDB_DataRecordMetaData_h
+#define PoconoDB_DataRecordMetaData_h
 #include "Utils.h"
 
-namespace PoconoFileSystem {
+namespace PoconoDB {
     
 	/*this class is a fixed size class that 
 	contains sits at an offset multiple of BLOCK_SIZE
@@ -101,34 +101,34 @@ namespace PoconoFileSystem {
             recordStr.append("RecordMetaData is {");
 
             recordStr.append("offsetOfDataRecord : ");
-            recordStr.append(PoconoFileSystem::toStr(offsetOfDataRecord));
+            recordStr.append(PoconoDB::toStr(offsetOfDataRecord));
             
 
             recordStr.append("offsetOfDataRecordMetaData : ");
-            recordStr.append(PoconoFileSystem::toStr(offsetOfDataRecordMetaData));
+            recordStr.append(PoconoDB::toStr(offsetOfDataRecordMetaData));
             
 
             recordStr.append("offsetOfNextDataRecordMetaData : ");
-            recordStr.append(PoconoFileSystem::toStr(offsetOfNextDataRecordMetaData));
+            recordStr.append(PoconoDB::toStr(offsetOfNextDataRecordMetaData));
             
             recordStr.append("offsetOfPreviousDataRecordMetaData : ");
-            recordStr.append(PoconoFileSystem::toStr(offsetOfPreviousDataRecordMetaData));
+            recordStr.append(PoconoDB::toStr(offsetOfPreviousDataRecordMetaData));
             
             recordStr.append(" ,offsetOfDataRecord : ");
-            recordStr.append(PoconoFileSystem::toStr(offsetOfDataRecord));
+            recordStr.append(PoconoDB::toStr(offsetOfDataRecord));
             
            
            recordStr.append(" ,offsetOfCollection : ");
-           recordStr.append(PoconoFileSystem::toStr(offsetOfCollection));
+           recordStr.append(PoconoDB::toStr(offsetOfCollection));
             
             recordStr.append(" ,offsetOfValueOfRecordInFile : ");
-            recordStr.append(PoconoFileSystem::toStr(offsetOfValueOfRecordInFile));
+            recordStr.append(PoconoDB::toStr(offsetOfValueOfRecordInFile));
             
             recordStr.append(" ,lengthOfValueField : ");
-            recordStr.append(PoconoFileSystem::toStr(lengthOfValueField));
+            recordStr.append(PoconoDB::toStr(lengthOfValueField));
             
             recordStr.append(" ,isDataRecordMetaDeleted : ");
-            recordStr.append(PoconoFileSystem::toStr(isDataRecordMetaDeleted));
+            recordStr.append(PoconoDB::toStr(isDataRecordMetaDeleted));
             
             
            recordStr.append("}");

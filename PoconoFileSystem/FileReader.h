@@ -1,13 +1,13 @@
 //
 //  FileReader.h
-//  PoconoFileSystem
+//  PoconoDB
 //
 //  Created by Mahmoud Taabodi on 6/6/14.
 //  Copyright (c) 2014 Mahmoud Taabodi. All rights reserved.
 //
 
-#ifndef PoconoFileSystem_FileReader_h
-#define PoconoFileSystem_FileReader_h
+#ifndef PoconoDB_FileReader_h
+#define PoconoDB_FileReader_h
 #include "DataRecord.h"
 #include <fstream>
 #include <iostream>
@@ -17,9 +17,9 @@
 #include "DataRecordMetaData.h"
 #include "LoggerWrapper.h"
 
-namespace PoconoFileSystem {
+namespace PoconoDB {
     
-    class FileReader : public loggerWrapper{
+    class FileReader : public LoggerWrapper{
         std::string filename;
         public :
         FileReader(std::string fileName) : filename(fileName)

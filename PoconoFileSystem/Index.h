@@ -1,19 +1,19 @@
 //
 //  Index.h
-//  PoconoFileSystem
+//  PoconoDB
 //
 //  Created by Mahmoud Taabodi on 6/19/14.
 //  Copyright (c) 2014 Mahmoud Taabodi. All rights reserved.
 //
 
-#ifndef PoconoFileSystem_Index_h
-#define PoconoFileSystem_Index_h
+#ifndef PoconoDB_Index_h
+#define PoconoDB_Index_h
 
 
 #include <list>
 #include <memory>
 using namespace std;
-namespace pico {
+namespace PoconoDB {
     class pico_record_node;
     typedef pico_record_node* nodeType;
     

@@ -1,15 +1,15 @@
 //
 //  PoconoConfig.h
-//  PoconoFileSystem
+//  PoconoDB
 //
 //  Created by Mahmoud Taabodi on 6/6/14.
 //  Copyright (c) 2014 Mahmoud Taabodi. All rights reserved.
 //
 
-#ifndef PoconoFileSystem_PoconoConfig_h
-#define PoconoFileSystem_PoconoConfig_h
+#ifndef PoconoDB_PoconoConfig_h
+#define PoconoDB_PoconoConfig_h
 
-namespace PoconoFileSystem{
+namespace PoconoDB {
     
     class PoconoConfig {
     public:

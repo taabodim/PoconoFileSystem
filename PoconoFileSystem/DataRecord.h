@@ -1,18 +1,18 @@
 //
 //  DataRecord.h
-//  PoconoFileSystem
+//  PoconoDB
 //
 //  Created by Mahmoud Taabodi on 6/6/14.
 //  Copyright (c) 2014 Mahmoud Taabodi. All rights reserved.
 //
 
-#ifndef PoconoFileSystem_DataRecord_h
-#define PoconoFileSystem_DataRecord_h
+#ifndef PoconoDB_DataRecord_h
+#define PoconoDB_DataRecord_h
 #include "Utils.h"
 #include <string.h>
 #include <list>
 
-namespace PoconoFileSystem {
+namespace PoconoDB {
     const static size_t MAX_KEY_SIZE = 32;
     
     struct DataRecordStruct{
@@ -159,19 +159,19 @@ namespace PoconoFileSystem {
                 recordStr.append(value);
             }
 //            recordStr.append("offsetOfNextDataRecordMetaData : ");
-//            recordStr.append(PoconoFileSystem::toStr(offsetOfNextDataRecordMetaData));
+//            recordStr.append(PoconoDB::toStr(offsetOfNextDataRecordMetaData));
 //            
 //            recordStr.append("offsetOfPreviousDataRecordMetaData : ");
-//            recordStr.append(PoconoFileSystem::toStr(offsetOfPreviousDataRecordMetaData));
+//            recordStr.append(PoconoDB::toStr(offsetOfPreviousDataRecordMetaData));
             
            // recordStr.append(" ,offsetOfDataRecord : ");
-           // recordStr.append(PoconoFileSystem::toStr(offsetOfDataRecord));
+           // recordStr.append(PoconoDB::toStr(offsetOfDataRecord));
             
             recordStr.append(" ,sizeOfValueFieldInDataRecord : ");
-            recordStr.append(PoconoFileSystem::toStr(sizeOfValueFieldInDataRecord));
+            recordStr.append(PoconoDB::toStr(sizeOfValueFieldInDataRecord));
            
             recordStr.append(" ,offsetOfValueOfRecordInFile : ");
-            recordStr.append(PoconoFileSystem::toStr(offsetOfValueOfRecordInFile));
+            recordStr.append(PoconoDB::toStr(offsetOfValueOfRecordInFile));
 //           
            
 

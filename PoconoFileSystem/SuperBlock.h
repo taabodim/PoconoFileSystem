@@ -1,15 +1,15 @@
 //
 //  SuperBlock.h
-//  PoconoFileSystem
+//  PoconoDB
 //
 //  Created by Mahmoud Taabodi on 6/6/14.
 //  Copyright (c) 2014 Mahmoud Taabodi. All rights reserved.
 //
 
-#ifndef PoconoFileSystem_SuperBlock_h
-#define PoconoFileSystem_SuperBlock_h
+#ifndef PoconoDB_SuperBlock_h
+#define PoconoDB_SuperBlock_h
 #include <map>
-namespace PoconoFileSystem{
+namespace PoconoDB {
     
 //    class SuperBlock {
 //    

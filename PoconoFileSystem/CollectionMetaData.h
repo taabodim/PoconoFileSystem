@@ -1,18 +1,18 @@
 //
 //  CollectionMetaData.h
-//  PoconoFileSystem
+//  PoconoDB
 //
 //  Created by Mahmoud Taabodi on 6/14/14.
 //  Copyright (c) 2014 Mahmoud Taabodi. All rights reserved.
 //
 
-#ifndef PoconoFileSystem_CollectionMetaData_h
-#define PoconoFileSystem_CollectionMetaData_h
+#ifndef PoconoDB_CollectionMetaData_h
+#define PoconoDB_CollectionMetaData_h
 
 #include "Utils.h"
 #include <memory>
 #include <iostream>
-namespace PoconoFileSystem {
+namespace PoconoDB {
     //typedef std::shared_ptr<CollectionMetaData> CollectionMetaDataPtr;
     class CollectionMetaData;
     typedef CollectionMetaData* CollectionMetaDataPtr;
@@ -123,17 +123,17 @@ namespace PoconoFileSystem {
             recordStr.append(getNameOfCollectionAsString());
             recordStr.append(";");
             recordStr.append("offsetOfFirstDataRecord : ");
-            recordStr.append(PoconoFileSystem::toStr(offsetOfFirstDataRecordMetaData));
+            recordStr.append(PoconoDB::toStr(offsetOfFirstDataRecordMetaData));
             
             recordStr.append("offsetOfLastDataRecord : ");
-            recordStr.append(PoconoFileSystem::toStr(offsetOfLastDataRecordMetaData));
+            recordStr.append(PoconoDB::toStr(offsetOfLastDataRecordMetaData));
             
             
             recordStr.append("isCollectionDeleted : ");
-            recordStr.append(PoconoFileSystem::toStr(isCollectionDeleted));
+            recordStr.append(PoconoDB::toStr(isCollectionDeleted));
           
             recordStr.append("offsetOfCollectionMetaDataInFile : ");
-            recordStr.append(PoconoFileSystem::toStr(offsetOfCollectionMetaDataInFile));
+            recordStr.append(PoconoDB::toStr(offsetOfCollectionMetaDataInFile));
             
           
             return recordStr;

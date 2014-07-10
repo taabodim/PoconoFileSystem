@@ -1,13 +1,13 @@
 //
 //  FileWriter.h
-//  PoconoFileSystem
+//  PoconoDB
 //
 //  Created by Mahmoud Taabodi on 6/6/14.
 //  Copyright (c) 2014 Mahmoud Taabodi. All rights reserved.
 //
 
-#ifndef PoconoFileSystem_FileWriter_h
-#define PoconoFileSystem_FileWriter_h
+#ifndef PoconoDB_FileWriter_h
+#define PoconoDB_FileWriter_h
 #include "DataRecord.h"
 #include "DataRecordMetaData.h"
 #include "Utils.h"
@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <cassert>
 #include "CollectionMetaData.h"
-namespace PoconoFileSystem {
+namespace PoconoDB {
     class FileWriter {
         private :
         std::string filename;
