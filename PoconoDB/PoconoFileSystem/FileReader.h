@@ -42,7 +42,7 @@ namespace PoconoDB {
     void FileReader::readCollectionMetaDataFromFile(CollectionMetaData* collectionPtr,offsetType offset) {
 
         FILE *ptr_myfile;
-//        std::cout<<"FileReader : filename : "<<filename<<std::endl;
+        std::cout<<"FileReader : filename : "<<filename<<std::endl;
         ptr_myfile=fopen(filename.c_str(),"rb");
         if (!ptr_myfile)
         {

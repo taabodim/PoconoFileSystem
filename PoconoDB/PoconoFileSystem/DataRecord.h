@@ -14,7 +14,7 @@
 
 namespace PoconoDB {
     const static size_t MAX_KEY_SIZE = 32;
-    
+
     struct DataRecordStruct{
         offsetType  offsetOfCollection;
         offsetType offsetOfValueOfRecordInFile; //this points to where the the value field of
@@ -30,7 +30,7 @@ namespace PoconoDB {
 //                key[i] = '\0';
 //            }
 //            sizeOfValueFieldInDataRecord = -1;
-//            
+//
 //            dataRecordRemovedFlag = false;
 //            offsetOfValueOfRecordInFile = -1;
 //            offsetOfCollection = -1;
@@ -41,10 +41,10 @@ namespace PoconoDB {
     class DataRecord {
         private :
         // const static size_t MAX_VALUE_SIZE = 32;
-        
+
         public :
-        
-       
+
+
         offsetType offsetOfCollection; //this points to the collection this data record belongs to.
         offsetType offsetOfValueOfRecordInFile; //this points to where the the value field of record is .
         //we need this , because the value part of the data is variable sized.
@@ -54,7 +54,8 @@ namespace PoconoDB {
         offsetType offsetOfDataRecord;//this points to where this datarecord sits in file,this is needed for update functionality
         char  key [MAX_KEY_SIZE];
         char*  value;
-        
+        //std::vector<char> value;
+        //std::vector<char> value;
         DataRecord() {
             //for reading the data into array, init the arrays later
             // offsetOfNextDataRecordMetaData = -1;
@@ -63,20 +64,20 @@ namespace PoconoDB {
             //sizeOfValueFieldInDataRecord = -1;
 //            offsetOfCollection = -1;
 //            offsetOfDataRecord =-1;
-//            
+//
 //            for(int i=0;i<MAX_KEY_SIZE;i++)
-//                
+//
 //            {
 //                key[i] = '\0';
-//                
+//
 //            }
         }
         DataRecord(std::string keyStr,std::string valueStr)
         {
             const char* keyPtr = keyStr.c_str();
-           
+
             for(int i=0;i<keyStr.size();i++)
-                
+
             {
                 key[i] = *keyPtr;
                 ++keyPtr;
@@ -85,45 +86,52 @@ namespace PoconoDB {
             {
                 key[i] = '\0';
             }
-            
+
             setValue(valueStr,valueStr.size()+1);
             //offsetOfDataRecord = -1;
             offsetOfCollection = -1;
             offsetOfDataRecord =-1;
-            
+
            // assert(offsetOfDataRecord==-1);
 
         }
+         virtual ~DataRecord()
+    {
+        if(value!=NULL)
+        {
+            delete[] value;
+        }
+    }
         void setValue(std::string valueStr,offsetType length)
         {
             const char* valuePtr = valueStr.c_str();
             value = new char[length];
             for(int i=0;i<length;i++)
-                
+
             {
                 value[i] = *valuePtr;
+                //value.push_back(*valuePtr);
                 ++valuePtr;
             }
-            value[length]='\0';
-            sizeOfValueFieldInDataRecord = length;
-            assert(sizeOfValueFieldInDataRecord== length);
+            this->sizeOfValueFieldInDataRecord = length;
+            assert(this->sizeOfValueFieldInDataRecord== length);
 
         }
         bool keyIsEqualTo(std::string keyGiven)
         {
            if(this->getKeyAsString().compare(keyGiven)==0)
                return true;
-            
+
             return false;
         }
         std::string keyStr;
         std::string getKeyAsString()
         {
-        
+
             if(keyStr.empty())
             {
             char keyArrayCopy[MAX_KEY_SIZE];
-            
+
             memcpy ( keyArrayCopy, key, MAX_KEY_SIZE );
             std::string keyStrNew (key);
             keyStr.append(keyStrNew);
@@ -131,22 +139,42 @@ namespace PoconoDB {
             }
             return keyStr;
         }
-        
-        
+
+
         std::string getValueAsString()
         {
+            if(value!=NULL)
+            {
+
+
             char valueArrayCopy[sizeOfValueFieldInDataRecord];
-            
-            memcpy ( valueArrayCopy, value, sizeOfValueFieldInDataRecord );
-            std::string val (valueArrayCopy,sizeOfValueFieldInDataRecord);
+            //char valueArrayCopy[value.size()];
+            std::string val("");
+            memcpy(valueArrayCopy,value,sizeOfValueFieldInDataRecord);
+
+           for(int i=0;i<sizeOfValueFieldInDataRecord;i++)
+
+            {
+//                valueArrayCopy[i] = *value;
+//                ++value;
+                val.push_back(valueArrayCopy[i]);
+            }
+
+           // std::string val (valueArrayCopy,this->sizeOfValueFieldInDataRecord);
             //std::cout<<"getValueAsString : "<<val<<std::endl;
             assert(value!=NULL);
             return val;
+            }
+            else
+            {
+                string val("unknownValue");
+                return val;
+            }
 
         }
         std::string toString()
         {
-            std::string recordStr;
+            std::string recordStr("");
             recordStr.reserve(1000);
             recordStr.append(key);
             recordStr.append(";");
@@ -156,56 +184,56 @@ namespace PoconoDB {
             }
             else
             {
-                recordStr.append(value);
+                //recordStr.append(value); valgrind : invalid read of size 1 or 4
             }
 //            recordStr.append("offsetOfNextDataRecordMetaData : ");
 //            recordStr.append(PoconoDB::toStr(offsetOfNextDataRecordMetaData));
-//            
+//
 //            recordStr.append("offsetOfPreviousDataRecordMetaData : ");
 //            recordStr.append(PoconoDB::toStr(offsetOfPreviousDataRecordMetaData));
-            
+
            // recordStr.append(" ,offsetOfDataRecord : ");
            // recordStr.append(PoconoDB::toStr(offsetOfDataRecord));
-            
+
             recordStr.append(" ,sizeOfValueFieldInDataRecord : ");
             recordStr.append(PoconoDB::toStr(sizeOfValueFieldInDataRecord));
-           
+
             recordStr.append(" ,offsetOfValueOfRecordInFile : ");
             recordStr.append(PoconoDB::toStr(offsetOfValueOfRecordInFile));
-//           
-           
+//
+
 
             return recordStr;
         }
     };
-   
+
     typedef std::shared_ptr<DataRecord> DataRecordPtr;
 //    typedef DataRecord* DataRecordPtr;
 //    typedef std::shared_ptr<std::list<DataRecord>> ListOfDataRecordPtr;
     typedef std::list<DataRecord> ListOfDataRecordPtr;
-    
+
     DataRecordPtr getARecordDataOnHeap() {
         //later count how many objects are created
         std::shared_ptr<DataRecord> ptr(new DataRecord());
 //        DataRecordPtr ptr = new DataRecord();
         return ptr;
     }
-    
+
      ListOfDataRecordPtr getAListOfDataRecordOnHeap() {
         std::list<DataRecord> allData;
-         
+
         return allData;
    }
     std::list<DataRecordPtr> getAListOfDataRecordOnHeapModified() {
         //        std::shared_ptr<std::list<DataRecordPtr>> allData(new std::list<DataRecordPtr>());
-        
+
         std::list<DataRecordPtr> allData;
-        
+
         return allData;
     }
 
-    
-    
+
+
 }
 
 #endif

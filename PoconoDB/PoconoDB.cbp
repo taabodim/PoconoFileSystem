@@ -12,8 +12,20 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-std=c++11" />
 					<Add option="-g" />
+					<Add directory="PoconoFileSystem" />
+					<Add directory="PoconoFileSystem/PicoDB" />
+					<Add directory="PoconoFileSystem/PicoDB/third_party" />
+					<Add directory="PoconoFileSystem/PicoDB/pico" />
+					<Add directory="PoconoFileSystem/PicoDB/third_party/json_cpp/json" />
 				</Compiler>
+				<Linker>
+					<Add option="-lpthread" />
+					<Add library="../../../../usr/lib/i386-linux-gnu/libboost_filesystem.so" />
+					<Add library="../../../../usr/lib/i386-linux-gnu/libboost_system.so" />
+					<Add library="../../../../usr/lib/i386-linux-gnu/libboost_thread.so" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/PoconoDB" prefix_auto="1" extension_auto="1" />
@@ -30,8 +42,93 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-pg" />
+			<Add option="-g" />
 			<Add option="-fexceptions" />
+			<Add directory="/home/mtaabodi/workspace-c++/PoconoDB/" />
 		</Compiler>
+		<Linker>
+			<Add option="-pg" />
+		</Linker>
+		<Unit filename="PoconoFileSystem/CRUDTests.h" />
+		<Unit filename="PoconoFileSystem/ClientServerExample.h" />
+		<Unit filename="PoconoFileSystem/CollectionMetaData.h" />
+		<Unit filename="PoconoFileSystem/ConcurrentCRUDtests.h" />
+		<Unit filename="PoconoFileSystem/Configs.h" />
+		<Unit filename="PoconoFileSystem/DBTest.h" />
+		<Unit filename="PoconoFileSystem/DataRecord.h" />
+		<Unit filename="PoconoFileSystem/DataRecordMetaData.h" />
+		<Unit filename="PoconoFileSystem/Examples.h" />
+		<Unit filename="PoconoFileSystem/FileReader.h" />
+		<Unit filename="PoconoFileSystem/FileSystem.h" />
+		<Unit filename="PoconoFileSystem/FileSystemAPI.h" />
+		<Unit filename="PoconoFileSystem/FileWriter.h" />
+		<Unit filename="PoconoFileSystem/Index.h" />
+		<Unit filename="PoconoFileSystem/Logger.h" />
+		<Unit filename="PoconoFileSystem/LoggerWrapper.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/Examples.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/MutilThreadedServerClient.cpp" />
+		<Unit filename="PoconoFileSystem/PicoDB/ObjectPool.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/PicoDB.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/PicoHedgeFund.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/Runnable.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/SimpleRunnable.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/SqlParser.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/StackTrace.cpp" />
+		<Unit filename="PoconoFileSystem/PicoDB/StackTrace.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/ThreadWorker.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/chat_message.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/countdown_latch.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/currency.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/file_test.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/jsonCppExamples.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/AsyncTcpClient.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/AtomicCounter.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/ClientResponseProcessor.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/ConcurrentVector.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/DBRecord.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/DeleteTaskRunnable.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/OffsetManager.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/PicoConfig.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/PonocoClient.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/PonocoDriverHelper.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/PonocoRunnable.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/RecordInserter.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/ShellClient.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/TODO.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/ThreadPool.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/asyncReader.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/logger.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/pico_buffered_message.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/pico_client.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/pico_collection.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/pico_concurrent_list.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/pico_exception.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/pico_heart_beat_sender.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/pico_index.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/pico_json_wrapper.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/pico_logger_wrapper.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/pico_message.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/pico_record.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/pico_record_deprecated.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/pico_record_old_version.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/pico_replicator.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/pico_server.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/pico_session.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/pico_sharder.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/pico_test.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/pico_utils.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/request_processor.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/pico/writer_buffer_container.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/stock.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/third_party/json_cpp/json/json-forwards.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/third_party/json_cpp/json/json.h" />
+		<Unit filename="PoconoFileSystem/PicoDB/third_party/json_cpp/json/jsoncpp.cpp" />
+		<Unit filename="PoconoFileSystem/PoconoClient.h" />
+		<Unit filename="PoconoFileSystem/PoconoConfig.h" />
+		<Unit filename="PoconoFileSystem/SuperBlock.h" />
+		<Unit filename="PoconoFileSystem/Utils.h" />
+		<Unit filename="PoconoFileSystem/main.cpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />

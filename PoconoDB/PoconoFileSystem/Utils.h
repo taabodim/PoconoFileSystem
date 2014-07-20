@@ -70,6 +70,7 @@ namespace PoconoDB {
 
     bool openFileIfItDoesntExist(const std::string& name) {
         std::fstream f;
+        std::cout<<"filenzme is "<<name<<std::endl;
         f.open(name, std::fstream::in); //this will open file if it doesnt exist
         if (f.good()) {
             f.close();
@@ -79,18 +80,18 @@ namespace PoconoDB {
             //      mylogger<<"file does NOT exist,creating one now...\n";
             FILE * pFile;
             pFile = fopen(name.c_str(), "w");
-            f.close();
+           fclose(pFile);
             return false;
         }
     }
     void truncateTheFile(const std::string& name) {
         FILE * pFile;
         pFile = fopen(name.c_str(), "w");
-        const char* str = "11";
+        const char* str = "";
         assert(pFile);
        if(pFile)
         {
-            fwrite(str , 1 , sizeof(str) , pFile );
+           // fwrite(str , 1 , sizeof(str) , pFile );
             fclose(pFile);
         }
         else {std::cout<<"couldnt open the file";}
@@ -148,9 +149,15 @@ namespace PoconoDB {
         {
             diff = sz%blockSize;
             sz+=(blockSize-diff);
-        }
-        std::cout<<" blockSize: "<<blockSize<<std::endl
+            std::cout<<" blockSize: "<<blockSize<<std::endl
         <<" diff : "<<diff<<std::endl<<" sz : "<<sz<<std::endl;
+
+        }else
+        {
+              std::cout<<" blockSize: "<<blockSize<<std::endl
+              <<std::endl<<" sz : "<<sz<<std::endl;
+
+        }
 
         return sz;
 

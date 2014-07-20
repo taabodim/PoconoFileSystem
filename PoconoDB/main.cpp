@@ -55,9 +55,9 @@ int main(int argc, const char * argv[])
     if(homeSetting)
     {
         Configs::logDir.clear();
-        Configs::logDir.append("/home/mtaabodi/Documents/");
+        Configs::logDir.append("/tmp/");
         Configs::dataDir.clear();
-        Configs::dataDir.append("/home/mataabodi/Documents/");
+        Configs::dataDir.append("/tmp/");
 
     }
     std::string dataFilename("test");
@@ -65,9 +65,9 @@ int main(int argc, const char * argv[])
     dataFilename=PoconoDB::getFullCollectionName(dataFilename);
     openFileIfItDoesntExist(dataFilename);
     truncateTheFile(dataFilename);
-    //    PoconoDB::allOfTests();
+        PoconoDB::allOfTests();
     //memoryTest();
-        clientServerExample();
+        //clientServerExample();
     } catch( const std::exception& e ) { // reference to the base of a polymorphic object
         std::cout << "exception thrown : "<<e.what(); // information from length_error printed
     }

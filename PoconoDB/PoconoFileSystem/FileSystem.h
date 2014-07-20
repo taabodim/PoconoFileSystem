@@ -179,12 +179,12 @@ namespace PoconoDB {
             dataRecordMetaData->offsetOfCollection=collectionMetaData->offsetOfCollectionMetaDataInFile;
 
             dataRecordMetaData->offsetOfValueOfRecordInFile = offsetOfValueField;
-            dataRecordMetaData->lengthOfValueField =record->getValueAsString().size();
+            dataRecordMetaData->lengthOfValueField =record->sizeOfValueFieldInDataRecord;
 
 
             //prepare DataRecord
             record->offsetOfCollection = collectionMetaData->offsetOfCollectionMetaDataInFile;
-            record->sizeOfValueFieldInDataRecord = record->getValueAsString().size();
+            record->sizeOfValueFieldInDataRecord = record->sizeOfValueFieldInDataRecord;
             record->dataRecordRemovedFlag = false;
             record->offsetOfValueOfRecordInFile = offsetOfValueField;
             record->offsetOfDataRecord = offsetOfDataRecord;
@@ -195,11 +195,12 @@ namespace PoconoDB {
             /* writing the value field in file */
 
             fileWriter->writeTheValueOfRecord(record,offsetOfValueField);
-            std::string valueExpected = record->getValueAsString();
             bool debug = true;
             if(debug)
             {
                 string valueRead = fileReader->readTheValueOfDataRecord(offsetOfValueField,record->sizeOfValueFieldInDataRecord);
+                std::string valueExpected = record->getValueAsString();
+
                 std::cout<< " valueRead is : "<<valueRead<<std::endl<<
                 "valueExpected is : "<<valueExpected<<std::endl;
                 assert(valueRead.compare(valueExpected)==0);
@@ -238,7 +239,7 @@ namespace PoconoDB {
         {
             //1.get the most updated version of collectionMetaData
             ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
-            DataRecordMetaDataPtr firstDataMetaDataPtr = new DataRecordMeataData();
+            DataRecordMetaDataPtr firstDataMetaDataPtr(new DataRecordMeataData());
 
             CollectionMetaDataRawPtr collection = new CollectionMetaData();
             assert(collectionArg->offsetOfCollectionMetaDataInFile>=0);
