@@ -13,11 +13,10 @@
 #include <memory>
 #include <iostream>
 namespace PoconoDB {
-    //typedef std::shared_ptr<CollectionMetaData> CollectionMetaDataPtr;
     class CollectionMetaData;
-    typedef CollectionMetaData* CollectionMetaDataPtr;
+    typedef std::shared_ptr<CollectionMetaData> CollectionMetaDataPtr;
 
-    typedef CollectionMetaData* CollectionMetaDataRawPtr;
+    typedef CollectionMetaData* CollectionMetaDataPtr;
 
     struct CollectionMetaDataStruct{
         char nameOfCollection [32];
@@ -59,7 +58,7 @@ namespace PoconoDB {
 //            for(int i=0;i<LIMIT_OF_COLLECTION_SIZE-1;i++)
 //
 //            {
-//                nameOfCollection [i] = '\0';//valgrind bug in this for loop
+//                nameOfCollection [i] = '\0';//memory bug in this for loop
 //            }
             this->offsetOfFirstDataRecordMetaData= -1;
             this->offsetOfLastDataRecordMetaData = -1;
@@ -80,7 +79,7 @@ namespace PoconoDB {
             for(size_t i=name.size();i<LIMIT_OF_COLLECTION_SIZE-1;i++)
 
             {
-               // nameOfCollection [i] = '\0';valgrind bug in this loop
+               // nameOfCollection [i] = '\0';memory bug in this loop
             }
 
             this->offsetOfFirstDataRecordMetaData= -1;
@@ -118,7 +117,6 @@ namespace PoconoDB {
         std::string toString()
         {
             std::string recordStr;
-            recordStr.reserve(1000);
             recordStr.append(getNameOfCollectionAsString());
             recordStr.append(";");
             recordStr.append("offsetOfFirstDataRecord : ");
@@ -141,14 +139,24 @@ namespace PoconoDB {
         {
             return shared_from_this();
         }
-        CollectionMetaDataRawPtr getNewInstanceOnHeap(std::string nameOfCollection)
+        CollectionMetaDataPtr getNewInstanceOnHeap(std::string nameOfCollection)
         {
             return new CollectionMetaData(nameOfCollection);
         }
         virtual  ~CollectionMetaData() {
 
         }
-
+        bool operator == (CollectionMetaData& other) {
+                for(int i=0;i<LIMIT_OF_COLLECTION_SIZE-1;i++)
+            {
+               if(this->nameOfCollection [i] != other.nameOfCollection[i]) return false;
+           }
+               if(this->offsetOfFirstDataRecordMetaData [i] != other.offsetOfFirstDataRecordMetaData[i]) return false;
+               if(this->offsetOfLastDataRecordMetaData [i] != other.offsetOfLastDataRecordMetaData[i]) return false;
+               if(this->isCollectionDeleted [i] != other.isCollectionDeleted[i]) return false;
+           
+            return true;
+        }
     };
 
 
