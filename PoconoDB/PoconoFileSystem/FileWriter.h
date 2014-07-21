@@ -106,7 +106,7 @@ namespace PoconoDB {
 
         fseek ( ptr_myfile , offsetOfCollectionIndex , SEEK_SET );
         fwrite(&colStructPtr, sizeof(struct CollectionMetaDataStruct), 1, ptr_myfile);
-        //fflush(ptr_myfile); valgrind bug
+        fflush(ptr_myfile);
         fclose(ptr_myfile);
 
 

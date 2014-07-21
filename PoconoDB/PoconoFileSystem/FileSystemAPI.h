@@ -17,23 +17,23 @@ namespace PoconoDB {
         FileSystem fs_;
         public :
         FileSystemAPI():fs_("test"){
-            
-            
+
+
         }
         CollectionMetaDataPtr openCollection(std::string nameOfCollection)
         {
             return fs_.openCollection(nameOfCollection);
-            
+
         }
         void createCollection(std::string nameOfCollection){
-            
+
         }
-        
+
         void deleteCollection(std::string nameOfCollection){
             fs_.deleteCollection(nameOfCollection);
 
         }
-        
+
         void insertData(CollectionMetaDataPtr collection,DataRecordPtr record)
         {
             fs_.insertData(collection,record);
@@ -42,12 +42,12 @@ namespace PoconoDB {
         {
            return  fs_.getAllData(collection);
         }
-        
+
         std::string deleteData(std::string nameOfCollection,std::string key)
         {
             return fs_.deleteData(nameOfCollection,key);
         }
-        
+
         std::string updateData(std::string nameOfCollection,std::string key,std::string valueToBeOverwritten)
             {
              return fs_.updateData(nameOfCollection,key,valueToBeOverwritten);
@@ -58,8 +58,11 @@ namespace PoconoDB {
         DataRecordPtr find(std::string nameOfCollection,std::string key) {
              return fs_.find(nameOfCollection,key);
         }
-        
-        
+
+        list<DataRecordPtr> findByValue(std::string nameOfCollection,std::string value) {
+             return fs_.findByValue(nameOfCollection, value);
+        }
+
     };
 }
 

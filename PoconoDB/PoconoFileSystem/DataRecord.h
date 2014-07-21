@@ -54,16 +54,15 @@ namespace PoconoDB {
         offsetType offsetOfDataRecord;//this points to where this datarecord sits in file,this is needed for update functionality
         char  key [MAX_KEY_SIZE];
         char*  value;
-        //std::vector<char> value;
-        //std::vector<char> value;
+
         DataRecord() {
             //for reading the data into array, init the arrays later
-            // offsetOfNextDataRecordMetaData = -1;
-            // offsetOfPreviousDataRecordMetaData = -1;
-           // offsetOfDataRecord = -1;
-            //sizeOfValueFieldInDataRecord = -1;
-//            offsetOfCollection = -1;
-//            offsetOfDataRecord =-1;
+         //   offsetOfNextDataRecordMetaData = -1;
+           // offsetOfPreviousDataRecordMetaData = -1;
+            offsetOfDataRecord = -1;
+            sizeOfValueFieldInDataRecord = -1;
+            offsetOfCollection = -1;
+            offsetOfDataRecord =-1;
 //
 //            for(int i=0;i<MAX_KEY_SIZE;i++)
 //
@@ -117,11 +116,17 @@ namespace PoconoDB {
             assert(this->sizeOfValueFieldInDataRecord== length);
 
         }
-        bool keyIsEqualTo(std::string keyGiven)
+        bool keyIsEqualTo(std::string keyArg)
         {
-           if(this->getKeyAsString().compare(keyGiven)==0)
+           if(this->getKeyAsString().compare(keyArg)==0)
                return true;
 
+            return false;
+        }
+        bool valueIsEqualTo(std::string valueArg)
+        {
+           if(this->getValueAsString().compare(valueArg)==0)
+               return true;
             return false;
         }
         std::string keyStr;
@@ -184,7 +189,7 @@ namespace PoconoDB {
             }
             else
             {
-                //recordStr.append(value); valgrind : invalid read of size 1 or 4
+                recordStr.append(value);
             }
 //            recordStr.append("offsetOfNextDataRecordMetaData : ");
 //            recordStr.append(PoconoDB::toStr(offsetOfNextDataRecordMetaData));
@@ -200,18 +205,14 @@ namespace PoconoDB {
 
             recordStr.append(" ,offsetOfValueOfRecordInFile : ");
             recordStr.append(PoconoDB::toStr(offsetOfValueOfRecordInFile));
-//
-
 
             return recordStr;
         }
     };
 
     typedef std::shared_ptr<DataRecord> DataRecordPtr;
-//    typedef DataRecord* DataRecordPtr;
-//    typedef std::shared_ptr<std::list<DataRecord>> ListOfDataRecordPtr;
-    typedef std::list<DataRecord> ListOfDataRecordPtr;
-
+    //typedef std::list<DataRecord> ListOfDataRecordPtr;
+    typedef std::list<DataRecordPtr> ListOfDataRecordPtr;
     DataRecordPtr getARecordDataOnHeap() {
         //later count how many objects are created
         std::shared_ptr<DataRecord> ptr(new DataRecord());
@@ -220,19 +221,9 @@ namespace PoconoDB {
     }
 
      ListOfDataRecordPtr getAListOfDataRecordOnHeap() {
-        std::list<DataRecord> allData;
-
+        std::list<DataRecordPtr> allData;
         return allData;
    }
-    std::list<DataRecordPtr> getAListOfDataRecordOnHeapModified() {
-        //        std::shared_ptr<std::list<DataRecordPtr>> allData(new std::list<DataRecordPtr>());
-
-        std::list<DataRecordPtr> allData;
-
-        return allData;
-    }
-
-
 
 }
 

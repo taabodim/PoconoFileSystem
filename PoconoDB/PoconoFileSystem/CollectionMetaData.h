@@ -61,10 +61,9 @@ namespace PoconoDB {
 //            {
 //                nameOfCollection [i] = '\0';//valgrind bug in this for loop
 //            }
-//            this->offsetOfFirstDataRecordMetaData=-1;
-//            this->offsetOfLastDataRecordMetaData=-1;
-//            this->isCollectionDeleted = -1; ///valgrind memory error in all of this function, find this later
-
+            this->offsetOfFirstDataRecordMetaData= -1;
+            this->offsetOfLastDataRecordMetaData = -1;
+            this->isCollectionDeleted = -1;
         }
         CollectionMetaData(std::string name)
 

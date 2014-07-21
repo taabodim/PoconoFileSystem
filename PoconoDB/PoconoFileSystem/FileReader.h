@@ -30,7 +30,7 @@ namespace PoconoDB {
             this->filename=fileName;
 
         }
-        DataRecord readDataRecordFromFile(offsetType offset);
+        DataRecordPtr readDataRecordFromFile(offsetType offset);
         void readCollectionMetaDataFromFile(CollectionMetaData* collectionPtr,offsetType offset);
         void readDataRecordMetaDataFromFile(DataRecordMetaDataPtr record,offsetType offset);
         std::string readTheValueOfDataRecord(offsetType offset,offsetType sizeOfValueField);
@@ -67,7 +67,7 @@ namespace PoconoDB {
 
 
 //
-//        std::cout<<"At offset "<<offset<<" with size of "<<sizeof(class CollectionMetaData)<<",this collMetadata was read from file "<<collMetadata->toString()<<std::endl;
+        std::cout<<"At offset "<<offset<<" with size of "<<sizeof(class CollectionMetaData)<<",this collectionPtr was read from file "<<collectionPtr->toString()<<std::endl;
 
 //         dbLogger->log(toStr(boost::format("\n loadAllCollectionMap : At offset  %1% with size of %2% ,this collMetadata was read from file %3% \n") %offset
 //             %sizeOfClass %collMetadata->toString()));
@@ -75,17 +75,11 @@ namespace PoconoDB {
         fclose(ptr_myfile);
 
     }
-//    DataRecordPtr FileReader::readDataRecordFromFileFake(offsetType offset) {
-//        std::shared_ptr<DataRecord> record (new DataRecord());
-//        return record;
-//    }
-    DataRecord FileReader::readDataRecordFromFile(offsetType offset) {
 
+    DataRecordPtr FileReader::readDataRecordFromFile(offsetType offset) {
 
+        std::shared_ptr<DataRecord> record (new DataRecord());
 
-//        DataRecordPtr record  = getARecordDataOnHeap();
-//        DataRecordPtr record(new DataRecord());
-        //DataRecordStruct* dataRecordStruct (new DataRecordStruct());
 
         FILE *ptr_myfile;
         ptr_myfile=fopen(filename.c_str(),"rb");
@@ -103,22 +97,20 @@ namespace PoconoDB {
         DataRecordStruct dataRecordStruct;
         fread(&dataRecordStruct,sizeof(struct DataRecordStruct),1,ptr_myfile);
 
-        //std::shared_ptr<DataRecord> record (new DataRecord());
-        DataRecord record;
 
         for(offsetType i=0;i<MAX_KEY_SIZE;i++)
         {
-            record.key[i] = dataRecordStruct.key[i];
+            record->key[i] = dataRecordStruct.key[i];
         }
-        record.sizeOfValueFieldInDataRecord = dataRecordStruct.sizeOfValueFieldInDataRecord;
+        record->sizeOfValueFieldInDataRecord = dataRecordStruct.sizeOfValueFieldInDataRecord;
 
-        record.dataRecordRemovedFlag = dataRecordStruct.dataRecordRemovedFlag;
-        record.offsetOfValueOfRecordInFile = dataRecordStruct.offsetOfValueOfRecordInFile;
-        record.offsetOfCollection = dataRecordStruct.offsetOfCollection;
-        record.offsetOfDataRecordMetaData =   dataRecordStruct.offsetOfDataRecordMetaData ;
-        record.offsetOfDataRecord =  dataRecordStruct.offsetOfDataRecord;
+        record->dataRecordRemovedFlag = dataRecordStruct.dataRecordRemovedFlag;
+        record->offsetOfValueOfRecordInFile = dataRecordStruct.offsetOfValueOfRecordInFile;
+        record->offsetOfCollection = dataRecordStruct.offsetOfCollection;
+        record->offsetOfDataRecordMetaData =   dataRecordStruct.offsetOfDataRecordMetaData ;
+        record->offsetOfDataRecord =  dataRecordStruct.offsetOfDataRecord;
 
-//         std::cout<<"At offset "<<offset<<" with size of "<<sizeof(struct DataRecordStruct)<<",this record was read from file "<<record->toString()<<std::endl;
+        // std::cout<<"At offset "<<offset<<" with size of "<<sizeof(struct DataRecordStruct)<<",this record was read from file "<<record->toString()<<std::endl;
 
         fclose(ptr_myfile);
 
@@ -135,17 +127,10 @@ namespace PoconoDB {
         }
         assert(ptr_myfile);
 
-
-
-        assert(offset>-1);
         fseek ( ptr_myfile , offset , SEEK_SET );
         DataRecordMetaDataStruct dataRecordMetaDataStruct;
 
         fread(&dataRecordMetaDataStruct,sizeof(struct DataRecordMetaDataStruct),1,ptr_myfile);
-
-
-
-
 
         record->lengthOfValueField =dataRecordMetaDataStruct.lengthOfValueField;
         record->offsetOfDataRecord = dataRecordMetaDataStruct.offsetOfDataRecord;
@@ -156,7 +141,7 @@ namespace PoconoDB {
         record->offsetOfCollection=dataRecordMetaDataStruct.offsetOfCollection;
 
 
-//        std::cout<<"At offset "<<offset<<" with size of "<<sizeof(class DataRecordMeataData)<<",this record meta data was read from file "<<record->toString()<<std::endl;
+        std::cout<<"At offset "<<offset<<" with size of "<<sizeof(class DataRecordMeataData)<<",this record meta data was read from file "<<record->toString()<<std::endl;
 
 
 

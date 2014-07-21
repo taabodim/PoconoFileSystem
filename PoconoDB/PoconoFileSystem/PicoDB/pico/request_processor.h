@@ -12,12 +12,15 @@
 #include "pico_logger_wrapper.h"
 #include "RecordInserter.h"
 #include "pico_message.h"
+#include "Utils.h"
+#include "FileSystemAPI.h"
 using namespace std;
 namespace PoconoDB {
+
 class RecordInserter;
 class request_processor: public pico_logger_wrapper {
 private:
-    
+
 	static std::string insertCommand;
 	static std::string deleteCommand;
 	static std::string updateCommand;
@@ -31,11 +34,10 @@ private:
 public:
 //    std::shared_ptr<collection_manager> collectionManager;
 	static string logFileName;
-
+    std::shared_ptr<FileSystemAPI> fileSystemAPI;
 	request_processor()
-//    : collectionManager(new collection_manager())
+    : fileSystemAPI(new FileSystemAPI())
      {
-//         recordInserter.setCollectionManager(collectionManager);
 	}
 
 	msgPtr processRequest(msgPtr picoMessage) {
@@ -52,14 +54,21 @@ public:
 		string str("request_processr: message wasn't processed");
 
 		if (picoMessage->command.compare(insertCommand) == 0) {
-			mylogger
-					<< "\nrequest_processr: inserting one record per client request";
-//			retMsg = fileSystemAPI->insertOneMessage(picoMessage);
+			mylogger<< "\nrequest_processr: inserting one record per client request";
+			DataRecordPtr record = pico_message::getRecordOutoffPicoMessage(picoMessage);
+
+			CollectionMetaDataPtr collection =fileSystemAPI->openCollection(picoMessage->collection);
+			 fileSystemAPI->insertData(collection, record);//TODO
+			string result("one message was inserted in database collection");
+            result.append(" seperate records");
+            std::string key("SUCCESS");
+            msgPtr msg(new pico_message (key, result, picoMessage->messageId));
+            retMsg = msg;
 			messageWasProcessed = true;
 		} else if (picoMessage->command.compare(deleteCommand) == 0) {
 			mylogger
 					<< "\nrequest_processr: deleting one record per client request";
-			retMsg = deleteRecords(picoMessage, true); //delete asynchronously
+			retMsg = deleteRecords(picoMessage);
 			messageWasProcessed = true;
 		} else if (picoMessage->command.compare(updateCommand) == 0) {
 			mylogger
@@ -69,11 +78,13 @@ public:
 		} else if (picoMessage->command.compare(findCommand) == 0) {
 			mylogger
 					<< "\nrequest_processr: finding records per client request";
-			//string str = findRecords(picoMessage);
+            DataRecordPtr allFoundRecordsPtr = fileSystemAPI->find(picoMessage->collection, picoMessage->key);//TODO
+            //set all the list to the pico message list of payloads
+            assert(false);
 			messageWasProcessed = true;
 		} else if (picoMessage->command.compare(addUserToDBCommand) == 0) {
 			mylogger << "\nrequest_processr: adding user per client request";
-			//	string str = addUser(picoMessage);
+            retMsg = addUser(picoMessage);
 			messageWasProcessed = true;
 		} else if (picoMessage->command.compare(deleteUserToDBCommand) == 0) {
 			mylogger << "\nrequest_processr: deleting user per client request";
@@ -105,7 +116,7 @@ public:
 			msgPtr retMsg= pico_message::build_message_from_string(str,
 					picoMessage->messageId);
 
-            
+
 		}
 		if (mylogger.isTraceEnabled()) {
 			mylogger << "request_processr: the message with Id "
@@ -144,7 +155,7 @@ public:
 		}
 
 	msgPtr deleteCollection(msgPtr picoMsg) {
-	
+
 		string result, key;
 
 		bool resultOfOperation;
@@ -169,21 +180,10 @@ public:
 
 		return msg;
 	}
-	msgPtr deleteRecords(msgPtr picoMsg, bool async) {
-	
-		//i am using collection pointer because, it should be passed to the
-		//deleter thread , so it should be in heap
-
-//		pico_buffered_message<pico_record> msg_in_buffers =
-//				picoMsg->getKeyValueOfMessageInRecords();
-//
-//		pico_record firstrecord = msg_in_buffers.pop();
-//		mylogger
-//				<< "\n request_processor : record that is going to be deleted from this : "
-//				<< firstrecord.toString();
-//
-        
-//		fileSystemAPI->deleteRecord(firstrecord, async);
+	msgPtr deleteRecords(msgPtr picoMsg) {
+		mylogger<< "\n request_processor : record that is going to be deleted from this : "
+				<< picoMsg->toString();
+    	fileSystemAPI->deleteData(picoMsg->collection, picoMsg->key);
 		string result("one message was deleted from database in unknown(todo)");
 		result.append(" seperate records");
 		std::string key("SUCCESS");
@@ -192,24 +192,11 @@ public:
 		return msg;
 	}
 	msgPtr updateRecords(msgPtr picoMsg) {
-//		pico_collection optionCollection(picoMsg->collection);
 
-		mylogger
-				<< "\nrequest_processor : record that is going to be updated is this : "
+		mylogger<< "\nrequest_processor : record that is going to be updated is this : "
 				<< picoMsg->toString();
 
-		pico_buffered_message<pico_record> msg_in_buffers ;
-//        =picoMsg->getKeyValueOfMessageInRecords();
-
-		pico_record firstrecord;
-//        = msg_in_buffers.pop();
-//		if (fileSystemAPI->ifRecordExists(firstrecord)) {
-//			//if the record is found
-//			deleteRecords(picoMsg, false); //delete it synchronously, wait for completion
-//		}
-		//if found, it will be deleted and and inserted agaain
-		//if not found, it will be inserted
-//		fileSystemAPI->insertOneMessage(picoMsg, firstrecord.offset_of_record);
+		fileSystemAPI->updateData(picoMsg->collection, picoMsg->key, picoMsg->value);
 
 		//TODO add num to the reply
 		std::string result("records were updated");
@@ -220,12 +207,13 @@ public:
 
 	}
 
-	msgPtr addUser(const std::string db, const std::string user,
-			pico_message picoMsg) {
+	msgPtr addUser(msgPtr picoMsg) {
+        assert(false);
+        assert(false);
 		string result = "not done yet";
 		msgPtr msg = pico_message::build_message_from_string(result,
-				picoMsg.messageId);
-          
+				picoMsg->messageId);
+
 		return msg;
 	}
 
@@ -233,7 +221,7 @@ public:
 			pico_message picoMsg) {
 		string result = "not done yet";
 		msgPtr msg = pico_message::build_message_from_string(result,picoMsg.messageId);
-        
+
 		return msg;
 	}
 
@@ -255,7 +243,7 @@ public:
 //				collectionManager->getTheCollection(requestMessage->collection);
 
 //		pico_buffered_message<pico_record> msg_in_buffers =requestMessage;
-        
+
 		pico_record firstrecord;
 //        = msg_in_buffers.pop();
 		mylogger
@@ -265,16 +253,16 @@ public:
 
 		assert(!requestMessage->messageId.empty());
 
-        
+
 		msgPtr msg;
 //        msg= fileSystemAPI->getMessageByKey(firstrecord,
 //				requestMessage->messageId);
 		mylogger << "\n request_processor : record that is fetched  db : "
 				<< msg->toString();
-        
-        
-       
-        
+
+
+
+
 		return msg;
 
 	}

@@ -24,10 +24,6 @@ typedef std::shared_ptr<pico_message> msgPtr;
 class pico_message: public pico_logger_wrapper {
 private:
 
-//	pico_buffered_message<pico_record> recorded_message; //a container for all the records that make up the whole message as a full json with all the value
-//	pico_buffered_message<pico_record> keyValueInBuffers;
-//	//a container for all the records that make up the key value
-
 public:
 	std::string key;
 	std::string value;
@@ -85,19 +81,19 @@ public:
     //the other side
     {
 		Json::Value root;   // will contains the root value after parsing.
-		      
+
 		bool parsingSuccessful = reader.parse(message_from_client, root);
         if (!parsingSuccessful) {
 			// report to the user the failure and their locations in the document.
             mylogger << "Failed to parse message :"<<message_from_client<<"\n"
             << reader.getFormattedErrorMessages();
         }
-        
+
         assert(parsingSuccessful);
-        
+
 		this->json_form_of_message = message_from_client;
 		this->command = root.get("command", "unknown").asString();
-        
+
         this->messageId = root.get("messageId", "couldntparseit").asString();
 		this->collection = root.get("collection", "unknown").asString();
 		this->db = root.get("db", "unknown").asString();
@@ -117,7 +113,7 @@ public:
 			                mylogger << "Failed to parse message :"<<message_from_client<<"\n"
 			              << reader.getFormattedErrorMessages();
            		}
-       
+
         assert(parsingSuccessful);
 
 		this->json_form_of_message = message_from_client;
@@ -140,7 +136,7 @@ public:
 			string msgId) {
         Json::Value root;   // will contains the root value after parsing.
 		Json::Reader reader;
-        
+
 		//this is for processing shell commands
 		this->messageId = msgId;
 		this->json_form_of_message = json_message_from_client;
@@ -183,11 +179,11 @@ public:
            (this->json_form_of_message.compare(msg.json_form_of_message)==0) &&
            (this->db.compare(msg.db)==0) &&
            (this->collection.compare(msg.collection)==0) &&
-           (this->value.compare(msg.value)==0) 
-           
+           (this->value.compare(msg.value)==0)
+
            )
             return true;
-        
+
         return false;
     }
 	pico_message operator=(pico_message& msg) {
@@ -286,34 +282,40 @@ public:
 
 		// cout << "unique message id is " << this->hashCodeOfMessage << endl;
 	}
- 
+
 	std::string toString() const {
 		return json_form_of_message;
 	}
     std::shared_ptr<pico_record> getCompleteMessageInJsonAsOnBuffer()
-    { 
+    {
         std::shared_ptr<pico_record> recordPtr(new pico_record(json_form_of_message));
         return recordPtr;
     }
 
 	~pico_message() {
-        
+
        // assert(shutDownNormally);
 		mylogger.log("pico_message being destroyed now.\n");
-        
+
 	}
 
     static  std::shared_ptr<pico_message> emptyInstance() //for template class
     {
         return NULL;
     }
-    
-};
-    
-    
 
-    
-      
+    static DataRecordPtr getRecordOutoffPicoMessage(msgPtr msg)
+    {
+        std::shared_ptr<DataRecord> ptr (new DataRecord (msg->key, msg->value));
+        return ptr;
+    }
+
+};
+
+
+
+
+
 }
 
 #endif /* PICO_MESSAGE_H_ */
