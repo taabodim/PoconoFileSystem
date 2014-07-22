@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="PoconoDB" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/PoconoDB" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-std=c++11" />
+					<Add option="-g" />
+					<Add directory="include/PoconoEngine" />
+					<Add directory="include" />
+					<Add directory="third_party/json_cpp" />
+				</Compiler>
+				<Linker>
+					<Add option="-lpthread" />
+					<Add library="../../../../../usr/lib/i386-linux-gnu/libboost_thread.so" />
+					<Add library="../../../../../usr/lib/i386-linux-gnu/libboost_system.so" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/PoconoDB" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="include" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="include/BoosFileExample.h" />
+		<Unit filename="include/BoosFileExample2.h" />
+		<Unit filename="include/CRUDTests.h" />
+		<Unit filename="include/ClientServerExample.h" />
+		<Unit filename="include/CollectionMetaData.h" />
+		<Unit filename="include/ConcurrentCRUDtests.h" />
+		<Unit filename="include/Configs.h" />
+		<Unit filename="include/DBTest.h" />
+		<Unit filename="include/DataRecord.h" />
+		<Unit filename="include/DataRecordMetaData.h" />
+		<Unit filename="include/Examples.h" />
+		<Unit filename="include/FileReader.h" />
+		<Unit filename="include/FileSystem.h" />
+		<Unit filename="include/FileWriter.h" />
+		<Unit filename="include/Index.h" />
+		<Unit filename="include/Logger.h" />
+		<Unit filename="include/LoggerWrapper.h" />
+		<Unit filename="include/PoconoClient.h" />
+		<Unit filename="include/PoconoConfig.h" />
+		<Unit filename="include/PoconoEngine/AsyncTcpClient.h" />
+		<Unit filename="include/PoconoEngine/AtomicCounter.h" />
+		<Unit filename="include/PoconoEngine/ClientResponseProcessor.h" />
+		<Unit filename="include/PoconoEngine/ConcurrentVector.h" />
+		<Unit filename="include/PoconoEngine/DBRecord.h" />
+		<Unit filename="include/PoconoEngine/DeleteTaskRunnable.h" />
+		<Unit filename="include/PoconoEngine/Examples.h" />
+		<Unit filename="include/PoconoEngine/ObjectPool.h" />
+		<Unit filename="include/PoconoEngine/OffsetManager.h" />
+		<Unit filename="include/PoconoEngine/PicoConfig.h" />
+		<Unit filename="include/PoconoEngine/PicoDB.h" />
+		<Unit filename="include/PoconoEngine/PicoHedgeFund.h" />
+		<Unit filename="include/PoconoEngine/PonocoClient.h" />
+		<Unit filename="include/PoconoEngine/PonocoDriverHelper.h" />
+		<Unit filename="include/PoconoEngine/PonocoRunnable.h" />
+		<Unit filename="include/PoconoEngine/RecordInserter.h" />
+		<Unit filename="include/PoconoEngine/Runnable.h" />
+		<Unit filename="include/PoconoEngine/ShellClient.h" />
+		<Unit filename="include/PoconoEngine/SimpleRunnable.h" />
+		<Unit filename="include/PoconoEngine/SqlParser.h" />
+		<Unit filename="include/PoconoEngine/StackTrace.h" />
+		<Unit filename="include/PoconoEngine/TODO.h" />
+		<Unit filename="include/PoconoEngine/ThreadPool.h" />
+		<Unit filename="include/PoconoEngine/ThreadWorker.h" />
+		<Unit filename="include/PoconoEngine/asyncReader.h" />
+		<Unit filename="include/PoconoEngine/chat_message.h" />
+		<Unit filename="include/PoconoEngine/countdown_latch.h" />
+		<Unit filename="include/PoconoEngine/currency.h" />
+		<Unit filename="include/PoconoEngine/file_test.h" />
+		<Unit filename="include/PoconoEngine/jsonCppExamples.h" />
+		<Unit filename="include/PoconoEngine/logger.h" />
+		<Unit filename="include/PoconoEngine/pico_buffered_message.h" />
+		<Unit filename="include/PoconoEngine/pico_client.h" />
+		<Unit filename="include/PoconoEngine/pico_collection.h" />
+		<Unit filename="include/PoconoEngine/pico_concurrent_list.h" />
+		<Unit filename="include/PoconoEngine/pico_exception.h" />
+		<Unit filename="include/PoconoEngine/pico_heart_beat_sender.h" />
+		<Unit filename="include/PoconoEngine/pico_index.h" />
+		<Unit filename="include/PoconoEngine/pico_json_wrapper.h" />
+		<Unit filename="include/PoconoEngine/pico_logger_wrapper.h" />
+		<Unit filename="include/PoconoEngine/pico_message.h" />
+		<Unit filename="include/PoconoEngine/pico_record.h" />
+		<Unit filename="include/PoconoEngine/pico_record_deprecated.h" />
+		<Unit filename="include/PoconoEngine/pico_record_old_version.h" />
+		<Unit filename="include/PoconoEngine/pico_replicator.h" />
+		<Unit filename="include/PoconoEngine/pico_server.h" />
+		<Unit filename="include/PoconoEngine/pico_session.h" />
+		<Unit filename="include/PoconoEngine/pico_sharder.h" />
+		<Unit filename="include/PoconoEngine/pico_test.h" />
+		<Unit filename="include/PoconoEngine/pico_utils.h" />
+		<Unit filename="include/PoconoEngine/request_processor.h" />
+		<Unit filename="include/PoconoEngine/stock.h" />
+		<Unit filename="include/PoconoEngine/writer_buffer_container.h" />
+		<Unit filename="include/SuperBlock.h" />
+		<Unit filename="include/Utils.h" />
+		<Unit filename="include/Utils1.h" />
+		<Unit filename="include/chat_server.h" />
+		<Unit filename="src/FileReader.cpp" />
+		<Unit filename="src/FileSystem.cpp" />
+		<Unit filename="src/FileWriter.cpp" />
+		<Unit filename="src/MutilThreadedServerClient.cpp" />
+		<Unit filename="src/StackTrace.cpp" />
+		<Unit filename="src/Utils1.cpp" />
+		<Unit filename="src/jsoncpp.cpp" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="third_party/json_cpp/json-forwards.h" />
+		<Unit filename="third_party/json_cpp/json.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
