@@ -58,8 +58,9 @@ FileSystem::FileSystem()
                             return collMetaData;
                        }
                     }
+                   // if(collMetaData->getNameOfCollectionAsString().size()>3) std::cout<<"collection read from : "<<collMetaData->toString()<<std::endl;
 
-                    offsetToGetMetaDataFrom +=(sizeof(class  CollectionMetaData));
+                    offsetToGetMetaDataFrom +=(sizeof(struct  CollectionMetaDataStruct));
                 }
             }
           std::cout<<"tried to load a collection from file but failed: "<<nameOfCollection<<std::endl;
@@ -78,7 +79,7 @@ FileSystem::FileSystem()
 
                 std::shared_ptr<CollectionMetaData> collectionMetada (new CollectionMetaData(nameOfCollection));
 
-                offsetType offsetOfCollectionMetaDataInFile =STARTING_OFFSET_OF_COLLECITON_INDEXS + ((allCollectionsMap.size()) * sizeof(class CollectionMetaData));
+                offsetType offsetOfCollectionMetaDataInFile =STARTING_OFFSET_OF_COLLECITON_INDEXS + ((allCollectionsMap.size()) * sizeof(struct CollectionMetaDataStruct));
 
                 assert(offsetOfCollectionMetaDataInFile>=0);
 
@@ -90,7 +91,9 @@ FileSystem::FileSystem()
                 if(debug) {
                     std::shared_ptr<CollectionMetaData> verifyObject (new CollectionMetaData());
                     fileReader->readCollectionMetaDataFromFile(verifyObject,offsetOfCollectionMetaDataInFile);
-                    assert(verifyObject==collectionMetada);
+                     std::cout<<"FileReader: collection read from file is "<<collectionMetada->toString()<<std::endl;
+
+                    //assert(verifyObject==collectionMetada);
                 }
                 return collectionMetada;
             }
@@ -114,7 +117,7 @@ FileSystem::FileSystem()
                        }
                     }
 
-                    offsetToGetMetaDataFrom +=(sizeof(class  CollectionMetaData));
+                    offsetToGetMetaDataFrom +=(sizeof(struct  CollectionMetaDataStruct));
                 }
             }
 
@@ -131,7 +134,7 @@ FileSystem::FileSystem()
                 size_t offset = PoconoDB::getEndOfFileOffset(filename);
                 CollectionMetaDataPtr colIndex(new CollectionMetaData(nameOfCollection));
 
-                size_t offsetOfCollectionIndex =STARTING_OFFSET_OF_COLLECITON_INDEXS+ allCollectionsMap.size()*sizeof(class CollectionMetaData);
+                size_t offsetOfCollectionIndex =STARTING_OFFSET_OF_COLLECITON_INDEXS+ allCollectionsMap.size()*sizeof(struct CollectionMetaDataStruct);
                 std::cout<< " offsetOfCollectionIndex : "<<offsetOfCollectionIndex<<std::endl;
 
                 fileWriter->writeCollectionMetaData(colIndex,offsetOfCollectionIndex);
@@ -258,7 +261,7 @@ FileSystem::FileSystem()
             if(debug) {
                     std::shared_ptr<CollectionMetaData> verifyObject (new CollectionMetaData());
                     fileReader->readCollectionMetaDataFromFile(verifyObject,collectionMetaData->offsetOfCollectionMetaDataInFile);
-                    assert(verifyObject==collectionMetaData);
+                    //assert(verifyObject==collectionMetaData);
                 }
         }
         void FileSystem::updateTheCollectionMetaDataInMemory(CollectionMetaDataPtr collectionMetaData) {

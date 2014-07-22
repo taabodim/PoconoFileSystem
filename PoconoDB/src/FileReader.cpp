@@ -44,7 +44,7 @@ void FileReader::readCollectionMetaDataFromFile(std::shared_ptr<CollectionMetaDa
 
 
 //
-        std::cout<<"At offset "<<offset<<" with size of "<<sizeof(class CollectionMetaData)<<",this collectionPtr was read from file "<<collectionPtr->toString()<<std::endl;
+        std::cout<<"At offset "<<offset<<" with size of "<<sizeof(struct CollectionMetaDataStruct)<<",this collectionPtr was read from file "<<collectionPtr->toString()<<std::endl;
 
 //         dbLogger->log(toStr(boost::format("\n loadAllCollectionMap : At offset  %1% with size of %2% ,this collMetadata was read from file %3% \n") %offset
 //             %sizeOfClass %collMetadata->toString()));
@@ -119,7 +119,7 @@ void FileReader::readCollectionMetaDataFromFile(std::shared_ptr<CollectionMetaDa
         record->offsetOfCollection=dataRecordMetaDataStruct.offsetOfCollection;
 
 
-        std::cout<<"At offset "<<offset<<" with size of "<<sizeof(class DataRecordMeataData)<<",this record meta data was read from file "<<record->toString()<<std::endl;
+        std::cout<<"At offset "<<offset<<" with size of "<<sizeof(struct DataRecordMetaDataStruct)<<",this record meta data was read from file "<<record->toString()<<std::endl;
 
 //        assert(record->offsetOfDataRecord!=-1);
 //        assert(record->offsetOfDataRecordMetaData!= -1);

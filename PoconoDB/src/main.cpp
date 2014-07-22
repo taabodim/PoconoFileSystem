@@ -65,7 +65,7 @@ int main(int argc, const char * argv[])
     dataFilename=PoconoDB::getFullCollectionName(dataFilename);
     openFileIfItDoesntExist(dataFilename);
     truncateTheFile(dataFilename);
-        PoconoDB::allOfTests();
+    PoconoDB::allOfTests();
     //memoryTest();
         //clientServerExample();
     } catch( const std::exception& e ) { // reference to the base of a polymorphic object

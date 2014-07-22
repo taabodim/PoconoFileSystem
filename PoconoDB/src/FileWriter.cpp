@@ -58,12 +58,15 @@
 
         assert(ptr_myfile);
         CollectionMetaDataStruct colStructPtr;
-
+        if(debug) { std::cout<<"this is the name of collection being written in file\n";}
         for(int i=0;i<32;i++)
         {
             colStructPtr.nameOfCollection[i]=colIndex->nameOfCollection[i];
+            if(debug) {
+                std::cout<<colStructPtr.nameOfCollection[i];
+            }
         }
-
+        std::cout<<std::endl;
         colStructPtr.offsetOfLastDataRecordMetaData=colIndex->offsetOfLastDataRecordMetaData;
         colStructPtr.offsetOfCollectionMetaDataInFile=colIndex->offsetOfCollectionMetaDataInFile;
         colStructPtr.offsetOfFirstDataRecordMetaData=colIndex->offsetOfFirstDataRecordMetaData;

@@ -15,7 +15,7 @@ namespace PoconoDB {
     void testWritingAndReadingSmallValuesInOneCollection()
     {
         FileSystem testFS;
-        CollectionMetaDataPtr collection =testFS.openCollection("testCollect");
+        CollectionMetaDataPtr collection =testFS.openCollection("testCollection");
 
         int num = 10;
         for(int i=0;i<num;i++)
@@ -23,7 +23,7 @@ namespace PoconoDB {
             DataRecordPtr record(new DataRecord(smallKey,smallValue));
             testFS.insertData(collection, record);
         }
-            DataRecordPtr foundRecord = testFS.find("testCollect", smallKey);
+            DataRecordPtr foundRecord = testFS.find("testCollection", smallKey);
            // assert(foundRecord==record);
             assert(foundRecord->getKeyAsString().compare(smallKey)==0);
             assert(foundRecord->getValueAsString().compare(smallValue)==0);
@@ -324,15 +324,18 @@ namespace PoconoDB {
 
     }
     void allOfTests() {
-//        testWritingAndReadingOneSmallValueInOneCollection();//stage 1
-//        testWritingAndReadingSmallValuesInOneCollection();
-//        testWritingAndReadingSmallValuesInThreeCollections();
-//        testDeletingFourCollections();
-//
+
+       // testWritingAndReadingSmallValuesInOneCollection();//fail
+        //testWritingAndReadingSmallValuesInThreeCollections();//pass
+        testDeletingFourCollections();
+////
 //        testWritingTenDataRecordAndFindingOne();
 //        testWriting10DataRecordAndDeletingTheOneWithSmallKey8();
 
         //testWriting10DataRecordAndDeletingAllOfThem(); //its buggy  fix it
+
+        //these tests pass
+            testWritingAndReadingOneSmallValueInOneCollection();//stage 1
         testWritingAndReadingSmall1000ValuesInThreeCollections();
 
     }

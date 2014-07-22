@@ -39,7 +39,7 @@ namespace PoconoDB {
 
         private :
 
-        const static int LIMIT_OF_COLLECTION_SIZE = 128;
+        const static int LIMIT_OF_COLLECTION_SIZE = 32;
         public :
 
         offsetType offsetOfFirstDataRecordMetaData;//this points to the first data record meta data of the collection
@@ -51,11 +51,11 @@ namespace PoconoDB {
         CollectionMetaData() //for reading the CollectionMetaData
         //info from file
         {
-//            for(int i=0;i<LIMIT_OF_COLLECTION_SIZE-1;i++)
-//
-//            {
-//                nameOfCollection [i] = '\0';//memory bug in this for loop
-//            }
+            for(int i=0;i<LIMIT_OF_COLLECTION_SIZE;i++)
+
+            {
+                nameOfCollection [i] = '\0';//memory bug in this for loop
+            }
             this->offsetOfFirstDataRecordMetaData= -1;
             this->offsetOfLastDataRecordMetaData = -1;
             this->isCollectionDeleted = -1;
@@ -75,7 +75,7 @@ namespace PoconoDB {
             for(size_t i=name.size();i<LIMIT_OF_COLLECTION_SIZE-1;i++)
 
             {
-               // nameOfCollection [i] = '\0';memory bug in this loop
+                nameOfCollection [i] = '\0';//memory bug in this loop
             }
 
             this->offsetOfFirstDataRecordMetaData= -1;
@@ -113,6 +113,7 @@ namespace PoconoDB {
         std::string toString()
         {
             std::string recordStr;
+            recordStr.append("nameOfCollection : ");
             recordStr.append(getNameOfCollectionAsString());
             recordStr.append(";");
             recordStr.append("offsetOfFirstDataRecord : ");
