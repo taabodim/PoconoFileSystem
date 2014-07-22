@@ -1,4 +1,22 @@
-void FileReader::readCollectionMetaDataFromFile(CollectionMetaData* collectionPtr,offsetType offset) {
+#include "DataRecord.h"
+#include <fstream>
+#include <iostream>
+#include <stdio.h>
+#include <cassert>
+#include "PoconoConfig.h"
+#include "DataRecordMetaData.h"
+#include "LoggerWrapper.h"
+#include "pico_logger_wrapper.h"
+#include "CollectionMetaData.h"
+#include "FileReader.h"
+namespace PoconoDB {
+
+  FileReader::FileReader(std::string fileName) : filename(fileName)
+        {
+            this->filename=fileName;
+
+        }
+void FileReader::readCollectionMetaDataFromFile(std::shared_ptr<CollectionMetaData> collectionPtr,offsetType offset) {
 
         FILE *ptr_myfile;
         std::cout<<"FileReader : filename : "<<filename<<std::endl;
@@ -146,3 +164,4 @@ void FileReader::readCollectionMetaDataFromFile(CollectionMetaData* collectionPt
         return valueReadFromFileStr;
 
     }
+}

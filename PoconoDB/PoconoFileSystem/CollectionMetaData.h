@@ -15,9 +15,6 @@
 namespace PoconoDB {
     class CollectionMetaData;
     typedef std::shared_ptr<CollectionMetaData> CollectionMetaDataPtr;
-
-    typedef CollectionMetaData* CollectionMetaDataPtr;
-
     struct CollectionMetaDataStruct{
         char nameOfCollection [32];
         offsetType offsetOfLastDataRecordMetaData;//this points to the last data
@@ -38,8 +35,7 @@ namespace PoconoDB {
         }
     };
 
-    class CollectionMetaData : std::enable_shared_from_this<CollectionMetaData>{
-
+    class CollectionMetaData {
 
         private :
 
@@ -135,13 +131,10 @@ namespace PoconoDB {
 
             return recordStr;
          }
-        std::shared_ptr<CollectionMetaData> getSharedPtrFromThis()
-        {
-            return shared_from_this();
-        }
         CollectionMetaDataPtr getNewInstanceOnHeap(std::string nameOfCollection)
         {
-            return new CollectionMetaData(nameOfCollection);
+            std::shared_ptr<CollectionMetaData> ptr(new CollectionMetaData(nameOfCollection));
+            return ptr;
         }
         virtual  ~CollectionMetaData() {
 
@@ -151,10 +144,10 @@ namespace PoconoDB {
             {
                if(this->nameOfCollection [i] != other.nameOfCollection[i]) return false;
            }
-               if(this->offsetOfFirstDataRecordMetaData [i] != other.offsetOfFirstDataRecordMetaData[i]) return false;
-               if(this->offsetOfLastDataRecordMetaData [i] != other.offsetOfLastDataRecordMetaData[i]) return false;
-               if(this->isCollectionDeleted [i] != other.isCollectionDeleted[i]) return false;
-           
+               if(this->offsetOfFirstDataRecordMetaData != other.offsetOfFirstDataRecordMetaData) return false;
+               if(this->offsetOfLastDataRecordMetaData  != other.offsetOfLastDataRecordMetaData) return false;
+               if(this->isCollectionDeleted != other.isCollectionDeleted) return false;
+
             return true;
         }
     };

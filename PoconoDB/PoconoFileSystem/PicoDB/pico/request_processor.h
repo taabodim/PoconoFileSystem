@@ -13,7 +13,7 @@
 #include "RecordInserter.h"
 #include "pico_message.h"
 #include "Utils.h"
-#include "FileSystemAPI.h"
+#include "FileSystem.h"
 using namespace std;
 namespace PoconoDB {
 
@@ -34,9 +34,9 @@ private:
 public:
 //    std::shared_ptr<collection_manager> collectionManager;
 	static string logFileName;
-    std::shared_ptr<FileSystemAPI> fileSystemAPI;
+    std::shared_ptr<FileSystem> fileSystemAPI;
 	request_processor()
-    : fileSystemAPI(new FileSystemAPI())
+    : fileSystemAPI(new FileSystem())
      {
 	}
 

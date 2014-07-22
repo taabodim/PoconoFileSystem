@@ -1,13 +1,7 @@
-#include "DataRecord.h"
-#include "DataRecordMetaData.h"
-#include "Utils.h"
-#include <fstream>
-#include <iostream>
-#include <stdio.h>
-#include <cassert>
-#include "CollectionMetaData.h"
-#include "FileReader.h"
- namespace PoconoDB { 
+#include "FileWriter.h"
+
+ namespace PoconoDB {
+
  void FileWriter::writeDataRecordMetaData(DataRecordMetaDataPtr dataRecordMetaDataPtr)
     {
         FILE *ptr_myfile;
@@ -100,7 +94,7 @@
 
         fclose(ptr_myfile);
         std::cout<<" wrote this value of data record at offset "<<offsetOfValueOfRecordInFile<<std::endl;
-       
+
     }
 
     void  FileWriter::writeDataRecordAtOffset (DataRecordPtr record,offsetType offsetOfDataRecord) {

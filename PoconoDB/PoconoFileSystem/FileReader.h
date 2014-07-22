@@ -25,13 +25,9 @@ namespace PoconoDB {
 
             std::string filename;
         public :
-        FileReader(std::string fileName) : filename(fileName)
-        {
-            this->filename=fileName;
-
-        }
+        FileReader(std::string fileName);
         DataRecordPtr readDataRecordFromFile(offsetType offset);
-        void readCollectionMetaDataFromFile(CollectionMetaData* collectionPtr,offsetType offset);
+        void readCollectionMetaDataFromFile(std::shared_ptr<CollectionMetaData> collectionPtr,offsetType offset);
         void readDataRecordMetaDataFromFile(DataRecordMetaDataPtr record,offsetType offset);
         std::string readTheValueOfDataRecord(offsetType offset,offsetType sizeOfValueField);
 
@@ -39,7 +35,7 @@ namespace PoconoDB {
 
 
         typedef std::shared_ptr<FileReader> FileReaderPtr;
-    
+
 
     }
 

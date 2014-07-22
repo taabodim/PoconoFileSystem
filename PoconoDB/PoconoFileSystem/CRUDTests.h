@@ -14,7 +14,7 @@ namespace PoconoDB {
     std::string bigValue0="bigValue0**********************THISISABIGVALUE**THISISABIGVALUE**THISISABIGVALUE**THISISABIGVALUE*******THISISABIGVALUE*****************THISISABIGVALUE***********************************EhdOfValue";
     void testWritingAndReadingSmallValuesInOneCollection()
     {
-        FileSystemAPI testFS;
+        FileSystem testFS;
         CollectionMetaDataPtr collection =testFS.openCollection("testCollect");
 
         int num = 10;
@@ -38,7 +38,7 @@ namespace PoconoDB {
 //        }
     }
     void testWritingAndReadingOneSmallValueInOneCollection() {
-        FileSystemAPI testFS;
+        FileSystem testFS;
         std::string nameOfCollection("testCollection");
         CollectionMetaDataPtr collection =testFS.openCollection(nameOfCollection);
 
@@ -66,7 +66,7 @@ namespace PoconoDB {
     void testWritingAndReadingSmall1000ValuesInThreeCollections() {
 
 
-        FileSystemAPI testFS;
+        FileSystem testFS;
         int numOfCollectionsInTest =3;
 
         std::string colName1 ("testCollection1");
@@ -118,7 +118,7 @@ namespace PoconoDB {
     }
     void testWritingAndReadingSmallValuesInThreeCollections()
     {
-        FileSystemAPI testFS;
+        FileSystem testFS;
         int numOfCollectionsInTest =3;
 
         //    for(int col = 0 ; col<numOfCollectionsInTest;col++)
@@ -169,7 +169,7 @@ namespace PoconoDB {
     }
 
     void testWritingTenDataRecordAndFindingOne() {
-        FileSystemAPI testFS;
+        FileSystem testFS;
         std::string nameOfCollection("testCollection");
         CollectionMetaDataPtr collection =testFS.openCollection(nameOfCollection);
 
@@ -193,7 +193,7 @@ namespace PoconoDB {
     }
     void testDeletingFourCollections()
     {
-        FileSystemAPI testFS;
+        FileSystem testFS;
         std::string nameOfCollection("testCollection");
         std::string nameOfCollection1("testCollection1");
         std::string nameOfCollection2("testCollection2");
@@ -222,7 +222,7 @@ namespace PoconoDB {
 
     //incomplete , finish this test , debug this test and make sure it works
     void testWriting10DataRecordAndDeletingTheOneWithSmallKey8() {
-        FileSystemAPI testFS;
+        FileSystem testFS;
         std::string nameOfCollection("testCollection");
 
         testFS.deleteCollection(nameOfCollection);
@@ -252,7 +252,7 @@ namespace PoconoDB {
 
     //incomplete , finish this test , debug this test and make sure it works
     void testWriting10DataRecordAndDeletingAllOfThem() {
-        FileSystemAPI testFS;
+        FileSystem testFS;
         std::string nameOfCollection("testCollection");
 
         testFS.deleteCollection(nameOfCollection);
@@ -287,7 +287,7 @@ namespace PoconoDB {
 
     //incomplete , finish this test , debug this test and make sure it works
     void testWriting10DataRecordAndUpdatingAllOfThem() {
-        FileSystemAPI testFS;
+        FileSystem testFS;
         std::string nameOfCollection("testCollection");
 
         testFS.deleteCollection(nameOfCollection);

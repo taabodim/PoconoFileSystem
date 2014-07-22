@@ -6,21 +6,29 @@
 //  Copyright (c) 2014 Mahmoud Taabodi. All rights reserved.
 //
 
-#ifndef PoconoDB_FileSystem_h
-#define PoconoDB_FileSystem_h
-#include "FileWriter.h"
-#include "FileReader.h"
-#include "CollectionMetaData.h"
-#include <list>
-#include "SuperBlock.h"
-#include "Utils.h"
-#include "DataRecordMetaData.h"
-#include "pico_logger_wrapper.h"
-namespace PoconoDB {
+#include "FileSystem.h"
 
-FileSystem::FileSystem(std::string fileName):filename(fileName)
+
+namespace PoconoDB {
+   FileSystem::FileSystem(std::string fileName)
+    {
+
+                this->filename = PoconoDB::getFullCollectionName(filename);
+                openFileIfItDoesntExist(filename);
+                FileReaderPtr tmpReader (new FileReader(filename));
+                FileWriterPtr tmpWriter (new FileWriter(filename));
+                this->fileReader = tmpReader;
+                this->fileWriter = tmpWriter;
+
+                //read all the collectionOffsets from the file , and load the collectionMap
+
+                loadAllCollectionMap();
+    }
+
+FileSystem::FileSystem()
 {
-            this->filename = PoconoDB::getFullCollectionName(filename);
+
+            this->filename = PoconoDB::getFullCollectionName("test");
             openFileIfItDoesntExist(filename);
             FileReaderPtr tmpReader (new FileReader(filename));
             FileWriterPtr tmpWriter (new FileWriter(filename));
@@ -31,12 +39,13 @@ FileSystem::FileSystem(std::string fileName):filename(fileName)
 
             loadAllCollectionMap();
 }
+
         CollectionMetaDataPtr FileSystem::openCollectionFromFile(std::string nameOfCollection) {
                 offsetType offsetToGetMetaDataFrom = STARTING_OFFSET_OF_COLLECITON_INDEXS;
             while(offsetToGetMetaDataFrom<ENDING_OFFSET_OF_COLLECITON_INDEXS)
             {
                 //                dbLogger->log(toStr(boost::format("\n loadAllCollectionMap : offset %1%") % offsetToGetMetaDataFrom));
-                CollectionMetaDataPtr collMetaData = new CollectionMetaData();
+                std::shared_ptr<CollectionMetaData> collMetaData ( new CollectionMetaData());
                 fileReader->readCollectionMetaDataFromFile(collMetaData,offsetToGetMetaDataFrom);
                 if(collMetaData!=NULL)
                 {
@@ -67,7 +76,7 @@ FileSystem::FileSystem(std::string fileName):filename(fileName)
             }
             else {
 
-                CollectionMetaDataPtr collectionMetada = new CollectionMetaData(nameOfCollection);
+                std::shared_ptr<CollectionMetaData> collectionMetada (new CollectionMetaData(nameOfCollection));
 
                 offsetType offsetOfCollectionMetaDataInFile =STARTING_OFFSET_OF_COLLECITON_INDEXS + ((allCollectionsMap.size()) * sizeof(class CollectionMetaData));
 
@@ -81,7 +90,7 @@ FileSystem::FileSystem(std::string fileName):filename(fileName)
                 if(debug) {
                     std::shared_ptr<CollectionMetaData> verifyObject (new CollectionMetaData());
                     fileReader->readCollectionMetaDataFromFile(verifyObject,offsetOfCollectionMetaDataInFile);
-                    assert(verifyObject==colindex);
+                    assert(verifyObject==collectionMetada);
                 }
                 return collectionMetada;
             }
@@ -121,7 +130,7 @@ FileSystem::FileSystem(std::string fileName):filename(fileName)
             {
                 size_t offset = PoconoDB::getEndOfFileOffset(filename);
                 CollectionMetaDataPtr colIndex(new CollectionMetaData(nameOfCollection));
-                
+
                 size_t offsetOfCollectionIndex =STARTING_OFFSET_OF_COLLECITON_INDEXS+ allCollectionsMap.size()*sizeof(class CollectionMetaData);
                 std::cout<< " offsetOfCollectionIndex : "<<offsetOfCollectionIndex<<std::endl;
 
@@ -129,11 +138,11 @@ FileSystem::FileSystem(std::string fileName):filename(fileName)
                 allCollectionsMap.push_back(colIndex);
                 res.append("collection was added");
 
-            if(debug) {
-                    std::shared_ptr<CollectionMetaData> verifyObject (new CollectionMetaData());
-                    fileReader->readCollectionMetaDataFromFile(verifyObject,offsetOfCollectionMetaDataInFile);
-                    assert(verifyObject==colindex);
-                }
+//            if(debug) {
+//                    std::shared_ptr<CollectionMetaData> verifyObject (new CollectionMetaData());
+//                    fileReader->readCollectionMetaDataFromFile(verifyObject,offsetOfCollectionMetaDataInFile);
+//                    assert(verifyObject==colindex);
+//                }
 
                 return res;
             }
@@ -143,7 +152,7 @@ FileSystem::FileSystem(std::string fileName):filename(fileName)
         bool FileSystem::collectionExists(std::string nameOfCollection) {
             return false;//for now
         }
-        void linkTheLastMetaDataAndNewOneAndUpdateTheLastMetaData( CollectionMetaDataPtr collectionMetaData,DataRecordMetaDataPtr dataRecordMetaDataPtr)
+        void FileSystem::linkTheLastMetaDataAndNewOneAndUpdateTheLastMetaData( CollectionMetaDataPtr collectionMetaData,DataRecordMetaDataPtr dataRecordMetaDataPtr)
         {
 
             //get the last data record meta data that collection meta data points to
@@ -194,7 +203,7 @@ FileSystem::FileSystem(std::string fileName):filename(fileName)
 
 
             //prepare DataRecord meta data
-            DataRecordMetaDataPtr dataRecordMetaData = getARecordMetaDataOnHeap();
+            std::shared_ptr<DataRecordMeataData> dataRecordMetaData (new DataRecordMeataData());
 
             dataRecordMetaData->offsetOfDataRecord = offsetOfDataRecord;
             dataRecordMetaData->offsetOfDataRecordMetaData=offsetOfDataRecordMetaData;
@@ -222,7 +231,7 @@ FileSystem::FileSystem(std::string fileName):filename(fileName)
 
             /* writing the value field in file */
 
-            fileWriter->writeTheValueOfRecord(record,offsetOfValueField);
+            this->fileWriter->writeTheValueOfRecord(record,offsetOfValueField);
             bool debug = true;
             if(debug)
             {
@@ -261,13 +270,13 @@ FileSystem::FileSystem(std::string fileName):filename(fileName)
             }
         }
 
-        ListOfDataRecordPtr FileSystem::getAllData(CollectionMetaDataPtr collectionArg)
+        std::list<DataRecordPtr> FileSystem::getAllData(CollectionMetaDataPtr collectionArg)
         {
             //1.get the most updated version of collectionMetaData
             ListOfDataRecordPtr allData = getAListOfDataRecordOnHeap();
             DataRecordMetaDataPtr firstDataMetaDataPtr(new DataRecordMeataData());
 
-            CollectionMetaDataPtr collection = new CollectionMetaData();
+            std::shared_ptr<CollectionMetaData> collection (new CollectionMetaData());
 
             fileReader->readCollectionMetaDataFromFile(collection,collectionArg->offsetOfCollectionMetaDataInFile);
             assert(collection->offsetOfCollectionMetaDataInFile>=0);
@@ -316,7 +325,7 @@ FileSystem::FileSystem(std::string fileName):filename(fileName)
 
         DataRecordMetaDataPtr FileSystem::getLastDataRecordMetaDataOfCollection(CollectionMetaDataPtr collection)
         {
-            DataRecordMetaDataPtr record = getARecordMetaDataOnHeap();
+           std::shared_ptr<DataRecordMeataData> record (new DataRecordMeataData());
             if(collection->offsetOfLastDataRecordMetaData==-1) return NULL;
             else
             {
@@ -427,9 +436,9 @@ FileSystem::FileSystem(std::string fileName):filename(fileName)
             }
             else
             {
-                DataRecordMetaDataPtr currentRecordMetaData = getARecordMetaDataOnHeap();
-                DataRecordMetaDataPtr previouseRecordMetaData = getARecordMetaDataOnHeap();
-                DataRecordMetaDataPtr nextRecordMetaData = getARecordMetaDataOnHeap();
+               std::shared_ptr<DataRecordMeataData> currentRecordMetaData (new DataRecordMeataData());
+               std::shared_ptr<DataRecordMeataData> previouseRecordMetaData (new DataRecordMeataData());
+               std::shared_ptr<DataRecordMeataData> nextRecordMetaData (new DataRecordMeataData());
 
                 fileReader->readDataRecordMetaDataFromFile(currentRecordMetaData,recordPtr->offsetOfDataRecordMetaData);
                 fileReader->readDataRecordMetaDataFromFile(previouseRecordMetaData,currentRecordMetaData->offsetOfPreviousDataRecordMetaData);
@@ -473,7 +482,7 @@ FileSystem::FileSystem(std::string fileName):filename(fileName)
              CollectionMetaDataPtr collecitonPtr = getCollectionMetaData (nameOfCollection);
             record->setValue(valueToBeOverwritten,valueToBeOverwritten.size());
             offsetType offsetOfnewValue = PoconoDB::getEndOfFileDataBlockOffsetAsMultipleOfBlock(filename, BLOCK_SIZE);//this should be 0 or 1024 , //getting a proper offset
-            DataRecordMetaDataPtr dataRecordMetaData  = getARecordMetaDataOnHeap();
+            std::shared_ptr<DataRecordMeataData> dataRecordMetaData (new DataRecordMeataData());
             fileReader->readDataRecordMetaDataFromFile(dataRecordMetaData,record->offsetOfDataRecordMetaData);
 
 
@@ -524,7 +533,6 @@ FileSystem::FileSystem(std::string fileName):filename(fileName)
             return allCollectionNames;
          }
 
-    };
+
 }
 
-#endif

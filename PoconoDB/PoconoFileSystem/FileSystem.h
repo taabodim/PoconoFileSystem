@@ -12,7 +12,6 @@
 #include "FileReader.h"
 #include "CollectionMetaData.h"
 #include <list>
-#include "SuperBlock.h"
 #include "Utils.h"
 #include "DataRecordMetaData.h"
 #include "pico_logger_wrapper.h"
@@ -29,6 +28,7 @@ namespace PoconoDB {
 
 
             FileSystem(std::string fileName);
+            FileSystem();
 
             CollectionMetaDataPtr openCollectionFromFile(std::string nameOfCollection);
             CollectionMetaDataPtr openCollection(std::string nameOfCollection);
@@ -47,8 +47,10 @@ namespace PoconoDB {
             void addOffsetToFreeListOfCurrentMetaDataOffsets(offsetType freeOffsetOfDataRecordMetaData);
             std::string updateData(std::string nameOfCollection,std::string key,std::string valueToBeOverwritten);
             std::list<std::string> showAllCollections();
+            std::list<DataRecordPtr> getAllData(CollectionMetaDataPtr collectionArg);
+            void updateTheCollectionMetaDataInMemory(CollectionMetaDataPtr collectionMetaData);
 
-    };
+            };
 }
 
 #endif

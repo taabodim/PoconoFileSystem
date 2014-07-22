@@ -144,13 +144,6 @@ namespace PoconoDB {
 
  	typedef std::shared_ptr<DataRecordMeataData> DataRecordMetaDataPtr;
     //typedef DataRecordMeataData* DataRecordMetaDataPtr;
-    static DataRecordMetaDataPtr getARecordMetaDataOnHeap() {
-        //later count how many objects are created
-        //DataRecordMetaDataPtr ptr = new DataRecordMeataData();
-        DataRecordMetaDataPtr ptr(new DataRecordMeataData());
-
-        return ptr;
-    }
 }
 
 #endif
