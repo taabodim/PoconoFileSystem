@@ -66,7 +66,7 @@ namespace PoconoDB {
 
             const char* namePtr = name.c_str();
 
-            for(int i=0;i<name.size()-1;i++)
+            for(int i=0;i<name.size();i++)
 
             {
                 nameOfCollection [i] = *(namePtr);
@@ -85,18 +85,8 @@ namespace PoconoDB {
         }
         std::string  getNameOfCollectionAsString()
         {
-            std::string  nameOfCollectionStr;
-
-            for(int i=0;i<32;i++)
-            {
-                if(nameOfCollection [i]!='\0')
-                {
-                    nameOfCollectionStr.push_back(nameOfCollection [i]);
-                }
-            }
+            std::string  nameOfCollectionStr(nameOfCollection,32);
             return nameOfCollectionStr;
-
-
         }
         void addTheOffsetToListOfDataRecords(size_t offsetOfNewDataRecord)
         {

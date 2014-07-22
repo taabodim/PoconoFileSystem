@@ -84,7 +84,7 @@ FileSystem::FileSystem()
                 assert(offsetOfCollectionMetaDataInFile>=0);
 
                 collectionMetada->offsetOfCollectionMetaDataInFile = offsetOfCollectionMetaDataInFile;
-//                std::cout<<"openCollection: going to write this collection in File"<<collectionMetada->toString()<<std::endl;
+                std::cout<<"openCollection: going to write this collection in File"<<collectionMetada->toString()<<std::endl;
                 allCollectionsMap.push_back(collectionMetada);
 
                 fileWriter->writeCollectionMetaData(collectionMetada,offsetOfCollectionMetaDataInFile);
@@ -523,10 +523,7 @@ FileSystem::FileSystem()
 
         }
         std::list<std::string> FileSystem::showAllCollections() {
-            //this loads the collection without caching it to make sure that
-            //the delete collection and other possible functionality
-            //works fine
-            loadAllCollectionMap();
+
             list<std::string> allCollectionNames;
             for(list<CollectionMetaDataPtr>::iterator iter = allCollectionsMap.begin();
                 iter!=allCollectionsMap.end();++iter) {
